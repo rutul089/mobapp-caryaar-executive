@@ -10,6 +10,7 @@ const Card = ({
   padding,
   noShadow,
   onPress,
+  row,
   style,
 }) => {
   let _padding = padding ?? 20;
@@ -17,6 +18,7 @@ const Card = ({
   const iCardStyle = StyleSheet.flatten([
     styles.card,
     {padding: _padding},
+    row && {flexDirection: 'row'},
     noShadow && styles.noShadow,
     cardContainerStyle,
   ]);

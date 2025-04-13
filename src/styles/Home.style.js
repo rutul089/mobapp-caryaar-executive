@@ -10,19 +10,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  avatar: {
-    width: theme.sizes.icons.xl,
-    height: theme.sizes.icons.xl,
-    borderRadius: theme.sizes.borderRadius.jumbo,
-  },
-  bell: {
-    width: theme.sizes.icons.xl,
-    height: theme.sizes.icons.xl,
-    backgroundColor: theme.colors.gray900,
-    borderRadius: theme.sizes.borderRadius.jumbo,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   statsContainer: {
     paddingTop: 16,
     flexDirection: 'row',
@@ -40,55 +27,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: theme.sizes.padding,
     paddingBlock: theme.sizes.spacing.smd,
   },
-  scrollSection: {
+  flatListStyle: {
+    flexGrow: 1,
     padding: theme.sizes.padding,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
-  },
-  carTypeBox: {
-    flex: 1,
-    // marginRight: 8,
-    position: 'relative',
-  },
-  carTypeBoxSelected: {
-    backgroundColor: '#E0F2FE',
-    borderColor: '#007BFF',
-    borderWidth: 2,
-  },
-  carTypeIcon: {
-    width: theme.sizes.icons.lg,
-    height: theme.sizes.icons.lg,
-    marginBottom: 8,
-  },
-  checkIcon: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    backgroundColor: '#007BFF',
-    width: theme.sizes.icons.smd,
-    height: theme.sizes.icons.smd,
-    borderRadius: theme.sizes.borderRadius.lg,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  circleCheck: {height: theme.sizes.icons.md, width: theme.sizes.icons.md},
-  loanTypeRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
-  },
-  loanTypeItem: {
-    width: '31%',
-    backgroundColor: '#fff',
-    padding: theme.sizes.spacing.md,
-    borderRadius: theme.sizes.borderRadius.card,
-  },
-  loanIcon: {
-    width: theme.sizes.icons.iconXXLarge,
-    height: theme.sizes.icons.iconXXLarge,
-    marginRight: 10,
+    backgroundColor: theme.colors.background,
   },
 });

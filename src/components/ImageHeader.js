@@ -19,6 +19,7 @@ type ImageHeaderProps = {
   showSearch?: boolean,
   profileImage?: string,
   titleText?: string,
+  hideProfileIcon?: boolean,
 };
 
 const ImageHeader = ({
@@ -33,19 +34,21 @@ const ImageHeader = ({
   showSearch = true,
   profileImage = 'https://i.pravatar.cc/150?img=3',
   titleText = 'CarYaar',
+  hideProfileIcon,
 }: ImageHeaderProps) => {
   return (
     <>
       <View style={styles.header}>
         {/* Profile Row */}
         <View style={styles.profileRow}>
-          <Pressable
-            onPress={
-              onLeftIconPress || (() => navigate(ScreenNames.UserProfile))
-            }>
-            <Image source={{uri: profileImage}} style={styles.avatar} />
-          </Pressable>
-
+          {!hideProfileIcon && (
+            <Pressable
+              onPress={
+                onLeftIconPress || (() => navigate(ScreenNames.UserProfile))
+              }>
+              <Image source={{uri: profileImage}} style={styles.avatar} />
+            </Pressable>
+          )}
           <Text
             hankenGroteskExtraBold
             size={28}
