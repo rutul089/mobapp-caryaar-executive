@@ -1,5 +1,6 @@
 {
-  "name": "Caryaar Pro",
+  "name": "CaryaarPro",
+  "displayName": "Caryaar Pro",
   "version": "0.0.1",
   "private": true,
   "scripts": {
