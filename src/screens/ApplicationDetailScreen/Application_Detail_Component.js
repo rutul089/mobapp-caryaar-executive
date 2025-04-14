@@ -5,15 +5,14 @@ import {
   SafeAreaWrapper,
   CardWrapper,
   PartnerCard,
-} from '@caryaar/components';
-import theme from '../../theme';
-import {
   Button,
   DetailInfoCard,
   Spacing,
   Text,
   TextAreaInput,
-} from '../../components';
+} from '@caryaar/components';
+import theme from '../../theme';
+
 import {getGradientColors} from '../../utils/helper';
 import DocumentList from './DocumentList';
 

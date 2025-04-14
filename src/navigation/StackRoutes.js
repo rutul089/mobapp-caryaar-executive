@@ -56,6 +56,23 @@ const StackRoutes = () => {
         name={ScreenNames.ApplicationDetail}
         component={Screens.ApplicationDetailScreen}
       />
+      <Stack.Screen
+        name={ScreenNames.ManageMember}
+        component={Screens.ManageMembersScreen}
+      />
+      <Stack.Screen
+        name={ScreenNames.ChangePassword}
+        component={Screens.ChangePasswordScreen}
+      />
+      <Stack.Screen name={ScreenNames.FAQS} component={Screens.FAQScreen} />
+      <Stack.Screen
+        name={ScreenNames.ContactSupport}
+        component={Screens.ContactSupportScreen}
+      />
+      <Stack.Screen
+        name={ScreenNames.EditProfile}
+        component={Screens.EditProfileScreen}
+      />
     </Stack.Navigator>
   );
 };

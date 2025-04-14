@@ -9,3 +9,10 @@ export {default as ApplicationsScreen} from './ApplicationsScreen';
 export {default as NotificationScreen} from './NotificationScreen';
 export {default as PartnerDetailScreen} from './PartnerDetailScreen';
 export {default as ApplicationDetailScreen} from './ApplicationDetailScreen';
+
+//UserProfile
+export {default as ChangePasswordScreen} from './UserProfile/ChangePasswordScreen';
+export {default as EditProfileScreen} from './UserProfile/EditProfileScreen';
+export {default as ManageMembersScreen} from './UserProfile/ManageMembersScreen';
+export {default as FAQScreen} from './UserProfile/FAQScreen';
+export {default as ContactSupportScreen} from './UserProfile/ContactSupportScreen';
