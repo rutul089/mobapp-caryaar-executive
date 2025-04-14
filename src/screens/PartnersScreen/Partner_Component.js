@@ -36,12 +36,15 @@ const Partner_Component = ({
   };
 
   const renderPartner = ({item}) => (
-    <PartnerCard
-      name={item.name}
-      location={item.location}
-      phone={item.phone}
-      onPress={() => onItemPress && onItemPress(item)}
-    />
+    <>
+      <PartnerCard
+        name={item.name}
+        location={item.location}
+        phone={item.phone}
+        onPress={() => onItemPress && onItemPress(item)}
+      />
+      <Spacing size="md" />
+    </>
   );
 
   const renderTabButton = tab => {
@@ -103,6 +106,7 @@ const Partner_Component = ({
             buttonLabel={'Request Docs'}
             callToAction={callToAction}
           />
+          <Spacing size="md" />
 
           <PartnerCard
             name={'Carville Motors'}

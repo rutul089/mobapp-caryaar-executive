@@ -58,6 +58,18 @@ export const statusColor = {
   success: '#5FC52E',
 };
 
+export const GradientColors = {
+  authGradient: ['rgba(29, 149, 240, 0)', 'rgba(61, 173, 255, 0.48)'],
+  saveGradient: ['rgba(29, 149, 240, 0.12)', 'rgba(61, 173, 255, 0.2)'],
+  inProgressGradient: ['rgba(243, 105, 110, 0.12)', 'rgba(248, 169, 2, 0.2)'],
+  completedGradient: ['rgba(95, 197, 46, 0.12)', 'rgba(110, 238, 135, 0.2)'],
+  defaultGradient: ['#E8E8E8', '#E8E8E8'],
+  draftGradient: ['#E8E8E8', '#E8E8E8'],
+  appliedGradient: ['#F8A902', '#F3696E'],
+  lenderApprovedGradient: ['#6EEE87', '#5FC52E'],
+  onHoldGradient: ['#FF5B5E', '#B60003'],
+};
+
 // Combined Colors
 const colors = {
   ...PrimaryColors,
@@ -67,6 +79,7 @@ const colors = {
   ...BackgroundColors,
   ...TextColors,
   ...statusColor,
+  ...GradientColors,
   inputBorder: 'rgba(0, 0, 0, 0.12)',
   yellow: '#FFE100',
   gray: '#6c6c6c',

@@ -30,6 +30,8 @@ const InfoRow = ({
   iconStyle,
   textStyle,
   textColor,
+  suffixText,
+  suffixTextColor,
 }) => {
   return (
     <View style={[styles.infoRow, containerStyle]}>
@@ -42,6 +44,14 @@ const InfoRow = ({
         style={[styles.text, textStyle]}>
         {text}
       </Text>
+      {suffixText && (
+        <Text
+          size="small"
+          hankenGroteskSemiBold={true}
+          color={suffixTextColor ?? theme.colors.primaryBlack}>
+          {suffixText}
+        </Text>
+      )}
     </View>
   );
 };

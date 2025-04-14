@@ -8,3 +8,4 @@ export {default as PartnersScreen} from './PartnersScreen';
 export {default as ApplicationsScreen} from './ApplicationsScreen';
 export {default as NotificationScreen} from './NotificationScreen';
 export {default as PartnerDetailScreen} from './PartnerDetailScreen';
+export {default as ApplicationDetailScreen} from './ApplicationDetailScreen';

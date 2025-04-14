@@ -75,4 +75,5 @@ export default {
   down_trend: require('./down_trend.png'),
   up_trend: require('./up_trend.png'),
   icAdd: require('./icAdd.png'),
+  time: require('./time.png'),
 };

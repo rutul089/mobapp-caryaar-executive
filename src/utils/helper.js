@@ -1,4 +1,5 @@
 import theme from '../theme';
+import colors from '../theme/colors';
 
 export const formatIndianNumber = (value, showSign = true) => {
   const [intPart, decimalPart] = value?.toString().split('.');
@@ -27,14 +28,14 @@ export const formatAmount = text => {
 
 export const getGradientColors = status => {
   switch (status) {
-    case 'SAVED':
-      return ['rgba(29, 149, 240, 0.12)', 'rgba(61, 173, 255, 0.2)'];
-    case 'IN_PROGRESS':
-      return ['rgba(243, 105, 110, 0.12)', 'rgba(248, 169, 2, 0.2)'];
-    case 'COMPLETED':
-      return ['rgba(95, 197, 46, 0.12)', 'rgba(110, 238, 135, 0.2)'];
+    case 1: ///Pending
+      return colors.appliedGradient;
+    case 2: //Approved
+      return colors.lenderApprovedGradient;
+    case 3: //Rejected
+      return colors.onHoldGradient;
     default:
-      return ['#E8E8E8', '#f0f0f0']; // fallback
+      return colors.defaultGradient;
   }
 };
 

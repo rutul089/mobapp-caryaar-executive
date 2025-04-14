@@ -12,6 +12,7 @@ const ScreenNames = {
   Profile: 'ProfileScreen',
   Notification: 'NotificationScreen',
   PartnerDetail: 'PartnerDetailScreen',
+  ApplicationDetail: 'ApplicationDetailScreen',
 };
 
 export default ScreenNames;

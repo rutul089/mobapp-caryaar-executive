@@ -52,6 +52,10 @@ const StackRoutes = () => {
         name={ScreenNames.PartnerDetail}
         component={Screens.PartnerDetailScreen}
       />
+      <Stack.Screen
+        name={ScreenNames.ApplicationDetail}
+        component={Screens.ApplicationDetailScreen}
+      />
     </Stack.Navigator>
   );
 };

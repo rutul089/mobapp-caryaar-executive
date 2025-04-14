@@ -11,6 +11,7 @@ const TextAreaInput = ({
   optionalText = 'optional',
   numberOfLines = 4,
   style,
+  textAreaStyle,
   ...rest
 }) => {
   return (
@@ -26,7 +27,7 @@ const TextAreaInput = ({
         </Text>
       )}
       <TextInput
-        style={styles.textArea}
+        style={[styles.textArea, textAreaStyle]}
         placeholder={placeholder}
         multiline
         numberOfLines={numberOfLines}
