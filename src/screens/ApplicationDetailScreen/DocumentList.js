@@ -2,8 +2,7 @@ import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 
 import images from '../../assets/images';
-import {Spacing, Text, Pressable} from '../../components';
-import theme from '../../theme';
+import {Spacing, Text, Pressable, theme} from '@caryaar/components';
 
 const DocumentList = () => {
   return (

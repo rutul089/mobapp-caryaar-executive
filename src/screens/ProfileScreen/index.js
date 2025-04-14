@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
-import {View, Text, Alert} from 'react-native';
-import Profile_Component from './Profile_Component';
 import ScreenNames from '../../constants/ScreenNames';
 import {
   navigate,
   navigateAndSimpleReset,
 } from '../../navigation/NavigationUtils';
+import Profile_Component from './Profile_Component';
 
 export default class ProfileScreen extends Component {
   constructor(props) {

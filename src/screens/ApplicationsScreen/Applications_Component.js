@@ -1,14 +1,13 @@
-import React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
 import {
   CardWrapper,
   ImageHeader,
   PartnerCard,
   SafeAreaWrapper,
   Spacing,
-} from '../../components';
-import {theme} from '@caryaar/components';
-import colors from '../../theme/colors';
+  theme,
+} from '@caryaar/components';
+import React from 'react';
+import {FlatList, StyleSheet} from 'react-native';
 import {getGradientColors} from '../../utils/helper';
 
 const Applications_Component = ({

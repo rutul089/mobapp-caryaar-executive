@@ -1,15 +1,16 @@
-import React from 'react';
-import {View, StyleSheet, Image, ScrollView, Alert} from 'react-native';
 import {
   Card,
   ImageHeader,
+  images,
   Pressable,
   SafeAreaWrapper,
   Spacing,
   Text,
-} from '../../components';
-import theme from '../../theme';
-import images from '../../assets/images';
+  theme,
+} from '@caryaar/components';
+import React from 'react';
+import {Image, ScrollView, StyleSheet, View} from 'react-native';
+
 import ScreenNames from '../../constants/ScreenNames';
 
 const Profile_Component = ({

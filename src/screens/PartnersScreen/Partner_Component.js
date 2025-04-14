@@ -1,22 +1,16 @@
-import React from 'react';
 import {
-  View,
-  StyleSheet,
-  Pressable,
-  FlatList,
-  Image,
-  ScrollView,
-} from 'react-native';
-import {
-  SafeAreaWrapper,
-  ImageHeader,
   Card,
-  theme,
+  ImageHeader,
   PartnerCard,
+  SafeAreaWrapper,
   Spacing,
+  Text,
+  images,
+  theme,
 } from '@caryaar/components';
-import {Text} from '../../components';
-import images from '../../assets/images';
+import React from 'react';
+import {FlatList, Pressable, ScrollView, StyleSheet, View} from 'react-native';
+// import images from '../../assets/images';
 
 const Partner_Component = ({
   onRightIconPress,

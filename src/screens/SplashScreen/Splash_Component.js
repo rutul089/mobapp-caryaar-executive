@@ -2,20 +2,19 @@ import React from 'react';
 import {Image, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import images from '../../assets/images';
-import {Text} from '../../components';
-import SafeAreaWrapper from '../../components/SafeAreaWrapper';
+import {Text, SafeAreaWrapper, theme} from '@caryaar/components';
+
 import {styles} from '../../styles/splash';
-import colors from '../../theme/colors';
 
 const Splash_Component = ({params, onPress}) => {
   return (
     <SafeAreaWrapper
-      statusBarColor={colors.primary}
-      backgroundColor={colors.primaryLight}
+      statusBarColor={theme.colors.primary}
+      backgroundColor={theme.colors.primaryLight}
       barStyle="light-content">
       <LinearGradient
         style={styles.wrapper}
-        colors={[colors.primary, colors.primaryLight]}>
+        colors={[theme.colors.primary, theme.colors.primaryLight]}>
         <View style={styles.innerWrapper}>
           <View style={styles.textWrapper}>
             <Text hankenGroteskExtraBold={true} size={48} color={'white'}>

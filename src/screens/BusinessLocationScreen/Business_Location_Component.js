@@ -10,11 +10,11 @@ import {
   Spacing,
   StepTracker,
   Text,
-} from '../../components';
+  theme,
+} from '@caryaar/components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import theme from '../../theme';
+
 import images from '../../assets/images';
-import {the} from '../../../node_modules/@babel/core/node_modules/semver/semver';
 
 const Business_Location_Component = ({params, handleNextPress}) => {
   return (

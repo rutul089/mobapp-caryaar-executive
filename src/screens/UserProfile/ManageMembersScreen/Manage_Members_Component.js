@@ -1,5 +1,3 @@
-import React from 'react';
-import {FlatList, View, StyleSheet, Image} from 'react-native';
 import {
   Button,
   Card,
@@ -10,10 +8,12 @@ import {
   SafeAreaWrapper,
   Spacing,
   Text,
-} from '../../../components';
+  images,
+  theme,
+} from '@caryaar/components';
+import React from 'react';
+import {FlatList, Image, StyleSheet, View} from 'react-native';
 import {goBack} from '../../../navigation/NavigationUtils';
-import theme from '../../../theme';
-import images from '../../../assets/images';
 
 const Manage_Members_Component = ({
   handleAddNewMemberPress,

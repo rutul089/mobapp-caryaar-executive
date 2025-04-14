@@ -9,9 +9,10 @@ import {
   SafeAreaWrapper,
   Spacing,
   StepTracker,
-} from '../../components';
+  theme,
+} from '@caryaar/components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import theme from '../../theme';
+
 import images from '../../assets/images';
 
 const Partner_BankDetails_Component = ({
