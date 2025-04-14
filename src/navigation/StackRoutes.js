@@ -77,6 +77,18 @@ const StackRoutes = () => {
         name={ScreenNames.PartnerBasicDetails}
         component={Screens.PartnerBasicDetailsScreen}
       />
+      <Stack.Screen
+        name={ScreenNames.BusinessLocation}
+        component={Screens.BusinessLocationScreen}
+      />
+      <Stack.Screen
+        name={ScreenNames.DocumentScreen}
+        component={Screens.PartnerDocumentsScreen}
+      />
+      <Stack.Screen
+        name={ScreenNames.PartnerBankDetails}
+        component={Screens.PartnerBankDetailsScreen}
+      />
     </Stack.Navigator>
   );
 };

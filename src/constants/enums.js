@@ -28,3 +28,8 @@ export const loanType = Object.freeze({
   lease: 7,
   subscribe: 8,
 });
+
+export const transferModes = Object.freeze({
+  neft: 1,
+  imps: 2,
+});
