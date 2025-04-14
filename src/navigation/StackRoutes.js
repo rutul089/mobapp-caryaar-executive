@@ -73,6 +73,10 @@ const StackRoutes = () => {
         name={ScreenNames.EditProfile}
         component={Screens.EditProfileScreen}
       />
+      <Stack.Screen
+        name={ScreenNames.PartnerBasicDetails}
+        component={Screens.PartnerBasicDetailsScreen}
+      />
     </Stack.Navigator>
   );
 };

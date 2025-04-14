@@ -77,6 +77,10 @@ export default class PartnersScreen extends Component {
     navigate(ScreenNames.PartnerDetail, {params: item});
   };
 
+  callToAction = () => {
+    navigate(ScreenNames.PartnerBasicDetails);
+  };
+
   render() {
     const {TAB_OPTIONS, partnersData} = this.state;
 
@@ -88,6 +92,7 @@ export default class PartnersScreen extends Component {
           onRightIconPress={this.onRightIconPress}
           partnersData={partnersData}
           onItemPress={this.onItemPress}
+          callToAction={this.callToAction}
         />
       </>
     );

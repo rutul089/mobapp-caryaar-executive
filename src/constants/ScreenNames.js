@@ -19,6 +19,7 @@ const ScreenNames = {
   FAQS: 'FAQScreen',
   ContactSupport: 'ContactSupportScreen',
   Logout: 'logout',
+  PartnerBasicDetails: 'PartnerBasicDetailsScreen',
 };
 
 export default ScreenNames;

@@ -33,3 +33,4 @@ export {default as NetworkStatus} from './NetworkStatus';
 export {default as NetworkStatusBanner} from './NetworkStatusBanner';
 export {default as InfoRow} from './InfoRow';
 export {default as PartnerCard} from './PartnerCard';
+export {default as StepTracker} from './StepTracker';

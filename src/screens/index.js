@@ -9,6 +9,7 @@ export {default as ApplicationsScreen} from './ApplicationsScreen';
 export {default as NotificationScreen} from './NotificationScreen';
 export {default as PartnerDetailScreen} from './PartnerDetailScreen';
 export {default as ApplicationDetailScreen} from './ApplicationDetailScreen';
+export {default as PartnerBasicDetailsScreen} from './PartnerBasicDetailsScreen';
 
 //UserProfile
 export {default as ChangePasswordScreen} from './UserProfile/ChangePasswordScreen';
