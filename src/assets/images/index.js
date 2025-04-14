@@ -76,4 +76,5 @@ export default {
   up_trend: require('./up_trend.png'),
   icAdd: require('./icAdd.png'),
   time: require('./time.png'),
+  partner_success: require('./partner_success.png'),
 };

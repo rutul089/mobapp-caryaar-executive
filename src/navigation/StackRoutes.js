@@ -32,7 +32,7 @@ const screenOptions = {
 const StackRoutes = () => {
   return (
     <Stack.Navigator
-      initialRouteName={ScreenNames.HomeTab}
+      initialRouteName={ScreenNames.Splash}
       screenOptions={screenOptions}>
       <Stack.Screen
         name={ScreenNames.Splash}
@@ -88,6 +88,10 @@ const StackRoutes = () => {
       <Stack.Screen
         name={ScreenNames.PartnerBankDetails}
         component={Screens.PartnerBankDetailsScreen}
+      />
+      <Stack.Screen
+        name={ScreenNames.PartnerRegistrationSuccess}
+        component={Screens.PartnerRegistrationSuccessScreen}
       />
     </Stack.Navigator>
   );

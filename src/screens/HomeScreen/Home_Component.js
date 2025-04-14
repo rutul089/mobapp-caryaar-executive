@@ -11,13 +11,14 @@ import {
   images,
 } from '@caryaar/components';
 import {styles} from '../../styles/Home.style';
+import {InfoRow, Pressable} from '../../components';
 
 const data = Array.from({length: 12}, (_, index) => ({
   id: index + 1,
   label: `Item ${index + 1}`,
 }));
 
-const Home_Component = ({onRightIconPress}) => {
+const Home_Component = ({onRightIconPress, onAddPartner}) => {
   const renderBox = (count, countColor, label) => {
     return (
       <View style={styles.statBox}>
@@ -124,13 +125,16 @@ const Home_Component = ({onRightIconPress}) => {
               <Text type={'h4'} hankenGroteskSemiBold={true} lineHeight={24}>
                 Partner Performance
               </Text>
-              <Text
-                lineHeight={20}
-                size={'small'}
-                hankenGroteskSemiBold={true}
-                color={theme.colors.primary}>
-                Add New
-              </Text>
+              <Pressable onPress={onAddPartner}>
+                <InfoRow
+                  iconSource={images.plus_icon}
+                  text="ADD NEW"
+                  textColor={theme.colors.primary}
+                  textStyle={{
+                    ...theme.typography.fontStyles.hankenGroteskBold,
+                  }}
+                />
+              </Pressable>
             </View>
           }
           keyExtractor={item => item.id.toString()}

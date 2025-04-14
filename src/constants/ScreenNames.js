@@ -23,6 +23,7 @@ const ScreenNames = {
   BusinessLocation: 'BusinessLocationScreen',
   DocumentScreen: 'PartnerDocumentsScreen',
   PartnerBankDetails: 'PartnerBankDetailsScreen',
+  PartnerRegistrationSuccess: 'PartnerRegistrationSuccessScreen',
 };
 
 export default ScreenNames;

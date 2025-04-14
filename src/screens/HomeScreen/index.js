@@ -14,10 +14,17 @@ export default class HomeScreen extends Component {
     navigate(ScreenNames.Notification);
   };
 
+  onAddPartner = () => {
+    navigate(ScreenNames.PartnerRegistrationSuccess);
+  };
+
   render() {
     return (
       <>
-        <Home_Component onRightIconPress={this.onRightIconPress} />
+        <Home_Component
+          onRightIconPress={this.onRightIconPress}
+          onAddPartner={this.onAddPartner}
+        />
       </>
     );
   }
