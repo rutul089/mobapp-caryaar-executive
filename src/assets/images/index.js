@@ -70,4 +70,9 @@ export default {
   edit_profile: require('./edit_profile.png'),
   ic_delete: require('./ic_delete.png'),
   noInternet: require('./noInternet.png'),
+  error_document: require('./error_document.png'),
+  plus_icon: require('./plus_icon.png'),
+  down_trend: require('./down_trend.png'),
+  up_trend: require('./up_trend.png'),
+  icAdd: require('./icAdd.png'),
 };

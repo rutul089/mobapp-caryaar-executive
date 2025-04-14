@@ -8,9 +8,9 @@ import {
   Spacing,
   Text,
   theme,
+  images,
 } from '@caryaar/components';
 import {styles} from '../../styles/Home.style';
-import images from '../../assets/images';
 
 const data = Array.from({length: 12}, (_, index) => ({
   id: index + 1,
@@ -54,17 +54,27 @@ const Home_Component = ({onRightIconPress}) => {
         cardContainerStyle={{
           alignItems: 'center',
           marginBottom: 12,
+          gap: 13,
         }}>
         <Image
           source={images.placeholder_image}
           style={{height: 42, width: 42, borderRadius: 20}}
         />
-        <View style={{paddingHorizontal: 10, flex: 1}}>
+        <View style={{flex: 1}}>
           <Text hankenGroteskMedium={true}>Super Cars + {item.label} </Text>
           <Spacing size={3} />
           <Text type={'helper-text'}>12 application this month</Text>
         </View>
-        <Text hankenGroteskMedium={true}>85%</Text>
+        <View style={{flexDirection: 'row', gap: 8, alignItems: 'center'}}>
+          <Image source={images.down_trend} style={{height: 20, width: 20}} />
+          <Text
+            lineHeight={'small'}
+            size={'small'}
+            hankenGroteskMedium={true}
+            color={'#B60003'}>
+            85%
+          </Text>
+        </View>
       </Card>
     );
   };

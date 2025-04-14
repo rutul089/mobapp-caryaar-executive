@@ -48,6 +48,10 @@ const StackRoutes = () => {
         name={ScreenNames.Notification}
         component={Screens.NotificationScreen}
       />
+      <Stack.Screen
+        name={ScreenNames.PartnerDetail}
+        component={Screens.PartnerDetailScreen}
+      />
     </Stack.Navigator>
   );
 };

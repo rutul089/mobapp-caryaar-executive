@@ -31,3 +31,5 @@ export {default as DetailInfoCard} from './DetailInfoCard';
 export {default as CurrencySlider} from './CurrencySlider';
 export {default as NetworkStatus} from './NetworkStatus';
 export {default as NetworkStatusBanner} from './NetworkStatusBanner';
+export {default as InfoRow} from './InfoRow';
+export {default as PartnerCard} from './PartnerCard';
