@@ -25,6 +25,7 @@ const ScreenNames = {
   PartnerBankDetails: 'PartnerBankDetailsScreen',
   PartnerRegistrationSuccess: 'PartnerRegistrationSuccessScreen',
   DealershipTypeSelection: 'DealershipTypeSelectionScreen',
+  UserAndCarTypeSelection: 'UserAndCarTypeSelectionScreen',
 };
 
 export default ScreenNames;

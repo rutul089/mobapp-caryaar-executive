@@ -15,6 +15,7 @@ export {default as PartnerDocumentsScreen} from './PartnerDocumentsScreen';
 export {default as PartnerBankDetailsScreen} from './PartnerBankDetailsScreen';
 export {default as PartnerRegistrationSuccessScreen} from './AddPartnerFlow/PartnerRegistrationSuccessScreen';
 export {default as DealershipTypeSelectionScreen} from './AddPartnerFlow/DealershipTypeSelectionScreen';
+export {default as UserAndCarTypeSelection} from './AddPartnerFlow/SelectUserAndCarPreferencesScreen';
 
 //UserProfile
 export {default as ChangePasswordScreen} from './UserProfile/ChangePasswordScreen';

@@ -40,3 +40,8 @@ export const DealershipType = Object.freeze({
   DSA: 'DSA',
   BROKER: 'Broker',
 });
+
+export const userType = Object.freeze({
+  singleUser: 1,
+  multiUser: 2,
+});

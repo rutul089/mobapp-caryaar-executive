@@ -97,6 +97,10 @@ const StackRoutes = () => {
         name={ScreenNames.DealershipTypeSelection}
         component={Screens.DealershipTypeSelectionScreen}
       />
+      <Stack.Screen
+        name={ScreenNames.UserAndCarTypeSelection}
+        component={Screens.UserAndCarTypeSelection}
+      />
     </Stack.Navigator>
   );
 };

@@ -77,4 +77,5 @@ export default {
   icAdd: require('./icAdd.png'),
   time: require('./time.png'),
   partner_success: require('./partner_success.png'),
+  userGroup: require('./userGroup.png'),
 };
