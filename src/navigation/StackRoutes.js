@@ -32,7 +32,7 @@ const screenOptions = {
 const StackRoutes = () => {
   return (
     <Stack.Navigator
-      initialRouteName={ScreenNames.Splash}
+      initialRouteName={ScreenNames.SelectPartnerRole}
       screenOptions={screenOptions}>
       <Stack.Screen
         name={ScreenNames.Splash}
@@ -100,6 +100,26 @@ const StackRoutes = () => {
       <Stack.Screen
         name={ScreenNames.UserAndCarTypeSelection}
         component={Screens.UserAndCarTypeSelection}
+      />
+      <Stack.Screen
+        name={ScreenNames.SelectPartnerRole}
+        component={Screens.SelectPartnerRoleScreen}
+      />
+      <Stack.Screen
+        name={ScreenNames.AddPartnerBasicDetail}
+        component={Screens.AddPartnerBasicDetail}
+      />
+      <Stack.Screen
+        name={ScreenNames.AddPartnerBusinessLocation}
+        component={Screens.AddPartnerBusinessLocation}
+      />
+      <Stack.Screen
+        name={ScreenNames.AddPartnerRequiredDocument}
+        component={Screens.AddPartnerRequiredDocument}
+      />
+      <Stack.Screen
+        name={ScreenNames.AddPartnersBankDetail}
+        component={Screens.AddPartnersBankDetail}
       />
     </Stack.Navigator>
   );

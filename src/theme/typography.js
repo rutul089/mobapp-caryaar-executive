@@ -75,7 +75,7 @@ const fontStyles = {
   },
   hankenGroteskSemiBold: {
     fontFamily: fonts.hankenGroteskSemiBold,
-    fontWeight: fontWeights.bold,
+    fontWeight: fontWeights.semibold,
   },
   hankenGroteskThin: {
     fontFamily: fonts.hankenGroteskThin,

@@ -8,13 +8,13 @@ import {
   SafeAreaWrapper,
   Spacing,
   DropdownModal,
-  StepTracker,
 } from '@caryaar/components';
 
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import theme from '../../theme';
 import strings from '../../locales/strings';
 import images from '../../assets/images';
+import {StepTracker} from '../../components';
 
 const dropdownOptions = [
   {label: 'Corporate', value: 'a'},
@@ -38,7 +38,9 @@ const Partner_Basic_Details_Component = ({
   return (
     <SafeAreaWrapper>
       <Header title="Partner Details" onBackPress={onBackPress} />
-      <StepTracker errorSteps={[]} />
+      {/* <StepTracker errorSteps={[]} /> */}
+      {/* <StepTracker showImages={[]} errorSteps={[]} selectedId={1} /> */}
+      <StepTracker showImages={[1, 2, 3, 4]} errorSteps={[]} />
       <KeyboardAwareScrollView contentContainerStyle={styles.wrapper}>
         <GroupWrapper title="Basic Detail">
           <Input

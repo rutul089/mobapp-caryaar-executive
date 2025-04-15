@@ -16,6 +16,11 @@ export {default as PartnerBankDetailsScreen} from './PartnerBankDetailsScreen';
 export {default as PartnerRegistrationSuccessScreen} from './AddPartnerFlow/PartnerRegistrationSuccessScreen';
 export {default as DealershipTypeSelectionScreen} from './AddPartnerFlow/DealershipTypeSelectionScreen';
 export {default as UserAndCarTypeSelection} from './AddPartnerFlow/SelectUserAndCarPreferencesScreen';
+export {default as SelectPartnerRoleScreen} from './AddPartnerFlow/SelectPartnerRoleScreen';
+export {default as AddPartnerBasicDetail} from './AddPartnerFlow/AddPartnerBasicDetail';
+export {default as AddPartnerBusinessLocation} from './AddPartnerFlow/AddPartnerBusinessLocation';
+export {default as AddPartnerRequiredDocument} from './AddPartnerFlow/AddPartnerRequiredDocument';
+export {default as AddPartnersBankDetail} from './AddPartnerFlow/AddPartnersBankDetail';
 
 //UserProfile
 export {default as ChangePasswordScreen} from './UserProfile/ChangePasswordScreen';

@@ -12,6 +12,8 @@ const VehicleImageCard = ({
   onDeletePress,
   cardWrapper,
   isView,
+  btnLabel,
+  uploadMedia,
 }) => {
   return (
     <Card
@@ -37,11 +39,19 @@ const VehicleImageCard = ({
             )}
           </>
         ) : (
-          <Image
-            source={images.upload_image}
-            resizeMode="contain"
-            style={styles.uploadImage}
-          />
+          <Pressable
+            style={[styles.dashedWrapper, styles.uploadImage]}
+            onPress={uploadMedia}>
+            <Image source={images.icUpload} style={styles.icon} />
+            <Text type="helper-text" size="caption" textAlign="center">
+              {btnLabel}
+            </Text>
+          </Pressable>
+          // <Image
+          //   source={images.upload_image}
+          //   resizeMode="contain"
+          //   style={styles.uploadImage}
+          // />
         )}
         {isView && <Image source={images.viewIcon} style={styles.viewIcon} />}
       </Pressable>
@@ -86,6 +96,31 @@ const styles = StyleSheet.create({
     height: 28,
     width: 28,
     position: 'absolute',
+  },
+  uploadBox: {
+    borderRadius: 12,
+    backgroundColor: '#F9F9F9',
+    padding: 7,
+    marginTop: theme.sizes.spacing.sm,
+  },
+  dashedWrapper: {
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: '#5DB4F2',
+    borderRadius: 12,
+    backgroundColor: '#E9F4FD',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imagePreview: {
+    width: '100%',
+    borderRadius: 8,
+    resizeMode: 'cover',
+  },
+  icon: {
+    width: 28,
+    height: 28,
+    marginBottom: 8,
   },
 });
 

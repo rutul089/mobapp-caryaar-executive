@@ -45,3 +45,9 @@ export const userType = Object.freeze({
   singleUser: 1,
   multiUser: 2,
 });
+
+export const partnerRole = Object.freeze({
+  dealerPrinciple: 1,
+  seniorManagement: 2,
+  employee: 3,
+});

@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {View, Text} from 'react-native';
 import User_Car_Type_Selection_Component from './User_Car_Type_Selection_Component';
 import {userType, vehicleType} from '../../../constants/enums';
-import {goBack} from '../../../navigation/NavigationUtils';
+import {goBack, navigate} from '../../../navigation/NavigationUtils';
+import ScreenNames from '../../../constants/ScreenNames';
 
 export default class UserAndCarTypeSelection extends Component {
   constructor(props) {
@@ -27,7 +28,9 @@ export default class UserAndCarTypeSelection extends Component {
     });
   };
 
-  handleNextPress = () => {};
+  handleNextPress = () => {
+    navigate(ScreenNames.SelectPartnerRole);
+  };
 
   onBackPress = () => {
     goBack();
