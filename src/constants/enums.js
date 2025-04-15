@@ -33,3 +33,10 @@ export const transferModes = Object.freeze({
   neft: 1,
   imps: 2,
 });
+
+export const DealershipType = Object.freeze({
+  OEM_DEALER: 'OEM Dealer',
+  MULTI_BRAND_DEALER: 'Multi-Brand Dealer',
+  DSA: 'DSA',
+  BROKER: 'Broker',
+});

@@ -14,6 +14,7 @@ export {default as BusinessLocationScreen} from './BusinessLocationScreen';
 export {default as PartnerDocumentsScreen} from './PartnerDocumentsScreen';
 export {default as PartnerBankDetailsScreen} from './PartnerBankDetailsScreen';
 export {default as PartnerRegistrationSuccessScreen} from './AddPartnerFlow/PartnerRegistrationSuccessScreen';
+export {default as DealershipTypeSelectionScreen} from './AddPartnerFlow/DealershipTypeSelectionScreen';
 
 //UserProfile
 export {default as ChangePasswordScreen} from './UserProfile/ChangePasswordScreen';

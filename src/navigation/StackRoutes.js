@@ -93,6 +93,10 @@ const StackRoutes = () => {
         name={ScreenNames.PartnerRegistrationSuccess}
         component={Screens.PartnerRegistrationSuccessScreen}
       />
+      <Stack.Screen
+        name={ScreenNames.DealershipTypeSelection}
+        component={Screens.DealershipTypeSelectionScreen}
+      />
     </Stack.Navigator>
   );
 };

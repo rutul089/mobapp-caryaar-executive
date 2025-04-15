@@ -15,7 +15,7 @@ export default class HomeScreen extends Component {
   };
 
   onAddPartner = () => {
-    navigate(ScreenNames.PartnerRegistrationSuccess);
+    navigate(ScreenNames.DealershipTypeSelection);
   };
 
   render() {
