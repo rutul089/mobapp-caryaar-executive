@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
-import Partner_Basic_Details_Component from './Partner_Basic_Details_Component';
-import {goBack, navigate} from '../../navigation/NavigationUtils';
 import ScreenNames from '../../constants/ScreenNames';
+import {goBack, navigate} from '../../navigation/NavigationUtils';
+import Partner_Basic_Details_Component from './Partner_Basic_Details_Component';
 
 export default class PartnerBasicDetailsScreen extends Component {
   constructor(props) {

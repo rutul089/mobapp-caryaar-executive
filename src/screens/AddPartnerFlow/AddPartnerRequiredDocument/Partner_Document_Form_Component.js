@@ -8,8 +8,8 @@ import {
   VehicleImageCard,
   Text,
   Button,
-} from '../../../components';
-import theme from '../../../theme';
+  theme,
+} from '@caryaar/components';
 
 const Partner_Document_Form_Component = ({
   onBackPress,

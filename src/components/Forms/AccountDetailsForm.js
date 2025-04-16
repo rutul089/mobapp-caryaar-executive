@@ -26,9 +26,10 @@ const AccountDetailsForm = ({
   onTransferModeSelect,
   onButtonPress,
   buttonName,
+  contentContainerStyle,
 }) => {
   return (
-    <KeyboardAwareScrollView contentContainerStyle={styles.wrapper}>
+    <KeyboardAwareScrollView contentContainerStyle={contentContainerStyle}>
       <GroupWrapper title="Account Details">
         <Input
           label="Account Number"

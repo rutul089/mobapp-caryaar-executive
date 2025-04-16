@@ -1,11 +1,8 @@
+import {Header, SafeAreaWrapper, StepTracker} from '@caryaar/components';
 import React from 'react';
-import {Text, View} from 'react-native';
-import {
-  Header,
-  SafeAreaWrapper,
-  StepTracker,
-  AccountDetailsForm,
-} from '../../../components';
+import {StyleSheet} from 'react-native';
+import {AccountDetailsForm} from '../../../components';
+import theme from '../../../theme';
 
 const Partner_Bank_Detail_Component = ({
   transferModes,
@@ -23,9 +20,18 @@ const Partner_Bank_Detail_Component = ({
         onTransferModeSelect={onTransferModeSelect}
         buttonName={'Submit'}
         onButtonPress={handleSubmitPress}
+        contentContainerStyle={styles.wrapper}
       />
     </SafeAreaWrapper>
   );
 };
+
+const styles = StyleSheet.create({
+  wrapper: {
+    padding: theme.sizes.padding,
+    backgroundColor: theme.colors.background,
+    flexGrow: 1,
+  },
+});
 
 export default Partner_Bank_Detail_Component;

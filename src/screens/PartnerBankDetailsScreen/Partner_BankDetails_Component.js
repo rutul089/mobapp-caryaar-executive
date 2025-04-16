@@ -14,6 +14,7 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 import images from '../../assets/images';
+import {AccountDetailsForm} from '../../components';
 
 const Partner_BankDetails_Component = ({
   onBackPress,
@@ -25,47 +26,12 @@ const Partner_BankDetails_Component = ({
   return (
     <SafeAreaWrapper>
       <Header title="Partner Details" onBackPress={onBackPress} />
-      <StepTracker />
-      <KeyboardAwareScrollView contentContainerStyle={styles.wrapper}>
-        <GroupWrapper title="Account Details">
-          <Input
-            label="Account Number"
-            isLeftIconVisible
-            leftIconName={images.bank}
-            keyboardType="number-pad"
-          />
-          <Spacing size="md" />
-          <Input
-            label="Account Holder Name"
-            isLeftIconVisible
-            leftIconName={images.bank}
-          />
-          <Spacing size="md" />
-          <Input
-            label="Bank Name"
-            isLeftIconVisible
-            leftIconName={images.bank}
-            isAsDropdown
-            isRightIconVisible
-          />
-          <Spacing size="md" />
-          <Input
-            label="IFSC Code"
-            isLeftIconVisible
-            leftIconName={images.bank}
-            rightLabel="Branch Name"
-          />
-          <Spacing size="md" />
-          <RadioGroupRow
-            label={'Settlement Preference'}
-            options={transferModes}
-            selectedValue={selectedTransferMode}
-            onChange={onTransferModeSelect}
-          />
-        </GroupWrapper>
-        <Spacing size="xl" />
-        <Button label={'Close'} onPress={onClosePress} />
-      </KeyboardAwareScrollView>
+      <StepTracker showImages={[1, 2, 3, 4]} errorSteps={[]} />
+      <AccountDetailsForm
+        buttonName={'Close'}
+        onButtonPress={onClosePress}
+        contentContainerStyle={styles.wrapper}
+      />
     </SafeAreaWrapper>
   );
 };

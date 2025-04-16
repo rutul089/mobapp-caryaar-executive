@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
-import Partner_Component from './Partner_Component';
-import {navigate} from '../../navigation/NavigationUtils';
 import ScreenNames from '../../constants/ScreenNames';
+import {navigate} from '../../navigation/NavigationUtils';
+import Partner_Component from './Partner_Component';
 
 export default class PartnersScreen extends Component {
   constructor(props) {
@@ -81,6 +80,10 @@ export default class PartnersScreen extends Component {
     navigate(ScreenNames.PartnerBasicDetails);
   };
 
+  onAddButtonPress = () => {
+    navigate(ScreenNames.DealershipTypeSelection);
+  };
+
   render() {
     const {TAB_OPTIONS, partnersData} = this.state;
 
@@ -93,6 +96,7 @@ export default class PartnersScreen extends Component {
           partnersData={partnersData}
           onItemPress={this.onItemPress}
           callToAction={this.callToAction}
+          onAddButtonPress={this.onAddButtonPress}
         />
       </>
     );

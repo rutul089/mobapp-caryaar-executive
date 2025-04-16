@@ -32,7 +32,7 @@ const screenOptions = {
 const StackRoutes = () => {
   return (
     <Stack.Navigator
-      initialRouteName={ScreenNames.SelectPartnerRole}
+      initialRouteName={ScreenNames.Splash}
       screenOptions={screenOptions}>
       <Stack.Screen
         name={ScreenNames.Splash}

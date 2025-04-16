@@ -26,14 +26,13 @@ const Partner_Basic_Form_Component = ({
     <SafeAreaWrapper>
       <Header title="Add New Partner" />
       <StepTracker selectedId={1} />
-      <KeyboardAwareScrollView contentContainerStyle={styles.wrapper}>
-        <BasicDetailsForm
-          onSelectBusinessType={onSelectBusinessType}
-          businessType={businessType}
-          dropdownOptions={dropdownOptions}
-          handleNextPress={handleNextPress}
-        />
-      </KeyboardAwareScrollView>
+      <BasicDetailsForm
+        onSelectBusinessType={onSelectBusinessType}
+        businessType={businessType}
+        dropdownOptions={dropdownOptions}
+        handleNextPress={handleNextPress}
+        contentContainerStyle={styles.wrapper}
+      />
     </SafeAreaWrapper>
   );
 };
