@@ -1,7 +1,6 @@
 import {
   Card,
   ImageHeader,
-  images,
   Pressable,
   SafeAreaWrapper,
   Spacing,
@@ -12,6 +11,7 @@ import React from 'react';
 import {Image, ScrollView, StyleSheet, View} from 'react-native';
 
 import ScreenNames from '../../constants/ScreenNames';
+import images from '../../assets/images';
 
 const Profile_Component = ({
   params,
@@ -52,7 +52,7 @@ const Profile_Component = ({
           },
           {icon: images.user, label: 'Dealer Type'},
           {icon: images.email, label: 'ghanshyam_sinha859@gmail.com'},
-          {icon: images.callOutline, label: '91448 82901'},
+          {icon: images.phoneOutline, label: '91448 82901'},
         ].map((item, index) => (
           <View key={index} style={styles.detailRow}>
             <Image source={item.icon} style={styles.detailIcon} />
@@ -100,6 +100,11 @@ const Profile_Component = ({
               label: 'Change Password',
               icon: images.icon_access,
               screenName: ScreenNames.ChangePassword,
+            },
+            {
+              label: 'Notification Preferences',
+              icon: images.notification,
+              screenName: ScreenNames.NotificationPreference,
             },
             {
               label: 'FAQs',

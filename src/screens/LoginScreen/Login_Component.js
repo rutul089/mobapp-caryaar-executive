@@ -14,6 +14,7 @@ import {
 } from '@caryaar/components';
 import strings from '../../locales/strings';
 import {styles} from '../../styles/Login.style';
+import {CustomSwitch} from '../../components';
 
 const Login_Component = ({
   params,
@@ -22,6 +23,8 @@ const Login_Component = ({
   generateOTP,
   isError,
 }) => {
+  const [isEnabled, setIsEnabled] = React.useState(false);
+
   return (
     <SafeAreaWrapper
       barStyle="dark-content"

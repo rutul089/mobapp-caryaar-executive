@@ -28,3 +28,4 @@ export {default as EditProfileScreen} from './UserProfile/EditProfileScreen';
 export {default as ManageMembersScreen} from './UserProfile/ManageMembersScreen';
 export {default as FAQScreen} from './UserProfile/FAQScreen';
 export {default as ContactSupportScreen} from './UserProfile/ContactSupportScreen';
+export {default as NotificationPreferenceScreen} from './UserProfile/NotificationPreferenceScreen';

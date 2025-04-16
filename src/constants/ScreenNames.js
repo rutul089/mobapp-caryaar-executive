@@ -31,6 +31,7 @@ const ScreenNames = {
   AddPartnerBusinessLocation: 'AddPartnerBusinessLocationScreen',
   AddPartnerRequiredDocument: 'AddPartnerRequiredDocumentScreen',
   AddPartnersBankDetail: 'AddPartnersBankDetailScreen',
+  NotificationPreference: 'NotificationPreferenceScreen',
 };
 
 export default ScreenNames;

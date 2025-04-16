@@ -78,4 +78,6 @@ export default {
   time: require('./time.png'),
   partner_success: require('./partner_success.png'),
   userGroup: require('./userGroup.png'),
+  notification: require('./notification.png'),
+  phoneOutline: require('./phoneOutline.png'),
 };

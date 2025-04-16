@@ -121,6 +121,10 @@ const StackRoutes = () => {
         name={ScreenNames.AddPartnersBankDetail}
         component={Screens.AddPartnersBankDetail}
       />
+      <Stack.Screen
+        name={ScreenNames.NotificationPreference}
+        component={Screens.NotificationPreferenceScreen}
+      />
     </Stack.Navigator>
   );
 };

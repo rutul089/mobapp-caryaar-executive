@@ -37,3 +37,4 @@ export {default as StepTracker} from './StepTracker';
 export {default as BasicDetailsForm} from './Forms/BasicDetailsForm';
 export {default as LocationDetailsForm} from './Forms/LocationDetailsForm';
 export {default as AccountDetailsForm} from './Forms/AccountDetailsForm';
+export {default as CustomSwitch} from './CustomSwitch';
