@@ -1,10 +1,10 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, Image, StyleSheet, View} from 'react-native';
 
 import images from '../../assets/images';
 import {Spacing, Text, Pressable, theme} from '@caryaar/components';
 
-const DocumentList = () => {
+const DocumentList = ({viewPanCard, isLoading}) => {
   return (
     <>
       {/* KYC Documents */}
@@ -12,7 +12,12 @@ const DocumentList = () => {
         KYC Documents
       </Text>
       <Spacing size="sm" />
-      <DocumentRow label="PAN Card" actionLabel="View" />
+      <DocumentRow
+        label="PAN Card"
+        actionLabel="View"
+        onPress={viewPanCard}
+        isLoading={isLoading}
+      />
       <Spacing size="smd" />
 
       <DocumentRow label="Aadhar Card Front" actionLabel="View" />
@@ -42,7 +47,14 @@ const DocumentList = () => {
   );
 };
 
-const DocumentRow = ({label, actionLabel, isLink, showError, onPress}) => (
+const DocumentRow = ({
+  label,
+  actionLabel,
+  isLink,
+  showError,
+  onPress,
+  isLoading,
+}) => (
   <View style={styles.row}>
     <View style={styles.left}>
       <Text
@@ -55,14 +67,22 @@ const DocumentRow = ({label, actionLabel, isLink, showError, onPress}) => (
         <Image source={images.infoStatus} style={styles.errorIcon} />
       )}
     </View>
-    <Pressable onPress={onPress}>
-      <Text
-        color={theme.colors.primary}
-        type={'helper-text'}
-        hankenGroteskSemiBold={true}>
-        {actionLabel}
-      </Text>
-    </Pressable>
+    <View style={{flexDirection: 'row'}}>
+      <Pressable onPress={onPress} disabled={isLoading}>
+        <Text
+          color={isLoading ? theme.colors.placeHolder : theme.colors.primary}
+          type={'helper-text'}
+          hankenGroteskSemiBold={true}>
+          {actionLabel}
+        </Text>
+      </Pressable>
+      {isLoading && (
+        <>
+          <Spacing direction={'y'} />
+          <ActivityIndicator />
+        </>
+      )}
+    </View>
   </View>
 );
 

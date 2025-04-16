@@ -1,13 +1,13 @@
-import React from 'react';
-import {Text, View, StyleSheet, ScrollView} from 'react-native';
 import {
-  SafeAreaWrapper,
   BasicDetailsForm,
   Header,
+  SafeAreaWrapper,
   StepTracker,
-} from '../../../components';
-import theme from '../../../theme';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+  theme,
+} from '@caryaar/components';
+import React from 'react';
+import {StyleSheet} from 'react-native';
+
 import {goBack} from '../../../navigation/NavigationUtils';
 
 const Partner_Basic_Form_Component = ({

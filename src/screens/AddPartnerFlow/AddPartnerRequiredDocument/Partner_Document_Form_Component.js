@@ -11,6 +11,7 @@ import {
   theme,
 } from '@caryaar/components';
 import {getFileType} from '../../../utils/helper';
+import {goBack} from '../../../navigation/NavigationUtils';
 
 const Partner_Document_Form_Component = ({
   onBackPress,
@@ -46,7 +47,7 @@ const Partner_Document_Form_Component = ({
 
   return (
     <SafeAreaWrapper>
-      <Header title="Add New Partner" onBackPress={onBackPress} />
+      <Header title="Add New Partner" onBackPress={() => goBack()} />
       <StepTracker showImages={[1, 2]} selectedId={3} />
       <ScrollView contentContainerStyle={styles.wrapper}>
         {documentGroups.map(group =>

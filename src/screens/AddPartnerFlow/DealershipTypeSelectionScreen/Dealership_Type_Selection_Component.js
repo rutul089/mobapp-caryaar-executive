@@ -11,6 +11,7 @@ import {
   theme,
 } from '@caryaar/components';
 import {DealershipType} from '../../../constants/enums';
+import {goBack} from '../../../navigation/NavigationUtils';
 
 const Dealership_Type_Selection_Component = ({
   onBackPress,
@@ -20,7 +21,7 @@ const Dealership_Type_Selection_Component = ({
 }) => {
   return (
     <SafeAreaWrapper>
-      <Header title="Add New Partner" onBackPress={onBackPress} />
+      <Header title="Add New Partner" onBackPress={() => goBack()} />
       <View style={styles.wrapper}>
         <Text>Choose the dealership type</Text>
         <Spacing size="smd" />

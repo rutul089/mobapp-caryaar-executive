@@ -1,8 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
+import {
+  Card,
+  Header,
+  SafeAreaWrapper,
+  Spacing,
+  Text,
+  theme,
+} from '@caryaar/components';
 import React from 'react';
-import {View, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
-import {Card, Header, SafeAreaWrapper, Spacing, Text} from '../../components';
-import theme from '../../theme';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+
 import {goBack} from '../../navigation/NavigationUtils';
 
 const steps = [

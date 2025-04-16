@@ -1,10 +1,12 @@
-import {Header, SafeAreaWrapper} from '@caryaar/components';
+import {
+  BasicDetailsForm,
+  Header,
+  SafeAreaWrapper,
+  StepTracker,
+  theme,
+} from '@caryaar/components';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {BasicDetailsForm, StepTracker} from '../../components';
-import theme from '../../theme';
 
 const dropdownOptions = [
   {label: 'Corporate', value: 'a'},

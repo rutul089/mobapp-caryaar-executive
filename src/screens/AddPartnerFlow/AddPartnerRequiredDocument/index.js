@@ -4,7 +4,7 @@ import Partner_Document_Form_Component from './Partner_Document_Form_Component';
 import {navigate} from '../../../navigation/NavigationUtils';
 import ScreenNames from '../../../constants/ScreenNames';
 import DocumentUtils from '../../../utils/DocumentUtils';
-import {ImagePreviewModal} from '../../../components';
+import {ImagePreviewModal} from '@caryaar/components';
 
 export default class AddPartnerRequiredDocument extends Component {
   constructor(props) {

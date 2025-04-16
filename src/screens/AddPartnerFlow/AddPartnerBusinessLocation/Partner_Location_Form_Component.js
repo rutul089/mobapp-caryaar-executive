@@ -1,12 +1,12 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {
   Header,
+  LocationDetailsForm,
   SafeAreaWrapper,
   StepTracker,
-  LocationDetailsForm,
-} from '../../../components';
-import theme from '../../../theme';
+  theme,
+} from '@caryaar/components';
 
 const Partner_Location_Form_Component = ({onBackPress, handleNextPress}) => {
   return (

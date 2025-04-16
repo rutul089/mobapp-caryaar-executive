@@ -6,14 +6,22 @@ import {
   goBack,
   navigate,
 } from '../../navigation/NavigationUtils';
-import {formatIndianNumber} from '../../utils/helper';
+import {
+  formatIndianNumber,
+  handleViewFilePreview,
+  handleViewImage,
+} from '../../utils/helper';
 import ScreenNames from '../../constants/ScreenNames';
+// import {handleViewImage} from './DocumentList';
 
 export default class ApplicationDetailScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       applicationDetail: {},
+      isLoading: false,
+      panCardLink:
+        'https://file-examples.com/storage/fe0d4ef3b467fe96a99bd97/2017/10/file-example_PDF_1MB.pdf',
     };
     this.onBackPress = this.onBackPress.bind(this);
   }
@@ -37,6 +45,22 @@ export default class ApplicationDetailScreen extends Component {
 
   onTackApplicationPress = () => {
     navigate(ScreenNames.TrackApplication);
+  };
+
+  viewPanCard = () => {
+    handleViewFilePreview(
+      this.state.panCardLink,
+      imageUri => {
+        console.log({imageUri});
+        // Callback when image preview is available
+        this.setState({previewImage: imageUri});
+      },
+      'Pancard',
+      isProcessing => {
+        // Callback for loading state
+        this.setState({isLoading: isProcessing});
+      },
+    );
   };
 
   render() {
@@ -65,6 +89,8 @@ export default class ApplicationDetailScreen extends Component {
             {label: 'EMI', value: formatIndianNumber(17500)},
           ]}
           onTackApplicationPress={this.onTackApplicationPress}
+          viewPanCard={this.viewPanCard}
+          isLoading={this.state.isLoading}
         />
       </>
     );

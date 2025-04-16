@@ -1,3 +1,7 @@
+import {Alert} from 'react-native';
+import FileViewer from 'react-native-file-viewer';
+import RNFS from 'react-native-fs';
+import {launchImageLibrary} from 'react-native-image-picker';
 import theme from '../theme';
 import colors from '../theme/colors';
 
@@ -108,4 +112,50 @@ export const getFileType = fileUri => {
   }
 
   return null;
+};
+
+/**
+ * Preview an image or document from a given URL or local link.
+ *
+ * @param {string} fileUri - The URL or local URI of the file.
+ * @param {(imageUri: string) => void} onImagePreview - Callback to show image preview.
+ * @param {string} [label='file'] - The name to save the file as when downloading.
+ * @param {(isProcessing: boolean) => void} [onProgressChange] - Callback for loading state.
+ */
+export const handleViewFilePreview = (
+  fileUri,
+  onImagePreview,
+  label = 'file',
+  onProgressChange,
+) => {
+  if (!fileUri) {
+    Alert.alert('No file to preview');
+    return;
+  }
+
+  const fileExtension = fileUri.split('.').pop().toLowerCase();
+
+  if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
+    onImagePreview(fileUri);
+  } else {
+    const localFile = `${RNFS.DocumentDirectoryPath}/${label}.${fileExtension}`;
+
+    onProgressChange?.(true); // start loading
+
+    RNFS.downloadFile({fromUrl: fileUri, toFile: localFile})
+      .promise.then(() => {
+        FileViewer.open(localFile)
+          .then(() => {
+            onProgressChange?.(false); // done
+          })
+          .catch(error => {
+            onProgressChange?.(false);
+            Alert.alert('Error opening file', error.message);
+          });
+      })
+      .catch(error => {
+        onProgressChange?.(false);
+        Alert.alert('Download failed', error.message);
+      });
+  }
 };

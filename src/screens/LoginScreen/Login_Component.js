@@ -1,20 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import {Image, KeyboardAvoidingView, Platform, View} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import images from '../../assets/images';
 import {
   Button,
   Card,
+  images,
+  Input,
   SafeAreaWrapper,
   Spacing,
   Text,
   theme,
-  Input,
 } from '@caryaar/components';
+import React from 'react';
+import {Image, KeyboardAvoidingView, Platform, View} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+
 import strings from '../../locales/strings';
 import {styles} from '../../styles/Login.style';
-import {CustomSwitch} from '../../components';
 
 const Login_Component = ({
   params,
@@ -23,8 +23,6 @@ const Login_Component = ({
   generateOTP,
   isError,
 }) => {
-  const [isEnabled, setIsEnabled] = React.useState(false);
-
   return (
     <SafeAreaWrapper
       barStyle="dark-content"

@@ -1,9 +1,8 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React, {Component} from 'react';
-import {AppState, Image, StyleSheet, View} from 'react-native';
+import {AppState, StyleSheet, View} from 'react-native';
 
-import {NetworkStatusBanner, Text} from '../components';
-import theme from '../theme';
+import {NetworkStatusBanner} from '../components';
 import {navigationRef} from './NavigationUtils';
 import StackRoutes from './StackRoutes';
 

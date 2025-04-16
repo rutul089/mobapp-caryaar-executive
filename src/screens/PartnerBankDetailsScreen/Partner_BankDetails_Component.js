@@ -1,20 +1,12 @@
-import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
 import {
-  Button,
-  GroupWrapper,
   Header,
-  Input,
-  RadioGroupRow,
   SafeAreaWrapper,
-  Spacing,
   StepTracker,
   theme,
+  AccountDetailsForm,
 } from '@caryaar/components';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
-import images from '../../assets/images';
-import {AccountDetailsForm} from '../../components';
+import React from 'react';
+import {StyleSheet} from 'react-native';
 
 const Partner_BankDetails_Component = ({
   onBackPress,

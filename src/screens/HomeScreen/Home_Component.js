@@ -1,17 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import {FlatList, Image, View} from 'react-native';
 import {
-  SafeAreaWrapper,
-  ImageHeader,
   Card,
+  ImageHeader,
+  images,
+  InfoRow,
+  Pressable,
+  SafeAreaWrapper,
   Spacing,
   Text,
   theme,
-  images,
 } from '@caryaar/components';
+import React from 'react';
+import {FlatList, Image, View} from 'react-native';
 import {styles} from '../../styles/Home.style';
-import {InfoRow, Pressable} from '../../components';
 
 const data = Array.from({length: 12}, (_, index) => ({
   id: index + 1,

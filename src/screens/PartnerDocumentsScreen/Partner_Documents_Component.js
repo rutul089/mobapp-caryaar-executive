@@ -1,5 +1,3 @@
-import React from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {
   Button,
   Header,
@@ -7,8 +5,11 @@ import {
   Spacing,
   StepTracker,
   VehicleImageCard,
-} from '../../components';
-import theme from '../../theme';
+  theme,
+} from '@caryaar/components';
+import React from 'react';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
+
 import {getFileType} from '../../utils/helper';
 
 const Partner_Documents_Component = ({

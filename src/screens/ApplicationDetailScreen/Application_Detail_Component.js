@@ -23,6 +23,8 @@ const Application_Detail_Component = ({
   customerDetail,
   loanDetail,
   onTackApplicationPress,
+  viewPanCard,
+  isLoading,
 }) => {
   return (
     <SafeAreaWrapper backgroundColor={theme.colors.background}>
@@ -57,7 +59,7 @@ const Application_Detail_Component = ({
           <DetailInfoCard label="Customer Details" data={customerDetail} />
           <Spacing size="lg" />
           <DetailInfoCard label={'Documents'} isSemiBold={false}>
-            <DocumentList />
+            <DocumentList viewPanCard={viewPanCard} isLoading={isLoading} />
           </DetailInfoCard>
           <Spacing size="lg" />
           <DetailInfoCard label="Loan Details" data={loanDetail} />

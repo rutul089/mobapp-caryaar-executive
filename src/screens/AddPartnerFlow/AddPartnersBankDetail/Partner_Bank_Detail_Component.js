@@ -1,7 +1,11 @@
-import {SafeAreaWrapper, StepTracker, Header} from '@caryaar/components';
+import {
+  SafeAreaWrapper,
+  StepTracker,
+  Header,
+  AccountDetailsForm,
+} from '@caryaar/components';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {AccountDetailsForm} from '../../../components';
 import theme from '../../../theme';
 import {goBack} from '../../../navigation/NavigationUtils';
 

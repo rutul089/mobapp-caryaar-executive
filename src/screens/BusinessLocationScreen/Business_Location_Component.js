@@ -1,8 +1,13 @@
-import {Header, SafeAreaWrapper, StepTracker, theme} from '@caryaar/components';
+import {
+  Header,
+  LocationDetailsForm,
+  SafeAreaWrapper,
+  StepTracker,
+  theme,
+} from '@caryaar/components';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 
-import {LocationDetailsForm} from '../../components';
 import {goBack} from '../../navigation/NavigationUtils';
 
 const Business_Location_Component = ({params, handleNextPress}) => {
