@@ -1,7 +1,7 @@
 import React, {useRef, useState, useEffect} from 'react';
 import {TouchableOpacity, Animated, StyleSheet} from 'react-native';
 
-const CustomSwitch = ({initialValue = false, onValueChange = () => {}}) => {
+const Switch = ({initialValue = false, onValueChange = () => {}}) => {
   const [isOn, setIsOn] = useState(initialValue);
   const animatedValue = useRef(
     new Animated.Value(initialValue ? 1 : 0),
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomSwitch;
+export default Switch;

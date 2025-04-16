@@ -1,14 +1,14 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
 import {
   Card,
-  CustomSwitch,
   Header,
   SafeAreaWrapper,
   Spacing,
+  Switch,
   Text,
-} from '../../../components';
-import theme from '../../../theme';
+  theme,
+} from '@caryaar/components';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 
 const Notification_Preference_Component = ({
   onBackPress,
@@ -29,7 +29,7 @@ const Notification_Preference_Component = ({
           <Text size={'small'} hankenGroteskMedium={true}>
             Loan Status Update
           </Text>
-          <CustomSwitch
+          <Switch
             initialValue={valueLoanStatusUpdate}
             onValueChange={onLoanStatusUpdateChange}
           />
@@ -43,7 +43,7 @@ const Notification_Preference_Component = ({
           <Text size={'small'} hankenGroteskMedium={true}>
             Partner Onboarding Status
           </Text>
-          <CustomSwitch
+          <Switch
             initialValue={valuePartnerOnboardingStatus}
             onValueChange={onPartnerOnboardingStatusChange}
           />

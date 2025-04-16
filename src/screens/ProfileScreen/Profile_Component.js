@@ -6,12 +6,12 @@ import {
   Spacing,
   Text,
   theme,
+  images,
 } from '@caryaar/components';
 import React from 'react';
 import {Image, ScrollView, StyleSheet, View} from 'react-native';
 
 import ScreenNames from '../../constants/ScreenNames';
-import images from '../../assets/images';
 
 const Profile_Component = ({
   params,
