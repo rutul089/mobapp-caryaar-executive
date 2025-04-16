@@ -8,6 +8,7 @@ import {
 } from '../../../components';
 import theme from '../../../theme';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {goBack} from '../../../navigation/NavigationUtils';
 
 const Partner_Basic_Form_Component = ({
   businessType,
@@ -24,7 +25,7 @@ const Partner_Basic_Form_Component = ({
 }) => {
   return (
     <SafeAreaWrapper>
-      <Header title="Add New Partner" />
+      <Header title="Add New Partner" onBackPress={() => goBack()} />
       <StepTracker selectedId={1} />
       <BasicDetailsForm
         onSelectBusinessType={onSelectBusinessType}

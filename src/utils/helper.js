@@ -90,3 +90,22 @@ export const getGradientColorsLoan = status => {
       return ['#E8E8E8', '#E8E8E8'];
   }
 };
+
+export const getFileType = fileUri => {
+  if (!fileUri) {
+    return null;
+  }
+  const ext = fileUri.split('.').pop().toLowerCase();
+
+  if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
+    return 'image';
+  }
+  if (ext === 'pdf') {
+    return 'pdf';
+  }
+  if (['doc', 'docx'].includes(ext)) {
+    return 'doc';
+  }
+
+  return null;
+};

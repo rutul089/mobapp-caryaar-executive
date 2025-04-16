@@ -4,6 +4,7 @@ import Partner_Documents_Component from './Partner_Documents_Component';
 import {navigate} from '../../navigation/NavigationUtils';
 import ScreenNames from '../../constants/ScreenNames';
 import DocumentUtils from '../../utils/DocumentUtils';
+import {ImagePreviewModal} from '../../components';
 
 export default class PartnerDocumentsScreen extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export default class PartnerDocumentsScreen extends Component {
       documentGroups: [],
       initialDocuments: {},
       previewImage: null,
+      isImageViewerVisible: false,
     };
   }
 
@@ -22,8 +24,9 @@ export default class PartnerDocumentsScreen extends Component {
   fetchDocumentDataFromAPI = () => {
     const apiResponse = {
       documents: {
-        GST: 'https://votercardprint.com/image/cache/catalog/pan-card-print-500x500.jpg',
-        'Shop License': null,
+        GST: 'https://file-examples.com/wp-content/storage/2017/02/file-sample_1MB.doc',
+        'Shop License':
+          'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
         'PAN Card':
           'https://votercardprint.com/image/cache/catalog/pan-card-print-500x500.jpg',
         'Aadhar Card Front':
@@ -101,8 +104,14 @@ export default class PartnerDocumentsScreen extends Component {
       label,
     );
 
-  handleViewImage = label =>
-    DocumentUtils.handleViewImage(this.state, this.setState.bind(this), label);
+  handleViewImage = label => {
+    DocumentUtils.handleViewImage(
+      this.state,
+      this.setState.bind(this),
+      label,
+      () => this.setState({isImageViewerVisible: true}),
+    );
+  };
 
   handleNextPress = () =>
     DocumentUtils.handleNextPress(
@@ -159,6 +168,13 @@ export default class PartnerDocumentsScreen extends Component {
         <Partner_Documents_Component
           handleNextPress={this.handleNextPress}
           documentGroups={documentGroupsWithHandlers}
+        />
+        <ImagePreviewModal
+          visible={this.state.isImageViewerVisible}
+          imageUri={this.state.previewImage}
+          onClose={() =>
+            this.setState({isImageViewerVisible: false, previewImage: null})
+          }
         />
       </>
     );

@@ -10,6 +10,7 @@ import {
   Button,
   theme,
 } from '@caryaar/components';
+import {getFileType} from '../../../utils/helper';
 
 const Partner_Document_Form_Component = ({
   onBackPress,
@@ -20,18 +21,24 @@ const Partner_Document_Form_Component = ({
     <View key={title}>
       <Text>{title}</Text>
       <View style={styles.rowSpaceBetween}>
-        {documents.map((doc, index) => (
-          <View key={`${title}-${doc.label}`} style={styles.halfWidth}>
-            <VehicleImageCard
-              label={doc.label}
-              image={doc?.image?.uri}
-              onDeletePress={doc.onDeletePress}
-              viewImage={doc.viewImage}
-              btnLabel={'Click to Upload\nImage or PDF'}
-              uploadMedia={doc.uploadMedia}
-            />
-          </View>
-        ))}
+        {documents.map((doc, index) => {
+          const fileUri = doc?.image?.uri;
+          const fileType = getFileType(fileUri);
+          return (
+            <View key={`${title}-${doc.label}`} style={styles.halfWidth}>
+              <VehicleImageCard
+                label={doc.label}
+                image={doc?.image?.uri}
+                onDeletePress={doc.onDeletePress}
+                viewImage={doc.viewImage}
+                btnLabel={'Click to Upload\nImage or PDF'}
+                uploadMedia={doc.uploadMedia}
+                fileType={fileType}
+                isDocument={fileType !== 'image'}
+              />
+            </View>
+          );
+        })}
       </View>
       <Spacing size="lg" />
     </View>

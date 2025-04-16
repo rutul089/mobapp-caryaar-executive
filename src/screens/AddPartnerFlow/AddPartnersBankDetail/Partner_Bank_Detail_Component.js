@@ -1,8 +1,9 @@
-import {Header, SafeAreaWrapper, StepTracker} from '@caryaar/components';
+import {SafeAreaWrapper, StepTracker, Header} from '@caryaar/components';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {AccountDetailsForm} from '../../../components';
 import theme from '../../../theme';
+import {goBack} from '../../../navigation/NavigationUtils';
 
 const Partner_Bank_Detail_Component = ({
   transferModes,
@@ -12,7 +13,7 @@ const Partner_Bank_Detail_Component = ({
 }) => {
   return (
     <SafeAreaWrapper>
-      <Header title="Add New Partner" />
+      <Header title="Add New Partner" onBackPress={() => goBack()} />
       <StepTracker selectedId={4} showImages={[1, 2, 3]} />
       <AccountDetailsForm
         transferModes={transferModes}

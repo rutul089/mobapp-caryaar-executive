@@ -1,4 +1,7 @@
 import {launchImageLibrary} from 'react-native-image-picker';
+import FileViewer from 'react-native-file-viewer';
+import RNFS from 'react-native-fs';
+import {Alert} from 'react-native';
 
 export default {
   handleUploadMedia: (state, setState, groupTitle, label) => {
@@ -49,17 +52,47 @@ export default {
     setState({documentGroups: updatedGroups});
   },
 
-  handleViewImage: (state, setState, label) => {
-    const foundImage = state.documentGroups
-      .flatMap(group => group.documents)
-      .find(doc => doc.label === label)?.image;
+  handleViewImage: (state, setState, label, onImageFound) => {
+    const imageUri = state.initialDocuments[label];
+    if (!imageUri) {
+      Alert.alert('No file to preview');
+      return;
+    }
 
-    if (foundImage) {
-      setState({previewImage: foundImage});
+    const fileExtension = imageUri.split('.').pop().toLowerCase();
+
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
+      setState(prev => ({...prev, previewImage: imageUri}));
+      onImageFound?.();
     } else {
-      console.log('No image found for:', label);
+      // For pdf/doc files — download & open
+      const localFile = `${RNFS.DocumentDirectoryPath}/${label}.${fileExtension}`;
+
+      RNFS.downloadFile({fromUrl: imageUri, toFile: localFile})
+        .promise.then(() => {
+          FileViewer.open(localFile)
+            .then(() => {})
+            .catch(error => {
+              Alert.alert('Error opening file', error.message);
+            });
+        })
+        .catch(error => {
+          Alert.alert('Download failed', error.message);
+        });
     }
   },
+
+  // handleViewImage: (state, setState, label) => {
+  //   const foundImage = state.documentGroups
+  //     .flatMap(group => group.documents)
+  //     .find(doc => doc.label === label)?.image;
+
+  //   if (foundImage) {
+  //     setState({previewImage: foundImage});
+  //   } else {
+  //     console.log('No image found for:', label);
+  //   }
+  // },
 
   // handleNextPress: (state, navigateToNextScreen) => {
   //   const changedDocuments = {};

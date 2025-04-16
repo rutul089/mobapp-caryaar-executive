@@ -38,3 +38,4 @@ export {default as BasicDetailsForm} from './Forms/BasicDetailsForm';
 export {default as LocationDetailsForm} from './Forms/LocationDetailsForm';
 export {default as AccountDetailsForm} from './Forms/AccountDetailsForm';
 export {default as Switch} from './Switch';
+export {default as ImagePreviewModal} from './ImagePreviewModal';

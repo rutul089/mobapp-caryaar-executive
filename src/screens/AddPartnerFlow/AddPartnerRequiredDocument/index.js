@@ -3,6 +3,8 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import Partner_Document_Form_Component from './Partner_Document_Form_Component';
 import {navigate} from '../../../navigation/NavigationUtils';
 import ScreenNames from '../../../constants/ScreenNames';
+import DocumentUtils from '../../../utils/DocumentUtils';
+import {ImagePreviewModal} from '../../../components';
 
 export default class AddPartnerRequiredDocument extends Component {
   constructor(props) {
@@ -10,18 +12,20 @@ export default class AddPartnerRequiredDocument extends Component {
     this.state = {
       documentGroups: [],
       initialDocuments: {},
+      previewImage: null,
+      isImageViewerVisible: false,
     };
   }
 
   componentDidMount() {
     this.fetchDocumentDataFromAPI();
   }
-
   fetchDocumentDataFromAPI = () => {
     const apiResponse = {
       documents: {
-        GST: 'https://votercardprint.com/image/cache/catalog/pan-card-print-500x500.jpg',
-        'Shop License': null,
+        GST: 'https://file-examples.com/wp-content/storage/2017/02/file-sample_1MB.doc',
+        'Shop License':
+          'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
         'PAN Card':
           'https://votercardprint.com/image/cache/catalog/pan-card-print-500x500.jpg',
         'Aadhar Card Front':
@@ -77,67 +81,41 @@ export default class AddPartnerRequiredDocument extends Component {
       initialDocuments: apiResponse.documents,
     });
   };
+  handleUploadMedia = (groupTitle, label) =>
+    DocumentUtils.handleUploadMedia(
+      this.state,
+      this.setState.bind(this),
+      groupTitle,
+      label,
+    );
 
-  handleUploadMedia = (groupTitle, label) => {
-    launchImageLibrary({mediaType: 'photo'}, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.errorMessage) {
-        console.error('ImagePicker Error: ', response.errorMessage);
-      } else if (response.assets && response.assets.length > 0) {
-        const asset = response.assets[0];
-
-        const newImageData = {
-          uri: asset.uri,
-          type: asset.type,
-          fileSize: asset.fileSize,
-          isLocal: true,
-        };
-
-        const updatedGroups = this.state.documentGroups.map(group => {
-          if (group.title === groupTitle) {
-            return {
-              ...group,
-              documents: group.documents.map(doc =>
-                doc.label === label ? {...doc, image: newImageData} : doc,
-              ),
-            };
-          }
-          return group;
-        });
-
-        this.setState({documentGroups: updatedGroups});
-      }
-    });
-  };
-
-  handleDeleteMedia = (groupTitle, label) => {
-    const updatedGroups = this.state.documentGroups.map(group => {
-      if (group.title === groupTitle) {
-        return {
-          ...group,
-          documents: group.documents.map(doc =>
-            doc.label === label ? {...doc, image: null} : doc,
-          ),
-        };
-      }
-      return group;
-    });
-
-    this.setState({documentGroups: updatedGroups});
-  };
+  handleDeleteMedia = (groupTitle, label) =>
+    DocumentUtils.handleDeleteMedia(
+      this.state,
+      this.setState.bind(this),
+      groupTitle,
+      label,
+    );
 
   handleViewImage = label => {
-    const foundImage = this.state.documentGroups
-      .flatMap(group => group.documents)
-      .find(doc => doc.label === label)?.image;
-    console.log('foundImage', foundImage);
-    if (foundImage) {
-      this.setState({previewImage: foundImage});
-    } else {
-      console.log('No image found for:', label);
-    }
+    DocumentUtils.handleViewImage(
+      this.state,
+      this.setState.bind(this),
+      label,
+      () => this.setState({isImageViewerVisible: true}),
+    );
   };
+  // handleViewImage = label => {
+  //   const foundImage = this.state.documentGroups
+  //     .flatMap(group => group.documents)
+  //     .find(doc => doc.label === label)?.image;
+  //   console.log('foundImage', foundImage);
+  //   if (foundImage) {
+  //     this.setState({previewImage: foundImage});
+  //   } else {
+  //     console.log('No image found for:', label);
+  //   }
+  // };
 
   handleNextPress = () => {
     const changedDocuments = {};
@@ -159,21 +137,29 @@ export default class AddPartnerRequiredDocument extends Component {
   };
 
   render() {
-    const documentGroupsWithHandlers = this.state.documentGroups.map(group => ({
-      ...group,
-      documents: group.documents.map(doc => ({
-        ...doc,
-        onDeletePress: () => this.handleDeleteMedia(group.title, doc.label),
-        viewImage: () => this.handleViewImage(doc.label),
-        uploadMedia: () => this.handleUploadMedia(group.title, doc.label),
-      })),
-    }));
+    const documentGroupsWithHandlers =
+      DocumentUtils.getDocumentGroupsWithHandlers(
+        this.state,
+        this.setState.bind(this),
+        this.handleUploadMedia,
+        this.handleDeleteMedia,
+        this.handleViewImage,
+      );
 
     return (
-      <Partner_Document_Form_Component
-        documentGroups={documentGroupsWithHandlers}
-        handleNextPress={this.handleNextPress}
-      />
+      <>
+        <Partner_Document_Form_Component
+          documentGroups={documentGroupsWithHandlers}
+          handleNextPress={this.handleNextPress}
+        />
+        <ImagePreviewModal
+          visible={this.state.isImageViewerVisible}
+          imageUri={this.state.previewImage}
+          onClose={() =>
+            this.setState({isImageViewerVisible: false, previewImage: null})
+          }
+        />
+      </>
     );
   }
 }

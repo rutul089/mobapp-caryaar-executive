@@ -14,16 +14,29 @@ const VehicleImageCard = ({
   isView,
   btnLabel,
   uploadMedia,
+  isDocument, // <-- this prop identifies if it’s a doc/pdf
+  fileType,
 }) => {
   const renderImageContent = () => {
     if (image) {
       return (
         <>
-          <Image
-            source={{uri: image}}
-            style={styles.image}
-            defaultSource={images.placeholder_image}
-          />
+          {isDocument ? (
+            <>
+              <Image
+                source={images.applicationSolid} // your document icon here
+                style={styles.documentIcon}
+              />
+              <Text size={'small'}>{fileType}</Text>
+            </>
+          ) : (
+            <Image
+              source={{uri: image}}
+              style={styles.image}
+              defaultSource={images.placeholder_image}
+            />
+          )}
+
           {!isView && (
             <Pressable onPress={onDeletePress} style={styles.deleteIcon}>
               <Image source={images.icDelete} style={styles.iconOverlay} />
@@ -33,6 +46,7 @@ const VehicleImageCard = ({
       );
     }
 
+    // when no image/document uploaded yet
     return (
       <View style={[styles.dashedWrapper, styles.uploadImage]}>
         <Pressable onPress={uploadMedia} style={styles.centeredContent}>
@@ -75,12 +89,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 12,
+    padding: 5,
   },
   image: {
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
     borderRadius: 8,
+  },
+  documentIcon: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+    marginBottom: 10,
   },
   deleteIcon: {
     position: 'absolute',
