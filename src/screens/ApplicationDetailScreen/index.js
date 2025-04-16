@@ -1,8 +1,13 @@
 import React, {Component} from 'react';
 import {View, Text} from 'react-native';
 import Application_Detail_Component from './Application_Detail_Component';
-import {getScreenParam, goBack} from '../../navigation/NavigationUtils';
+import {
+  getScreenParam,
+  goBack,
+  navigate,
+} from '../../navigation/NavigationUtils';
 import {formatIndianNumber} from '../../utils/helper';
+import ScreenNames from '../../constants/ScreenNames';
 
 export default class ApplicationDetailScreen extends Component {
   constructor(props) {
@@ -30,6 +35,10 @@ export default class ApplicationDetailScreen extends Component {
     goBack();
   };
 
+  onTackApplicationPress = () => {
+    navigate(ScreenNames.TrackApplication);
+  };
+
   render() {
     return (
       <>
@@ -55,6 +64,7 @@ export default class ApplicationDetailScreen extends Component {
             {label: 'Interest Rate', value: '8.5%'},
             {label: 'EMI', value: formatIndianNumber(17500)},
           ]}
+          onTackApplicationPress={this.onTackApplicationPress}
         />
       </>
     );

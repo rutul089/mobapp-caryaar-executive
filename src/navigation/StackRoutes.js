@@ -125,6 +125,10 @@ const StackRoutes = () => {
         name={ScreenNames.NotificationPreference}
         component={Screens.NotificationPreferenceScreen}
       />
+      <Stack.Screen
+        name={ScreenNames.TrackApplication}
+        component={Screens.TrackApplicationScreen}
+      />
     </Stack.Navigator>
   );
 };

@@ -14,6 +14,7 @@ const Applications_Component = ({
   onRightIconPress,
   applications,
   onItemPress,
+  onTrackApplicationPress,
 }) => {
   return (
     <SafeAreaWrapper hideBottom>
@@ -40,7 +41,9 @@ const Applications_Component = ({
                 subtitle={`Submitted on: ${item.phone}`}
                 showPersonalInfo={false}
                 isCTAShow
-                callToAction={() => {}}
+                callToAction={() =>
+                  onTrackApplicationPress && onTrackApplicationPress(item)
+                }
                 buttonLabel="Track Application"
                 processingTime={item.id + ' Days'}
               />

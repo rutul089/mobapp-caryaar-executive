@@ -22,6 +22,7 @@ const Application_Detail_Component = ({
   vehicleDetail,
   customerDetail,
   loanDetail,
+  onTackApplicationPress,
 }) => {
   return (
     <SafeAreaWrapper backgroundColor={theme.colors.background}>
@@ -41,7 +42,7 @@ const Application_Detail_Component = ({
               buttonLabel="Track Application"
               processingTime={1 + ' Days'}
               textNote={'Last updated on 2 hours ago'}
-              callToAction={() => {}}
+              callToAction={onTackApplicationPress}
               wrapperColor={theme.colors.gray900}
               partnerColor={theme.colors.white}
               suffixTextColor={theme.colors.white}

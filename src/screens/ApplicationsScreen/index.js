@@ -32,10 +32,16 @@ export default class ApplicationsScreen extends Component {
       ],
     };
     this.onItemPress = this.onItemPress.bind(this);
+    this.onTrackApplicationPress = this.onTrackApplicationPress.bind(this);
   }
 
   onItemPress = item => {
     navigate(ScreenNames.ApplicationDetail, {params: item});
+  };
+
+  onTrackApplicationPress = item => {
+    console.log({item});
+    navigate(ScreenNames.TrackApplication);
   };
 
   render() {
@@ -44,6 +50,7 @@ export default class ApplicationsScreen extends Component {
         <Applications_Component
           applications={this.state.applications}
           onItemPress={this.onItemPress}
+          onTrackApplicationPress={this.onTrackApplicationPress}
         />
       </>
     );

@@ -21,6 +21,7 @@ export {default as AddPartnerBasicDetail} from './AddPartnerFlow/AddPartnerBasic
 export {default as AddPartnerBusinessLocation} from './AddPartnerFlow/AddPartnerBusinessLocation';
 export {default as AddPartnerRequiredDocument} from './AddPartnerFlow/AddPartnerRequiredDocument';
 export {default as AddPartnersBankDetail} from './AddPartnerFlow/AddPartnersBankDetail';
+export {default as TrackApplicationScreen} from './TrackApplicationScreen';
 
 //UserProfile
 export {default as ChangePasswordScreen} from './UserProfile/ChangePasswordScreen';

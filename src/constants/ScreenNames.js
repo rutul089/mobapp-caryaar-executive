@@ -32,6 +32,7 @@ const ScreenNames = {
   AddPartnerRequiredDocument: 'AddPartnerRequiredDocumentScreen',
   AddPartnersBankDetail: 'AddPartnersBankDetailScreen',
   NotificationPreference: 'NotificationPreferenceScreen',
+  TrackApplication: 'TrackApplicationScreen',
 };
 
 export default ScreenNames;
