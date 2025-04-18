@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
-import Partner_Success_Component from './Partner_Success_Component';
+import ScreenNames from '../../../constants/ScreenNames';
 import {
   navigateAndSimpleReset,
   navigateToTab,
 } from '../../../navigation/NavigationUtils';
-import ScreenNames from '../../../constants/ScreenNames';
-import {CommonActions} from '@react-navigation/native';
+import Partner_Success_Component from './Partner_Success_Component';
 
 export default class PartnerRegistrationSuccessScreen extends Component {
   constructor(props) {

@@ -33,6 +33,7 @@ export default class ApplicationsScreen extends Component {
     };
     this.onItemPress = this.onItemPress.bind(this);
     this.onTrackApplicationPress = this.onTrackApplicationPress.bind(this);
+    this.onRightIconPress = this.onRightIconPress.bind(this);
   }
 
   onItemPress = item => {
@@ -44,6 +45,10 @@ export default class ApplicationsScreen extends Component {
     navigate(ScreenNames.TrackApplication);
   };
 
+  onRightIconPress = () => {
+    navigate(ScreenNames.Notification);
+  };
+
   render() {
     return (
       <>
@@ -51,6 +56,7 @@ export default class ApplicationsScreen extends Component {
           applications={this.state.applications}
           onItemPress={this.onItemPress}
           onTrackApplicationPress={this.onTrackApplicationPress}
+          onRightIconPress={this.onRightIconPress}
         />
       </>
     );

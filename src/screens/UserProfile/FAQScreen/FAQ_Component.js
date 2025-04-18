@@ -5,8 +5,8 @@ import {
   LayoutAnimation,
   Platform,
   StyleSheet,
-  TouchableOpacity,
   UIManager,
+  View,
 } from 'react-native';
 
 import {
@@ -64,7 +64,7 @@ const faqData = [
 const AccordionItem = ({item, isExpanded, onPress}) => (
   <>
     <Card padding={16} noShadow={true} onPress={onPress}>
-      <TouchableOpacity style={styles.header} onPress={onPress}>
+      <View style={styles.header}>
         <Text size={'small'} hankenGroteskSemiBold={isExpanded}>
           {item.question}
         </Text>
@@ -73,7 +73,7 @@ const AccordionItem = ({item, isExpanded, onPress}) => (
           resizeMode="contain"
           style={{height: 20, width: 20}}
         />
-      </TouchableOpacity>
+      </View>
       {isExpanded && (
         <>
           <Spacing size="xs" />

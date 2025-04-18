@@ -11,12 +11,9 @@ import React from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {getFileType} from '../../utils/helper';
+import {goBack} from '../../navigation/NavigationUtils';
 
-const Partner_Documents_Component = ({
-  onBackPress,
-  documentGroups,
-  handleNextPress,
-}) => {
+const Partner_Documents_Component = ({documentGroups, handleNextPress}) => {
   const renderDocumentGroup = (title, documents) => (
     <View key={title} style={styles.groupContainer}>
       <Text style={styles.groupTitle}>{title}</Text>
@@ -47,7 +44,7 @@ const Partner_Documents_Component = ({
 
   return (
     <SafeAreaWrapper>
-      <Header title="Add New Partner" onBackPress={onBackPress} />
+      <Header title="Add New Partner" onBackPress={() => goBack()} />
       <StepTracker showImages={[1, 2, 3, 4]} errorSteps={[3]} />
       <ScrollView contentContainerStyle={styles.wrapper}>
         {documentGroups?.map(group =>

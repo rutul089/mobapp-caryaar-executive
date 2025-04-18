@@ -13,6 +13,8 @@ import {
 import React from 'react';
 import {FlatList, Image, View} from 'react-native';
 import {styles} from '../../styles/Home.style';
+import {navigateToTab} from '../../navigation/NavigationUtils';
+import ScreenNames from '../../constants/ScreenNames';
 
 const data = Array.from({length: 12}, (_, index) => ({
   id: index + 1,
@@ -20,9 +22,9 @@ const data = Array.from({length: 12}, (_, index) => ({
 }));
 
 const Home_Component = ({onRightIconPress, onAddPartner}) => {
-  const renderBox = (count, countColor, label) => {
+  const renderBox = (count, countColor, label, onPress) => {
     return (
-      <View style={styles.statBox}>
+      <Pressable style={styles.statBox} onPress={onPress}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text
             lineHeight={'h2'}
@@ -45,7 +47,7 @@ const Home_Component = ({onRightIconPress, onAddPartner}) => {
           color={theme.colors.textLabel}>
           {label}
         </Text>
-      </View>
+      </Pressable>
     );
   };
 
@@ -108,9 +110,15 @@ const Home_Component = ({onRightIconPress, onAddPartner}) => {
             </Text>
           </View>
           <View style={styles.statsContainer}>
-            {renderBox(1211, '#F8A902', 'Active Partners')}
-            {renderBox(3, '#6EEE87', 'Pending Approvals')}
-            {renderBox(2, '#696EFF', 'Loan Approved')}
+            {renderBox(1211, '#F8A902', 'Active Partners', () =>
+              navigateToTab(ScreenNames.Partners),
+            )}
+            {renderBox(3, '#6EEE87', 'Pending Approvals', () =>
+              navigateToTab(ScreenNames.Applications),
+            )}
+            {renderBox(2, '#696EFF', 'Loan Approved', () =>
+              navigateToTab(ScreenNames.Applications),
+            )}
           </View>
         </View>
         <FlatList

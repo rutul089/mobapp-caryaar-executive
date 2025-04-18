@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   Card,
   ImageHeader,
@@ -72,78 +73,86 @@ const Profile_Component = ({
         hideProfileIcon
         onRightIconPress={onRightIconPress}
       />
-      <View style={styles.header}>
-        <View style={styles.wrapper1}>
-          <Text size={'h2'} color={'white'} hankenGroteskBold={true}>
-            Profile
-          </Text>
-          <Pressable onPress={onEditProfilePress}>
-            <Image source={images.edit_user} style={{height: 22, width: 22}} />
-          </Pressable>
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        <View style={styles.header}>
+          <View style={styles.wrapper1}>
+            <Text size={'h2'} color={'white'} hankenGroteskBold={true}>
+              Profile
+            </Text>
+            <Pressable onPress={onEditProfilePress}>
+              <Image
+                source={images.edit_user}
+                style={{height: 22, width: 22}}
+              />
+            </Pressable>
+          </View>
+          <Spacing size="md" />
+          {/* Profile Card */}
+          {profileCard()}
+          {/* Details Card */}
+          {detailsCard()}
         </View>
-        <Spacing size="md" />
-        {/* Profile Card */}
-        {profileCard()}
-        {/* Details Card */}
-        {detailsCard()}
-      </View>
-      <ScrollView contentContainerStyle={styles.wrapper}>
-        {/* Action Menu */}
-        <View>
-          {[
-            {
-              label: 'Manage Members',
-              icon: images.icon_users,
-              screenName: ScreenNames.ManageMember,
-            },
-            {
-              label: 'Change Password',
-              icon: images.icon_access,
-              screenName: ScreenNames.ChangePassword,
-            },
-            {
-              label: 'Notification Preferences',
-              icon: images.notification,
-              screenName: ScreenNames.NotificationPreference,
-            },
-            {
-              label: 'FAQs',
-              icon: images.icon_help,
-              screenName: ScreenNames.FAQS,
-            },
-            {
-              label: 'Contact Support',
-              icon: images.icon_support,
-              screenName: ScreenNames.ContactSupport,
-            },
-            {
-              label: 'Logout',
-              icon: images.icon_logout,
-              themeColor: theme.colors.error,
-              hideRightArrow: true,
-              screenName: ScreenNames.Logout,
-            },
-          ].map((item, index) => (
-            <React.Fragment key={index}>
-              <Card
-                onPress={() => handleMenuPress(index, item)}
-                padding={15}
-                noShadow={true}
-                cardContainerStyle={{flexDirection: 'row'}}>
-                <Image
-                  source={item.icon}
-                  style={[styles.menuIcon, {tintColor: item?.themeColor}]}
-                />
-                <Text style={{flex: 1}} color={item?.themeColor}>
-                  {item.label}
-                </Text>
-                {!item?.hideRightArrow && (
-                  <Image source={images.arrow_right} style={styles.menuIcon} />
-                )}
-              </Card>
-              <Spacing size="smd" />
-            </React.Fragment>
-          ))}
+        <View style={styles.wrapper}>
+          {/* Action Menu */}
+          <View>
+            {[
+              {
+                label: 'Manage Members',
+                icon: images.icon_users,
+                screenName: ScreenNames.ManageMember,
+              },
+              {
+                label: 'Change Password',
+                icon: images.icon_access,
+                screenName: ScreenNames.ChangePassword,
+              },
+              {
+                label: 'Notification Preferences',
+                icon: images.notification,
+                screenName: ScreenNames.NotificationPreference,
+              },
+              {
+                label: 'FAQs',
+                icon: images.icon_help,
+                screenName: ScreenNames.FAQS,
+              },
+              {
+                label: 'Contact Support',
+                icon: images.icon_support,
+                screenName: ScreenNames.ContactSupport,
+              },
+              {
+                label: 'Logout',
+                icon: images.icon_logout,
+                themeColor: theme.colors.error,
+                hideRightArrow: true,
+                screenName: ScreenNames.Logout,
+              },
+            ].map((item, index) => (
+              <React.Fragment key={index}>
+                <Card
+                  onPress={() => handleMenuPress(index, item)}
+                  padding={15}
+                  noShadow={true}
+                  cardContainerStyle={{flexDirection: 'row'}}>
+                  <Image
+                    source={item.icon}
+                    style={[styles.menuIcon, {tintColor: item?.themeColor}]}
+                  />
+                  <Text style={{flex: 1}} color={item?.themeColor}>
+                    {item.label}
+                  </Text>
+                  {!item?.hideRightArrow && (
+                    <Image
+                      source={images.arrow_right}
+                      style={styles.menuIcon}
+                    />
+                  )}
+                </Card>
+                <Spacing size="smd" />
+              </React.Fragment>
+            ))}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaWrapper>
@@ -160,11 +169,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  profileWrapper: {
-    backgroundColor: theme.colors.primaryBlack,
-    padding: theme.sizes.padding,
-    paddingTop: theme.sizes.spacing.md,
   },
   profileCard: {
     backgroundColor: theme.colors.gray900,
