@@ -15,18 +15,18 @@ const screenOptions = {
   gestureEnabled: true,
   gestureDirection: 'horizontal',
   detachPreviousScreen: true,
-  lazy: true,
+  // lazy: true,
   cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-  transitionSpec: {
-    open: {
-      animation: 'timing',
-      config: {duration: 220},
-    },
-    close: {
-      animation: 'timing',
-      config: {duration: 200},
-    },
-  },
+  // transitionSpec: {
+  //   open: {
+  //     animation: 'timing',
+  //     config: {duration: 220},
+  //   },
+  //   close: {
+  //     animation: 'timing',
+  //     config: {duration: 200},
+  //   },
+  // },
 };
 
 const StackRoutes = () => {

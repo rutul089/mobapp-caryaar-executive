@@ -1,10 +1,9 @@
+import {ImagePreviewModal} from '@caryaar/components';
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
-import Partner_Documents_Component from './Partner_Documents_Component';
-import {navigate} from '../../navigation/NavigationUtils';
 import ScreenNames from '../../constants/ScreenNames';
+import {navigate} from '../../navigation/NavigationUtils';
 import DocumentUtils from '../../utils/DocumentUtils';
-import {ImagePreviewModal} from '../../components';
+import Partner_Documents_Component from './Partner_Documents_Component';
 
 export default class PartnerDocumentsScreen extends Component {
   constructor(props) {
