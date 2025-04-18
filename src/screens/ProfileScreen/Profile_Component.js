@@ -8,6 +8,7 @@ import {
   Text,
   theme,
   images,
+  CommonModal,
 } from '@caryaar/components';
 import React from 'react';
 import {Image, ScrollView, StyleSheet, View} from 'react-native';
@@ -19,6 +20,9 @@ const Profile_Component = ({
   handleMenuPress = () => {},
   onEditProfilePress,
   onRightIconPress,
+  onModalHide,
+  onPressPrimaryButton,
+  showLogoutModal,
 }) => {
   const profileCard = () => {
     return (
@@ -73,7 +77,7 @@ const Profile_Component = ({
         hideProfileIcon
         onRightIconPress={onRightIconPress}
       />
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView contentContainerStyle={{flexGrow: 1}} bounces={false}>
         <View style={styles.header}>
           <View style={styles.wrapper1}>
             <Text size={'h2'} color={'white'} hankenGroteskBold={true}>
@@ -155,6 +159,21 @@ const Profile_Component = ({
           </View>
         </View>
       </ScrollView>
+      <CommonModal
+        isVisible={showLogoutModal}
+        onModalHide={onModalHide}
+        primaryButtonLabel={'Logout'}
+        isScrollableContent={true}
+        isPrimaryButtonVisible={true}
+        onPressPrimaryButton={onPressPrimaryButton}
+        title="Confirm Logout">
+        <View style={{paddingVertical: 10}}>
+          <Text textAlign="center" lineHeight={22}>
+            Are you sure you want to log out? You will need to log in again to
+            access your account.
+          </Text>
+        </View>
+      </CommonModal>
     </SafeAreaWrapper>
   );
 };
@@ -219,6 +238,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: theme.colors.background,
     padding: theme.sizes.padding,
+    paddingBottom: 0,
   },
 });
 export default Profile_Component;

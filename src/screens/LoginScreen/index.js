@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import ScreenNames from '../../constants/ScreenNames';
 import {navigate} from '../../navigation/NavigationUtils';
 import {validateMobileNumber} from '../../utils/validation';
@@ -47,4 +48,11 @@ class Login extends Component {
   }
 }
 
-export default Login;
+const mapActionCreators = {};
+const mapStateToProps = state => {
+  return {
+    isInternetConnected: state.global.isInternetConnected,
+    isLoading: state.global.loading,
+  };
+};
+export default connect(mapStateToProps, mapActionCreators)(Login);

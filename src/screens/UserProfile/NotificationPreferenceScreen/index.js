@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
-import Notification_Preference_Component from './Notification_Preference_Component';
 import {goBack} from '../../../navigation/NavigationUtils';
+import Notification_Preference_Component from './Notification_Preference_Component';
 
 export default class NotificationPreferenceScreen extends Component {
   constructor(props) {

@@ -6,6 +6,9 @@ import {
   navigateAndSimpleReset,
 } from '../../navigation/NavigationUtils';
 import OTP_Verification_Component from './OTP_Verification_Component';
+import {connect} from 'react-redux';
+import {setLoginStatus as setReduxLoginStatus} from '../../redux/actions';
+import {setLoginStatus} from '../../utils/storage';
 const timerValue = 30;
 
 class OTPVerification extends Component {
@@ -75,12 +78,14 @@ class OTPVerification extends Component {
     );
   };
 
-  handleVerify = () => {
+  handleVerify = async () => {
     const {otp} = this.state;
     console.log('OTP', otp);
     console.log('OTP', otp === 4);
 
     if (otp.length === 4) {
+      await setLoginStatus(true);
+      this.props.setReduxLoginStatus(true);
       return navigateAndSimpleReset(ScreenNames.HomeTab);
     } else {
       this.setState({
@@ -109,4 +114,13 @@ class OTPVerification extends Component {
   }
 }
 
-export default OTPVerification;
+const mapActionCreators = {
+  setReduxLoginStatus,
+};
+const mapStateToProps = state => {
+  return {
+    isInternetConnected: state.global.isInternetConnected,
+    isLoading: state.global.loading,
+  };
+};
+export default connect(mapStateToProps, mapActionCreators)(OTPVerification);
