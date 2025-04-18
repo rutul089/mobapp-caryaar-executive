@@ -1,9 +1,7 @@
 import React from 'react';
 import {Image, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import images from '../../assets/images';
-import {Text, SafeAreaWrapper, theme} from '@caryaar/components';
-
+import {images, SafeAreaWrapper, Text, theme} from '@caryaar/components';
 import {styles} from '../../styles/splash';
 
 const Splash_Component = ({params, onPress}) => {

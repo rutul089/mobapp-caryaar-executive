@@ -1,18 +1,17 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {ScrollView, TouchableOpacity, View, StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {
   CustomerCard,
+  DetailInfoCard,
   Header,
   SafeAreaWrapper,
-  theme,
-  DetailInfoCard,
   Spacing,
   Text,
+  images,
+  theme,
 } from '@caryaar/components';
-
-import images from '../../assets/images';
 
 const Partner_Detail_Component = ({
   onBackPress,

@@ -1,8 +1,6 @@
 import React from 'react';
 import {ActivityIndicator, Image, StyleSheet, View} from 'react-native';
-
-import images from '../../assets/images';
-import {Spacing, Text, Pressable, theme} from '@caryaar/components';
+import {images, Pressable, Spacing, Text, theme} from '@caryaar/components';
 
 const DocumentList = ({viewPanCard, isLoading}) => {
   return (

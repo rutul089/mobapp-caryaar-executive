@@ -12,12 +12,13 @@ import {
 import {
   Card,
   Header,
+  images,
   SafeAreaWrapper,
   Spacing,
   Text,
   theme,
 } from '@caryaar/components';
-import images from '../../../assets/images';
+
 import {goBack} from '../../../navigation/NavigationUtils';
 
 if (Platform.OS === 'android') {

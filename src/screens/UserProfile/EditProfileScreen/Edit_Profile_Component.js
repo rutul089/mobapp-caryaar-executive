@@ -1,11 +1,11 @@
 import React, {useRef} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import images from '../../../assets/images';
 import {
   Button,
   Card,
   Header,
+  images,
   Input,
   Pressable,
   SafeAreaWrapper,

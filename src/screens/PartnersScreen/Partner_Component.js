@@ -10,7 +10,6 @@ import {
 } from '@caryaar/components';
 import React from 'react';
 import {FlatList, Pressable, ScrollView, StyleSheet, View} from 'react-native';
-// import images from '../../assets/images';
 
 const Partner_Component = ({
   onRightIconPress,
