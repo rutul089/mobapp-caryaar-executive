@@ -2,8 +2,10 @@ import React, {Component} from 'react';
 import ScreenNames from '../../constants/ScreenNames';
 import {navigate} from '../../navigation/NavigationUtils';
 import Partner_Component from './Partner_Component';
+import {connect} from 'react-redux';
+import {resetRegistration} from '../../redux/actions';
 
-export default class PartnersScreen extends Component {
+class PartnersScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -81,6 +83,7 @@ export default class PartnersScreen extends Component {
   };
 
   onAddButtonPress = () => {
+    this.props.resetRegistration();
     navigate(ScreenNames.DealershipTypeSelection);
   };
 
@@ -102,3 +105,14 @@ export default class PartnersScreen extends Component {
     );
   }
 }
+
+const mapDispatchToProps = {
+  resetRegistration,
+};
+const mapStateToProps = state => {
+  return {
+    isInternetConnected: state.global.isInternetConnected,
+    isLoading: state.global.loading,
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(PartnersScreen);

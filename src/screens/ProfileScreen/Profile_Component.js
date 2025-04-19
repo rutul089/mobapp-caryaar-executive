@@ -23,6 +23,10 @@ const Profile_Component = ({
   onModalHide,
   onPressPrimaryButton,
   showLogoutModal,
+  address,
+  name,
+  email,
+  phone,
 }) => {
   const profileCard = () => {
     return (
@@ -36,11 +40,11 @@ const Profile_Component = ({
             !XX0012
           </Text>
           <Text hankenGroteskExtraBold={true} color={theme.colors.white}>
-            Ghanshyam Sinha
+            {name}
           </Text>
           <View style={{flexDirection: 'row', marginTop: 5}}>
             <Image source={images.locationPin} style={styles.locationStyle} />
-            <Text color={theme.colors.textSecondary}>Delhi</Text>
+            <Text color={theme.colors.textSecondary}>{address}</Text>
           </View>
         </View>
       </View>
@@ -56,8 +60,8 @@ const Profile_Component = ({
             label: 'CarYaar Designation Name',
           },
           {icon: images.user, label: 'Dealer Type'},
-          {icon: images.email, label: 'ghanshyam_sinha859@gmail.com'},
-          {icon: images.phoneOutline, label: '91448 82901'},
+          {icon: images.email, label: email},
+          {icon: images.phoneOutline, label: phone},
         ].map((item, index) => (
           <View key={index} style={styles.detailRow}>
             <Image source={item.icon} style={styles.detailIcon} />

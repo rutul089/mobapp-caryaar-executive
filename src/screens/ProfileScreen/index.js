@@ -7,7 +7,7 @@ import {
 import Profile_Component from './Profile_Component';
 import {clearLoginStatus} from '../../utils/storage';
 import {connect} from 'react-redux';
-import {setLoginStatus} from '../../redux/actions';
+import {clearAllData, setLoginStatus} from '../../redux/actions';
 
 class ProfileScreen extends Component {
   constructor(props) {
@@ -47,7 +47,8 @@ class ProfileScreen extends Component {
 
   onPressPrimaryButton = () => {
     this.toggleLogoutModal(false);
-    clearLoginStatus();
+    this.props.clearLoginStatus();
+    this.props.clearAllData();
     this.props.setLoginStatus(false);
     navigateAndSimpleReset(ScreenNames.Login);
   };
@@ -58,6 +59,7 @@ class ProfileScreen extends Component {
 
   render() {
     const {showLogoutModal} = this.state;
+    const {userDetail} = this.props;
     return (
       <>
         <Profile_Component
@@ -67,6 +69,10 @@ class ProfileScreen extends Component {
           showLogoutModal={showLogoutModal}
           onPressPrimaryButton={this.onPressPrimaryButton}
           onModalHide={this.onModalHide}
+          address={userDetail?.address}
+          name={userDetail?.name}
+          email={userDetail?.email}
+          phone={userDetail?.phone}
         />
       </>
     );
@@ -75,11 +81,12 @@ class ProfileScreen extends Component {
 
 const mapDispatchToProps = {
   setLoginStatus,
+  clearAllData,
+  clearLoginStatus,
 };
 const mapStateToProps = state => {
   return {
-    isInternetConnected: state.global.isInternetConnected,
-    isLoading: state.global.loading,
+    userDetail: state.user?.userDetails,
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

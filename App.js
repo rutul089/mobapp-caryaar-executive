@@ -2,10 +2,7 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import RootNavigator from './src/navigation/RootNavigator';
-import {configureStore} from './src/redux';
-
-const store = configureStore().store;
-const persistor = configureStore().persistor;
+import {store, persistor} from './src/redux';
 
 export default function App() {
   return (

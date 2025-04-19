@@ -9,17 +9,11 @@ export const noInternetConnected = isConnected => ({
   payload: isConnected,
 });
 
-export const userDetail = userData => ({
-  type: types.USER_DETAIL,
-  payload: userData,
-});
-
-export const userProfile = userData => ({
-  type: types.USER_PROFILE,
-  payload: userData,
-});
-
 export const selectedLoanType = value => ({
   type: types.SELECTED_LOAN_TYPE,
   payload: value,
+});
+
+export const clearAllData = () => ({
+  type: types.CLEAR_ALL_DATA,
 });

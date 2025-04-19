@@ -1,14 +1,13 @@
 import React, {Component} from 'react';
-import ScreenNames from '../../constants/ScreenNames';
-import {
-  getScreenParam,
-  goBack,
-  navigateAndSimpleReset,
-} from '../../navigation/NavigationUtils';
-import OTP_Verification_Component from './OTP_Verification_Component';
 import {connect} from 'react-redux';
-import {setLoginStatus as setReduxLoginStatus} from '../../redux/actions';
+import ScreenNames from '../../constants/ScreenNames';
+import {goBack, navigateAndSimpleReset} from '../../navigation/NavigationUtils';
+import {
+  setLoginStatus as setReduxLoginStatus,
+  setUserDetails,
+} from '../../redux/actions';
 import {setLoginStatus} from '../../utils/storage';
+import OTP_Verification_Component from './OTP_Verification_Component';
 const timerValue = 30;
 
 class OTPVerification extends Component {
@@ -29,15 +28,13 @@ class OTPVerification extends Component {
   }
 
   componentDidMount() {
-    let route = this.props.route;
-    const mobileNumber = getScreenParam(route, 'mobileNumber');
+    const {phone} = this.props;
     this.setState(
       {
-        mobileNumber,
+        mobileNumber: phone,
       },
       () => this.startTimer(),
     );
-    console.log({mobileNumber});
   }
 
   startTimer = () => {
@@ -80,10 +77,15 @@ class OTPVerification extends Component {
 
   handleVerify = async () => {
     const {otp} = this.state;
-    console.log('OTP', otp);
-    console.log('OTP', otp === 4);
+    const {phone} = this.props;
 
     if (otp.length === 4) {
+      this.props.setUserDetails({
+        name: 'John',
+        email: 'john@example.com',
+        address: 'New York',
+        phone: phone,
+      });
       await setLoginStatus(true);
       this.props.setReduxLoginStatus(true);
       return navigateAndSimpleReset(ScreenNames.HomeTab);
@@ -114,13 +116,15 @@ class OTPVerification extends Component {
   }
 }
 
-const mapActionCreators = {
+const mapDispatchToProps = {
   setReduxLoginStatus,
+  setUserDetails,
 };
 const mapStateToProps = state => {
   return {
     isInternetConnected: state.global.isInternetConnected,
     isLoading: state.global.loading,
+    phone: state.user.userDetails?.phone,
   };
 };
-export default connect(mapStateToProps, mapActionCreators)(OTPVerification);
+export default connect(mapStateToProps, mapDispatchToProps)(OTPVerification);

@@ -11,6 +11,8 @@ export const authReducer = (state = initialState, action) => {
         ...state,
         isLoggedIn: action.payload,
       };
+    case types.CLEAR_ALL_DATA:
+      return {...initialState};
     default:
       return state;
   }

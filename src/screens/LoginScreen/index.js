@@ -4,6 +4,7 @@ import ScreenNames from '../../constants/ScreenNames';
 import {navigate} from '../../navigation/NavigationUtils';
 import {validateMobileNumber} from '../../utils/validation';
 import Login_Component from './Login_Component';
+import {updateUserDetailField} from '../../redux/actions';
 
 class Login extends Component {
   constructor(props) {
@@ -30,6 +31,7 @@ class Login extends Component {
       this.setState({isError: true});
       return;
     }
+    this.props.updateUserDetailField('phone', mobileNumber);
     navigate(ScreenNames.OTP, {mobileNumber});
   };
 
@@ -48,11 +50,10 @@ class Login extends Component {
   }
 }
 
-const mapActionCreators = {};
-const mapStateToProps = state => {
-  return {
-    isInternetConnected: state.global.isInternetConnected,
-    isLoading: state.global.loading,
-  };
+const mapDispatchToProps = {
+  updateUserDetailField,
 };
-export default connect(mapStateToProps, mapActionCreators)(Login);
+const mapStateToProps = state => {
+  return {};
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

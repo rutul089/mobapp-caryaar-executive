@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
-import Select_Partner_Role_Component from './Select_Partner_Role_Component';
+import {connect} from 'react-redux';
 import {partnerRole} from '../../../constants/enums';
-import {goBack, navigate} from '../../../navigation/NavigationUtils';
 import ScreenNames from '../../../constants/ScreenNames';
+import {goBack, navigate} from '../../../navigation/NavigationUtils';
+import Select_Partner_Role_Component from './Select_Partner_Role_Component';
+import {setPartnerRole} from '../../../redux/actions';
 
-export default class SelectPartnerRole extends Component {
+class SelectPartnerRole extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,6 +25,8 @@ export default class SelectPartnerRole extends Component {
   };
 
   handleNextPress = () => {
+    const {selectedRole} = this.state;
+    this.props.setPartnerRole(selectedRole);
     navigate(ScreenNames.AddPartnerBasicDetail);
   };
 
@@ -41,3 +44,13 @@ export default class SelectPartnerRole extends Component {
     );
   }
 }
+
+const mapDispatchToProps = {
+  setPartnerRole,
+};
+const mapStateToProps = state => {
+  return {
+    isInternetConnected: state.global.isInternetConnected,
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(SelectPartnerRole);

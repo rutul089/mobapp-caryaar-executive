@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
-import User_Car_Type_Selection_Component from './User_Car_Type_Selection_Component';
+import {connect} from 'react-redux';
 import {userType, vehicleType} from '../../../constants/enums';
-import {goBack, navigate} from '../../../navigation/NavigationUtils';
 import ScreenNames from '../../../constants/ScreenNames';
+import {goBack, navigate} from '../../../navigation/NavigationUtils';
+import {setCarType, setUserType} from '../../../redux/actions';
+import User_Car_Type_Selection_Component from './User_Car_Type_Selection_Component';
 
-export default class UserAndCarTypeSelection extends Component {
+class UserAndCarTypeSelection extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,6 +30,9 @@ export default class UserAndCarTypeSelection extends Component {
   };
 
   handleNextPress = () => {
+    let {selectedCarType, selectedUserType} = this.state;
+    this.props.setCarType(selectedCarType);
+    this.props.setUserType(selectedUserType);
     navigate(ScreenNames.SelectPartnerRole);
   };
 
@@ -52,3 +56,17 @@ export default class UserAndCarTypeSelection extends Component {
     );
   }
 }
+
+const mapDispatchToProps = {
+  setCarType,
+  setUserType,
+};
+const mapStateToProps = state => {
+  return {
+    dealershipType: state.partnerForm.dealershipType,
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(UserAndCarTypeSelection);
