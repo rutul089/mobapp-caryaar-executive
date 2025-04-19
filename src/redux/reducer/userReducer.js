@@ -3,10 +3,11 @@ import {types} from '../actions';
 const initialState = {
   userDetails: null,
   userProfile: null,
+  loading: false,
+  error: null,
 };
 
 const userReducer = (state = initialState, action) => {
-  console.log('action', JSON.stringify(action));
   switch (action.type) {
     case types.SET_USER_DETAILS:
       return {
@@ -26,6 +27,14 @@ const userReducer = (state = initialState, action) => {
           [action.payload.key]: action.payload.value,
         },
       };
+    case types.FETCH_USER_REQUEST:
+      return {...state, loading: true, error: null};
+
+    case types.FETCH_USER_SUCCESS:
+      return {...state, loading: false, userProfile: action.payload};
+
+    case types.FETCH_USER_FAILURE:
+      return {...state, loading: false, error: action.payload};
     case types.CLEAR_USER_DETAILS:
     case types.RESET_APP_STATE:
       return initialState;

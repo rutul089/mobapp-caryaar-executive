@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {Loader} from '../../components';
 import ScreenNames from '../../constants/ScreenNames';
 import {
   navigate,
   navigateAndSimpleReset,
 } from '../../navigation/NavigationUtils';
-import Profile_Component from './Profile_Component';
+import {fetchUser, resetAppState, setLoginStatus} from '../../redux/actions';
 import {clearLoginStatus} from '../../utils/storage';
-import {connect} from 'react-redux';
-import {resetAppState, setLoginStatus} from '../../redux/actions';
+import Profile_Component from './Profile_Component';
 
 class ProfileScreen extends Component {
   constructor(props) {
@@ -21,6 +22,23 @@ class ProfileScreen extends Component {
     this.onModalHide = this.onModalHide.bind(this);
     this.onPressPrimaryButton = this.onPressPrimaryButton.bind(this);
   }
+
+  async componentDidMount() {
+    this.fetchUser();
+  }
+
+  fetchUser = () => {
+    // return
+    this.props.fetchUser(
+      5,
+      user => {
+        console.log('User Data', JSON.stringify(user));
+      },
+      error => {
+        console.log('error', JSON.stringify(error));
+      },
+    );
+  };
 
   handleMenuPress = (index, item) => {
     if (item.screenName === ScreenNames.Logout) {
@@ -60,6 +78,7 @@ class ProfileScreen extends Component {
   render() {
     const {showLogoutModal} = this.state;
     const {userDetail} = this.props;
+
     return (
       <>
         <Profile_Component
@@ -74,6 +93,7 @@ class ProfileScreen extends Component {
           email={userDetail?.email}
           phone={userDetail?.phone}
         />
+        {this.props.loading && <Loader visible={this.props.loading} />}
       </>
     );
   }
@@ -82,10 +102,14 @@ class ProfileScreen extends Component {
 const mapDispatchToProps = {
   setLoginStatus,
   resetAppState,
+  fetchUser,
 };
 const mapStateToProps = state => {
   return {
     userDetail: state.user?.userDetails,
+    loading: state.user.loading,
+    user: state.user.userProfile,
+    error: state.user.error,
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

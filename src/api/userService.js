@@ -1,4 +1,25 @@
-// import axiosInstance from '../api/axiosInstance'; 
+import axiosInstance from '../api/axiosInstance';
+
+// to skip auth
+export const getPublicPosts = async () => {
+  try {
+    const response = await axiosInstance.get('/posts', {
+      skipAuth: true,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getUser = async userId => {
+  try {
+    const response = await axiosInstance.get(`/users/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 // // ✅ Get User by ID
 // export const getUser = async (userId) => {
