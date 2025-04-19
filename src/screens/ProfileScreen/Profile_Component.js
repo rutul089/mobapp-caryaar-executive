@@ -14,6 +14,7 @@ import React from 'react';
 import {Image, ScrollView, StyleSheet, View} from 'react-native';
 
 import ScreenNames from '../../constants/ScreenNames';
+import {ImageComponent} from '../../components';
 
 const Profile_Component = ({
   params,
@@ -32,7 +33,11 @@ const Profile_Component = ({
   const profileCard = () => {
     return (
       <View style={styles.profileCard}>
-        <Image source={images.placeholder_image} style={styles.profilePic} />
+        <ImageComponent
+          source="https://randomuser.me/api/portraits/men/1.jpg"
+          style={styles.profilePic}
+        />
+        {/* <Image source={images.placeholder_image} style={styles.profilePic} /> */}
         <View style={styles.infoSection}>
           <Text
             size={'small'}

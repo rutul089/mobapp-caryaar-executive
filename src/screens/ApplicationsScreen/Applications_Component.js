@@ -1,13 +1,15 @@
 import {
   CardWrapper,
+  CommonModal,
   ImageHeader,
   PartnerCard,
+  RadioButton,
   SafeAreaWrapper,
   Spacing,
   theme,
 } from '@caryaar/components';
 import React from 'react';
-import {FlatList, StyleSheet} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {getGradientColors} from '../../utils/helper';
 
 const Applications_Component = ({
@@ -15,7 +17,26 @@ const Applications_Component = ({
   applications,
   onItemPress,
   onTrackApplicationPress,
+  onPressPrimaryButton,
 }) => {
+  const [isFilterModalVisible, setIsFilterModalVisible] = React.useState(false);
+  const [activeFilterOption, setActiveFilterOption] = React.useState('');
+
+  const handleApplyFilter = () => {
+    onPressPrimaryButton && onPressPrimaryButton(activeFilterOption);
+    setActiveFilterOption('');
+    setIsFilterModalVisible(false);
+  };
+
+  const handleOpenFilter = () => {
+    setIsFilterModalVisible(true);
+  };
+
+  const handleCloseFilter = () => {
+    setActiveFilterOption('');
+    setIsFilterModalVisible(false);
+  };
+
   return (
     <SafeAreaWrapper hideBottom>
       <ImageHeader
@@ -23,12 +44,16 @@ const Applications_Component = ({
         hideSubHeader={false}
         hideProfileIcon
         subTittle="Applications"
+        searchPlaceHolder={'Search by application number...'}
+        onFilterPress={handleOpenFilter}
       />
+
       <FlatList
         contentContainerStyle={styles.wrapper}
         keyExtractor={(_, index) => index.toString()}
         bounces={false}
-        renderItem={({item, index}) => (
+        data={applications}
+        renderItem={({item}) => (
           <>
             <CardWrapper
               showLeftText
@@ -56,8 +81,30 @@ const Applications_Component = ({
         maxToRenderPerBatch={5}
         removeClippedSubviews
         windowSize={10}
-        data={applications}
       />
+
+      <CommonModal
+        isVisible={isFilterModalVisible}
+        onModalHide={handleCloseFilter}
+        primaryButtonLabel={'Apply'}
+        isScrollableContent={true}
+        isPrimaryButtonVisible={true}
+        onPressPrimaryButton={handleApplyFilter}
+        title="Filter by">
+        <View style={{paddingVertical: 10}}>
+          <RadioButton
+            label={'Saved Vehicles'}
+            selected={activeFilterOption === 'Saved'}
+            onPress={() => setActiveFilterOption('Saved')}
+          />
+          <Spacing />
+          <RadioButton
+            label={'Draft Vehicles'}
+            selected={activeFilterOption === 'Draft'}
+            onPress={() => setActiveFilterOption('Draft')}
+          />
+        </View>
+      </CommonModal>
     </SafeAreaWrapper>
   );
 };
