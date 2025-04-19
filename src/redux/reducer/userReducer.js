@@ -27,7 +27,7 @@ const userReducer = (state = initialState, action) => {
         },
       };
     case types.CLEAR_USER_DETAILS:
-    case types.CLEAR_ALL_DATA:
+    case types.RESET_APP_STATE:
       return initialState;
     default:
       return state;

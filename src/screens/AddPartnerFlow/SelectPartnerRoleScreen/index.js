@@ -49,8 +49,6 @@ const mapDispatchToProps = {
   setPartnerRole,
 };
 const mapStateToProps = state => {
-  return {
-    isInternetConnected: state.global.isInternetConnected,
-  };
+  return {};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SelectPartnerRole);

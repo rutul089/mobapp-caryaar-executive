@@ -111,8 +111,7 @@ const mapDispatchToProps = {
 };
 const mapStateToProps = state => {
   return {
-    isInternetConnected: state.global.isInternetConnected,
-    isLoading: state.global.loading,
+    isInternetConnected: state.appState.isInternetConnected,
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(PartnersScreen);

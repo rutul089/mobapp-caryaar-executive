@@ -1,11 +1,11 @@
 import {combineReducers} from 'redux';
-import global from './global';
-import {authReducer} from './authReducer';
+import appStateReducer from './appStateReducer';
+import authReducer from './authReducer';
 import partnerFormReducer from './partnerFormReducer';
 import userReducer from './userReducer';
 
 const rootReducer = combineReducers({
-  global,
+  appState: appStateReducer,
   auth: authReducer,
   partnerForm: partnerFormReducer,
   user: userReducer,

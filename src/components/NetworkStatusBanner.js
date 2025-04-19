@@ -9,7 +9,7 @@ import {
 import NetInfo from '@react-native-community/netinfo';
 import {Text, images} from '@caryaar/components';
 import {useDispatch} from 'react-redux';
-import {noInternetConnected} from '../redux/actions';
+import {setNetworkStatus} from '../redux/actions';
 
 const NetworkStatusBanner = () => {
   const [isConnected, setIsConnected] = useState(true);
@@ -23,11 +23,11 @@ const NetworkStatusBanner = () => {
         setIsConnected(false);
         setVisible(true);
         fadeIn();
-        dispatch(noInternetConnected(false)); // update redux
+        dispatch(setNetworkStatus(false)); // update redux
       } else if (!isConnected) {
         setIsConnected(true);
         fadeOut();
-        dispatch(noInternetConnected(true)); // update redux
+        dispatch(setNetworkStatus(true)); // update redux
       }
     });
 

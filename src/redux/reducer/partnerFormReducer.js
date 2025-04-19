@@ -43,7 +43,7 @@ export default function partnerFormReducer(state = initialState, action) {
       };
     case types.RESET_REGISTRATION:
     case types.CLEAR_PARTNER_FORM:
-    case types.CLEAR_ALL_DATA:
+    case types.RESET_APP_STATE:
       return initialState;
     default:
       return state;
