@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, use} from 'react';
 import {connect} from 'react-redux';
 import {Loader} from '../../components';
 import ScreenNames from '../../constants/ScreenNames';
@@ -28,7 +28,7 @@ class ProfileScreen extends Component {
   }
 
   fetchUser = () => {
-    // return
+    return;
     this.props.fetchUser(
       5,
       user => {
@@ -77,7 +77,8 @@ class ProfileScreen extends Component {
 
   render() {
     const {showLogoutModal} = this.state;
-    const {userDetail} = this.props;
+    const {userDetail, user} = this.props;
+    console.log(JSON.stringify(user));
 
     return (
       <>
@@ -89,9 +90,10 @@ class ProfileScreen extends Component {
           onPressPrimaryButton={this.onPressPrimaryButton}
           onModalHide={this.onModalHide}
           address={userDetail?.address}
-          name={userDetail?.name}
-          email={userDetail?.email}
-          phone={userDetail?.phone}
+          name={user?.name}
+          email={user?.email}
+          phone={user?.phone}
+          userID={user?.company?.name}
         />
         {this.props.loading && <Loader visible={this.props.loading} />}
       </>

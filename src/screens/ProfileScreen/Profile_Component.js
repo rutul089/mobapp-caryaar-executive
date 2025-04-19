@@ -27,6 +27,7 @@ const Profile_Component = ({
   name,
   email,
   phone,
+  userID,
 }) => {
   const profileCard = () => {
     return (
@@ -37,7 +38,7 @@ const Profile_Component = ({
             size={'small'}
             hankenGroteskSemiBold={true}
             color={theme.colors.primary}>
-            !XX0012
+            {userID}
           </Text>
           <Text hankenGroteskExtraBold={true} color={theme.colors.white}>
             {name}

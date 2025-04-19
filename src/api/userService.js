@@ -21,6 +21,35 @@ export const getUser = async userId => {
   }
 };
 
+//Multipart demo
+export const uploadProfilePicture = async (userId, imageFile) => {
+  const formData = new FormData();
+
+  formData.append('userId', userId);
+  formData.append('profileImage', {
+    uri: imageFile.uri,
+    name: imageFile.fileName || 'profile.jpg',
+    type: imageFile.type || 'image/jpeg',
+  });
+
+  try {
+    const response = await axiosInstance.post(
+      '/upload/profile-picture',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        // skipAuth: true,
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // // ✅ Get User by ID
 // export const getUser = async (userId) => {
 //   try {
@@ -60,3 +89,15 @@ export const getUser = async userId => {
 //     throw error;
 //   }
 // };
+
+// Example code
+// import {launchImageLibrary} from 'react-native-image-picker';
+
+// launchImageLibrary({mediaType: 'photo'}, response => {
+//   if (!response.didCancel && !response.errorCode) {
+//     const imageFile = response.assets[0];
+//     uploadProfilePicture('123', imageFile)
+//       .then(data => console.log('Upload success:', data))
+//       .catch(err => console.error('Upload error:', err));
+//   }
+// });
