@@ -22,6 +22,7 @@ const Partner_Basic_Form_Component = ({
   handleNextPress,
   dropdownOptions,
   onSelectBusinessType,
+  restInputProps,
 }) => {
   return (
     <SafeAreaWrapper>
@@ -33,6 +34,14 @@ const Partner_Basic_Form_Component = ({
         dropdownOptions={dropdownOptions}
         handleNextPress={handleNextPress}
         contentContainerStyle={styles.wrapper}
+        onBusinessTypePress={onBusinessTypePress}
+        onChangeBusinessName={onChangeBusinessName}
+        onChangeYearsInBusiness={onChangeYearsInBusiness}
+        onChangeMonthlyCarSales={onChangeMonthlyCarSales}
+        onChangeOwnerName={onChangeOwnerName}
+        onChangeMobileNumber={onChangeMobileNumber}
+        onChangeEmail={onChangeEmail}
+        restInputProps={restInputProps}
       />
     </SafeAreaWrapper>
   );

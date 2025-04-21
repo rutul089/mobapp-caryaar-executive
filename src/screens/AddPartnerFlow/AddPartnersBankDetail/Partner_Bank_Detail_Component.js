@@ -3,10 +3,10 @@ import {
   StepTracker,
   Header,
   AccountDetailsForm,
+  theme,
 } from '@caryaar/components';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import theme from '../../../theme';
 import {goBack} from '../../../navigation/NavigationUtils';
 
 const Partner_Bank_Detail_Component = ({
@@ -14,6 +14,14 @@ const Partner_Bank_Detail_Component = ({
   selectedTransferMode,
   onTransferModeSelect,
   handleSubmitPress,
+  onAccountNumberChange,
+  onAccountHolderNameChange,
+  onBankNamePress,
+  onIFSCCodeChange,
+  restInputProps,
+  dropdownOptions,
+  bankName,
+  onSelectBank,
 }) => {
   return (
     <SafeAreaWrapper>
@@ -26,6 +34,14 @@ const Partner_Bank_Detail_Component = ({
         buttonName={'Submit'}
         onButtonPress={handleSubmitPress}
         contentContainerStyle={styles.wrapper}
+        onAccountNumberChange={onAccountNumberChange}
+        onAccountHolderNameChange={onAccountHolderNameChange}
+        onBankNamePress={onBankNamePress}
+        onIFSCCodeChange={onIFSCCodeChange}
+        restInputProps={restInputProps}
+        dropdownOptions={dropdownOptions}
+        bankName={bankName}
+        onSelectBank={onSelectBank}
       />
     </SafeAreaWrapper>
   );

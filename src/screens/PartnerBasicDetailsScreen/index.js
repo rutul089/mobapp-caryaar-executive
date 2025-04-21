@@ -7,7 +7,13 @@ export default class PartnerBasicDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      businessName: '',
       businessType: '',
+      yearsInBusiness: '',
+      monthlyCarSales: '',
+      ownerName: '',
+      mobileNumber: '',
+      emailAddress: '',
     };
     this.onBackPress = this.onBackPress.bind(this);
   }

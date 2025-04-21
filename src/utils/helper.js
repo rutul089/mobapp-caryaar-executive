@@ -159,3 +159,113 @@ export const handleViewFilePreview = (
       });
   }
 };
+
+export const validateField = (key, value) => {
+  const trimmedValue = value.trim();
+
+  // Regular Expressions
+  const nameRegex = /^[A-Za-z\s]+$/;
+  const numericRegex = /^[0-9]+(\.[0-9]+)?$/;
+  const integerRegex = /^[0-9]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const mobileNumberRegex = /^[0-9]{10}$/;
+  const pincodeRegex = /^[0-9]{6}$/;
+  const ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+  const accountNumberRegex = /^[0-9]{9,18}$/;
+
+  switch (key) {
+    // Company & Business Names
+    case 'companyName':
+    case 'businessName':
+      return trimmedValue === ''
+        ? 'Please enter a valid company name'
+        : !nameRegex.test(trimmedValue)
+        ? 'Name should contain only alphabets'
+        : '';
+
+    // Numeric only fields with optional decimal — no leading decimal
+    case 'yearsInBusiness':
+    case 'monthlyCarSales':
+      return trimmedValue === ''
+        ? `Please enter ${
+            key === 'yearsInBusiness'
+              ? 'number of years in business'
+              : 'monthly car sales'
+          }`
+        : !numericRegex.test(trimmedValue) || trimmedValue.startsWith('.')
+        ? `${
+            key === 'yearsInBusiness'
+              ? 'Years in business'
+              : 'Monthly car sales'
+          } must be a valid number (not starting with a decimal)`
+        : '';
+
+    // Names
+    case 'ownerName':
+    case 'accountHolderName':
+      return trimmedValue === ''
+        ? `Please enter a valid ${
+            key === 'ownerName' ? 'owner name' : 'account holder name'
+          }`
+        : !nameRegex.test(trimmedValue)
+        ? 'Name should contain only alphabets'
+        : '';
+
+    // Address Fields
+    case 'shopNo':
+      return trimmedValue === ''
+        ? 'Please enter a valid shop/office number'
+        : '';
+    case 'buildingName':
+      return trimmedValue === '' ? 'Please enter a valid building name' : '';
+    case 'street':
+      return trimmedValue === '' ? 'Please enter a valid street' : '';
+    case 'area':
+      return trimmedValue === '' ? 'Please enter a valid area' : '';
+    case 'stateName':
+      return trimmedValue === '' ? 'Please select a valid State Name' : '';
+    case 'businessType':
+      return trimmedValue === '' ? 'Please select a valid business type' : '';
+
+    // Pincode
+    case 'pincode':
+      return pincodeRegex.test(trimmedValue)
+        ? ''
+        : 'Pincode must be a 6-digit number';
+
+    // Mobile Number
+    case 'mobileNumber':
+      return trimmedValue === ''
+        ? 'Please enter a mobile number'
+        : !mobileNumberRegex.test(trimmedValue)
+        ? 'Mobile number must be a 10-digit number'
+        : '';
+
+    // Email
+    case 'emailAddress':
+      return trimmedValue === ''
+        ? 'Please enter an email address'
+        : !emailRegex.test(trimmedValue)
+        ? 'Please enter a valid email address'
+        : '';
+
+    // Account Number
+    case 'accountNumber':
+      return accountNumberRegex.test(trimmedValue)
+        ? ''
+        : 'Account number must be 9 to 18 digit number';
+
+    // Bank Name
+    case 'bankName':
+      return trimmedValue === '' ? 'Please select a valid bank name' : '';
+
+    // IFSC Code
+    case 'ifscCode':
+      return ifscRegex.test(trimmedValue)
+        ? ''
+        : 'Please enter a valid IFSC code (e.g., HDFC0001234)';
+
+    default:
+      return '';
+  }
+};
