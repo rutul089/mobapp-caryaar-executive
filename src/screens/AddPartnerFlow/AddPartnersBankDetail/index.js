@@ -5,6 +5,7 @@ import {navigate} from '../../../navigation/NavigationUtils';
 import Partner_Bank_Detail_Component from './Partner_Bank_Detail_Component';
 import {connect} from 'react-redux';
 import {setBankingDetails} from '../../../redux/actions';
+import {handleFieldChange, validateField} from '../../../utils/helper';
 
 class AddPartnersBankDetail extends Component {
   constructor(props) {
@@ -23,7 +24,7 @@ class AddPartnersBankDetail extends Component {
         ifscCode: '',
         branchName: '',
       },
-      isFormValid: false, // This state will track if the form is valid
+      isFormValid: false,
     };
   }
 
@@ -41,17 +42,12 @@ class AddPartnersBankDetail extends Component {
       ifscCode,
       branchName,
       selectedTransferMode,
-      isFormValid,
     } = this.state;
 
-    if (bankName === '') {
-      this.onChangeField('bankName', bankName);
-      return;
-    }
+    const isFormValid = this.validateAllFields();
 
     if (!isFormValid) {
-      const message = 'Please fill all required fields correctly.';
-      console.log({message});
+      console.log('Form is invalid. Please correct the fields.');
       return;
     }
 
@@ -66,63 +62,38 @@ class AddPartnersBankDetail extends Component {
     navigate(ScreenNames.PartnerRegistrationSuccess);
   };
 
-  validateField = (key, value) => {
-    console.log(key, value);
-    const trimmedValue = value.trim();
-
-    switch (key) {
-      case 'accountNumber':
-        const accountNumberRegex = /^[0-9]{9,18}$/; // 9-18 digit numeric only
-        return accountNumberRegex.test(trimmedValue)
-          ? ''
-          : 'Account number must be 9 to 18 digit number';
-
-      case 'accountHolderName':
-        return trimmedValue === ''
-          ? 'Please enter a valid account holder name'
-          : '';
-
-      case 'bankName':
-        console.log('123:bankName', trimmedValue === '');
-        return trimmedValue === '' ? 'Please select a valid bank name' : '';
-
-      case 'ifscCode':
-        const ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/; // Standard IFSC format
-        return ifscRegex.test(trimmedValue)
-          ? ''
-          : 'Please enter a valid IFSC code (e.g., HDFC0001234)';
-
-      default:
-        return '';
-    }
-  };
-
-  onChangeField = (key, value) => {
-    const errorMsg = this.validateField(key, value);
-
-    this.setState(prevState => {
-      const updatedErrors = {
-        ...prevState.errors,
-        [key]: errorMsg,
-      };
-
-      // Check if all fields are valid
-      const isFormValid = Object.values(updatedErrors).every(
-        error => error === '',
-      );
-
-      return {
-        [key]: value,
-        errors: updatedErrors,
-        isFormValid, // Update form validity status
-      };
-    });
-  };
-
   onSelectBank = (item, index) => {
     this.setState({bankName: item.label}, () => {
       this.onChangeField('bankName', this.state.bankName);
     });
+  };
+
+  validateAllFields = () => {
+    const fieldsToValidate = [
+      'accountNumber',
+      'accountHolderName',
+      'bankName',
+      'ifscCode',
+    ];
+
+    const errors = {};
+    let isFormValid = true;
+
+    fieldsToValidate.forEach(key => {
+      const value = this.state[key];
+      const error = validateField(key, value);
+      errors[key] = error;
+      if (error !== '') {
+        isFormValid = false;
+      }
+    });
+
+    this.setState({errors, isFormValid});
+    return isFormValid;
+  };
+
+  onChangeField = (key, value) => {
+    handleFieldChange(this, key, value);
   };
 
   render() {

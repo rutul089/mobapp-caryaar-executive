@@ -161,7 +161,8 @@ export const handleViewFilePreview = (
 };
 
 export const validateField = (key, value) => {
-  const trimmedValue = value.trim();
+  console.log({key, value});
+  const trimmedValue = value?.trim();
 
   // Regular Expressions
   const nameRegex = /^[A-Za-z\s]+$/;
@@ -268,4 +269,25 @@ export const validateField = (key, value) => {
     default:
       return '';
   }
+};
+
+export const handleFieldChange = (component, key, value) => {
+  const errorMsg = validateField(key, value);
+
+  component.setState(prevState => {
+    const updatedErrors = {
+      ...prevState.errors,
+      [key]: errorMsg,
+    };
+
+    const isFormValid = Object.values(updatedErrors).every(
+      error => error === '',
+    );
+
+    return {
+      [key]: value,
+      errors: updatedErrors,
+      isFormValid,
+    };
+  });
 };

@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
-import {launchImageLibrary} from 'react-native-image-picker';
-import Partner_Document_Form_Component from './Partner_Document_Form_Component';
-import {navigate} from '../../../navigation/NavigationUtils';
-import ScreenNames from '../../../constants/ScreenNames';
-import DocumentUtils from '../../../utils/DocumentUtils';
 import {ImagePreviewModal} from '@caryaar/components';
+import React, {Component} from 'react';
+import ScreenNames from '../../../constants/ScreenNames';
+import {navigate} from '../../../navigation/NavigationUtils';
+import DocumentUtils from '../../../utils/DocumentUtils';
+import Partner_Document_Form_Component from './Partner_Document_Form_Component';
+import {connect} from 'react-redux';
+import {setDocumentDetails} from '../../../redux/actions';
 
-export default class AddPartnerRequiredDocument extends Component {
+class AddPartnerRequiredDocument extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,41 +24,54 @@ export default class AddPartnerRequiredDocument extends Component {
   fetchDocumentDataFromAPI = () => {
     const apiResponse = {
       documents: {
-        GST: 'https://file-examples.com/wp-content/storage/2017/02/file-sample_1MB.doc',
-        'Shop License':
-          'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-        'PAN Card':
-          'https://votercardprint.com/image/cache/catalog/pan-card-print-500x500.jpg',
-        'Aadhar Card Front':
-          'https://4.imimg.com/data4/TB/KH/MY-1817237/pre-printed-aadhar-card-1000x1000.jpg',
-        'Aadhar Card Back':
-          'https://4.imimg.com/data4/TB/KH/MY-1817237/pre-printed-aadhar-card-1000x1000.jpg',
+        GST: null,
+        ShopLicense: null,
+        'PAN Card': null,
+        'Aadhar Card Front': null,
+        'Aadhar Card Back': null,
         Photograph: null,
         'Bank Statement': null,
         'Cancelled Cheque': null,
       },
+      // documents: {
+      //   GST: 'https://file-examples.com/wp-content/storage/2017/02/file-sample_1MB.doc',
+      //   'Shop License':
+      //     'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      //   'PAN Card':
+      //     'https://votercardprint.com/image/cache/catalog/pan-card-print-500x500.jpg',
+      //   'Aadhar Card Front':
+      //     'https://4.imimg.com/data4/TB/KH/MY-1817237/pre-printed-aadhar-card-1000x1000.jpg',
+      //   'Aadhar Card Back':
+      //     'https://4.imimg.com/data4/TB/KH/MY-1817237/pre-printed-aadhar-card-1000x1000.jpg',
+      //   Photograph: null,
+      //   'Bank Statement': null,
+      //   'Cancelled Cheque': null,
+      // },
     };
 
     const groups = [
       {
         title: 'Business Documents',
         documents: [
-          {label: 'GST'},
-          {label: 'Shop License'},
-          {label: 'PAN Card'},
+          {label: 'GST', stateName: 'gst'},
+          {label: 'Shop License', stateName: 'shopLicense'},
+          {label: 'PAN Card', stateName: 'panCard'},
         ],
       },
       {
         title: 'Personal Documents',
         documents: [
-          {label: 'Aadhar Card Front'},
-          {label: 'Aadhar Card Back'},
-          {label: 'Photograph'},
+          {label: 'Aadhar Card Front', stateName: 'aadharCardFront'},
+          {label: 'Aadhar Card Back', stateName: 'aadharCardBack'},
+          {label: 'Photograph', stateName: 'photograph'},
         ],
       },
       {
         title: 'Bank Documents',
-        documents: [{label: 'Bank Statement'}, {label: 'Cancelled Cheque'}],
+        documents: [
+          {label: 'Bank Statement', stateName: 'bankStatement'},
+          {label: 'Cancelled Cheque', stateName: 'cancelledCheque'},
+        ],
       },
     ];
 
@@ -124,14 +138,17 @@ export default class AddPartnerRequiredDocument extends Component {
       group.documents.forEach(doc => {
         const initialUri = this.state.initialDocuments[doc.label] || null;
         const currentUri = doc.image ? doc.image.uri : null;
+        // changedDocuments[doc.label] = doc.image;
+        changedDocuments[doc.stateName] = doc.image;
 
-        if (currentUri !== initialUri) {
-          changedDocuments[doc.label] = doc.image;
-        }
+        // if (currentUri !== initialUri) {
+        //   changedDocuments[doc.label] = doc.image;
+        // }
       });
     });
 
     console.log('Changed Documents with details:', changedDocuments);
+    this.props.setDocumentDetails(changedDocuments);
     navigate(ScreenNames.AddPartnersBankDetail);
     return changedDocuments;
   };
@@ -163,3 +180,15 @@ export default class AddPartnerRequiredDocument extends Component {
     );
   }
 }
+
+const mapDispatchToProps = {setDocumentDetails};
+const mapStateToProps = state => {
+  return {
+    isInternetConnected: state.appState.isInternetConnected,
+    isLoading: state.appState.loading,
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AddPartnerRequiredDocument);

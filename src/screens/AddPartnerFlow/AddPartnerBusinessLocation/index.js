@@ -4,6 +4,7 @@ import Partner_Location_Form_Component from './Partner_Location_Form_Component';
 import ScreenNames from '../../../constants/ScreenNames';
 import {connect} from 'react-redux';
 import {setLocationDetails} from '../../../redux/actions';
+import {handleFieldChange, validateField} from '../../../utils/helper';
 
 class AddPartnerBusinessLocation extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class AddPartnerBusinessLocation extends Component {
         pincode: '',
         stateName: '',
       },
-      isFormValid: '', // This state will track if the form is valid
+      isFormValid: false,
     };
   }
 
@@ -34,54 +35,36 @@ class AddPartnerBusinessLocation extends Component {
     goBack();
   };
 
-  // Validation functions for each field
-  validateField = (key, value) => {
-    switch (key) {
-      case 'companyName':
-        return value.trim() === '' ? 'Please enter a valid company name' : '';
-      case 'shopNo':
-        return value.trim() === ''
-          ? 'Please enter a valid shop/office number'
-          : '';
-      case 'buildingName':
-        return value.trim() === '' ? 'Please enter a valid building name' : '';
-      case 'street':
-        return value.trim() === '' ? 'Please enter a valid street' : '';
-      case 'area':
-        return value.trim() === '' ? 'Please enter a valid area' : '';
-      case 'stateName':
-        return value.trim() === '' ? 'Please select a valid State Name' : '';
-      case 'pincode':
-        const pincodeRegex = /^[0-9]{6}$/; // Only 6 digit numbers
-        return pincodeRegex.test(value.trim())
-          ? ''
-          : 'Pincode must be a 6-digit number';
-      default:
-        return '';
-    }
+  validateAllFields = () => {
+    const fieldsToValidate = [
+      'companyName',
+      'shopNo',
+      'buildingName',
+      'street',
+      'area',
+      'stateName',
+      'pincode',
+      'cityName',
+    ];
+
+    const errors = {};
+    let isFormValid = true;
+
+    fieldsToValidate.forEach(key => {
+      const value = this.state[key];
+      const error = validateField(key, value);
+      errors[key] = error;
+      if (error !== '') {
+        isFormValid = false;
+      }
+    });
+
+    this.setState({errors, isFormValid});
+    return isFormValid;
   };
 
-  // Update field and validate
   onChangeField = (key, value) => {
-    const errorMsg = this.validateField(key, value);
-
-    this.setState(prevState => {
-      const updatedErrors = {
-        ...prevState.errors,
-        [key]: errorMsg,
-      };
-
-      // Check if all fields are valid
-      const isFormValid = Object.values(updatedErrors).every(
-        error => error === '',
-      );
-
-      return {
-        [key]: value,
-        errors: updatedErrors,
-        isFormValid, // Update form validity status
-      };
-    });
+    handleFieldChange(this, key, value);
   };
 
   handleNextPress = () => {
@@ -93,18 +76,14 @@ class AddPartnerBusinessLocation extends Component {
       area,
       stateName,
       pincode,
-      isFormValid,
     } = this.state;
 
-    if (stateName === '') {
-      return this.onChangeField('stateName', stateName);
-    }
+    const isFormValid = this.validateAllFields();
 
     if (!isFormValid) {
-      const message = 'Please fill all required fields correctly.';
+      console.log('Form is invalid. Please correct the fields.');
       return;
     }
-
     this.props.setLocationDetails({
       companyName,
       shopNo,

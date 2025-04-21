@@ -4,6 +4,7 @@ import ScreenNames from '../../../constants/ScreenNames';
 import {navigate} from '../../../navigation/NavigationUtils';
 import {setBasicDetails} from '../../../redux/actions';
 import Partner_Basic_Form_Component from './Partner_Basic_Form_Component';
+import {handleFieldChange, validateField} from '../../../utils/helper';
 
 class AddPartnerBasicDetail extends Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class AddPartnerBasicDetail extends Component {
         mobileNumber: '',
         businessType: '',
       },
-      isFormValid: false, // This state will track if the form is valid
+      isFormValid: false,
     };
   }
 
@@ -49,16 +50,11 @@ class AddPartnerBasicDetail extends Component {
       ownerName,
       mobileNumber,
       emailAddress,
-      isFormValid,
     } = this.state;
-
-    if (businessType === '') {
-      return this.onChangeField('businessType', businessType);
-    }
+    const isFormValid = this.validateAllFields();
 
     if (!isFormValid) {
-      const message = 'Please fill all required fields correctly.';
-      console.log({message});
+      console.log('Form is invalid. Please correct the fields.');
       return;
     }
 
@@ -75,73 +71,35 @@ class AddPartnerBasicDetail extends Component {
     navigate(ScreenNames.AddPartnerBusinessLocation);
   };
 
-  validateField = (key, value) => {
-    const trimmedValue = value.trim();
+  validateAllFields = () => {
+    const fieldsToValidate = [
+      'businessName',
+      'businessType',
+      'yearsInBusiness',
+      'monthlyCarSales',
+      'ownerName',
+      'mobileNumber',
+      'emailAddress',
+    ];
 
-    switch (key) {
-      case 'businessName':
-        return trimmedValue === '' ? 'Please enter a valid business name' : '';
+    const errors = {};
+    let isFormValid = true;
 
-      case 'yearsInBusiness':
-        return trimmedValue === ''
-          ? 'Please enter number of years in business'
-          : !/^[0-9]+(\.[0-9]+)?$/.test(trimmedValue)
-          ? 'Years in business must be a valid number (not starting with a decimal)'
-          : '';
+    fieldsToValidate.forEach(key => {
+      const value = this.state[key];
+      const error = validateField(key, value);
+      errors[key] = error;
+      if (error !== '') {
+        isFormValid = false;
+      }
+    });
 
-      case 'monthlyCarSales':
-        return trimmedValue === ''
-          ? 'Please enter monthly car sales'
-          : !/^[0-9]+(\.[0-9]+)?$/.test(trimmedValue)
-          ? 'Monthly car sales must be a valid number (not starting with a decimal)'
-          : '';
-
-      case 'ownerName':
-        return trimmedValue === '' ? 'Please enter a valid owner name' : '';
-      case 'businessType':
-        return trimmedValue === '' ? 'Please select valid business type' : '';
-
-      case 'emailAddress':
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return trimmedValue === ''
-          ? 'Please enter an email address'
-          : !emailRegex.test(trimmedValue)
-          ? 'Please enter a valid email address'
-          : '';
-
-      case 'mobileNumber':
-        const mobileNumberRegex = /^[0-9]{10}$/;
-        return trimmedValue === ''
-          ? 'Please enter a mobile number'
-          : !mobileNumberRegex.test(trimmedValue)
-          ? 'Mobile number must be a 10-digit number'
-          : '';
-
-      default:
-        return '';
-    }
+    this.setState({errors, isFormValid});
+    return isFormValid;
   };
 
   onChangeField = (key, value) => {
-    const errorMsg = this.validateField(key, value);
-
-    this.setState(prevState => {
-      const updatedErrors = {
-        ...prevState.errors,
-        [key]: errorMsg,
-      };
-
-      // Check if all fields are valid
-      const isFormValid = Object.values(updatedErrors).every(
-        error => error === '',
-      );
-
-      return {
-        [key]: value,
-        errors: updatedErrors,
-        isFormValid, // Update form validity status
-      };
-    });
+    handleFieldChange(this, key, value);
   };
 
   render() {
