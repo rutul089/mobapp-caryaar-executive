@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import ScreenNames from '../../../constants/ScreenNames';
-import {navigate} from '../../../navigation/NavigationUtils';
+import {getScreenParam, navigate} from '../../../navigation/NavigationUtils';
 import {setBasicDetails} from '../../../redux/actions';
 import Partner_Basic_Form_Component from './Partner_Basic_Form_Component';
 import {handleFieldChange, validateField} from '../../../utils/helper';
-
+import {get} from 'lodash';
 class AddPartnerBasicDetail extends Component {
   constructor(props) {
     super(props);
@@ -27,7 +27,32 @@ class AddPartnerBasicDetail extends Component {
         businessType: '',
       },
       isFormValid: false,
+      fromScreen: false,
+      showImages: [],
+      errorSteps: [],
     };
+  }
+
+  componentDidMount() {
+    const {basicDetail, route} = this.props;
+    let navState = getScreenParam(route, 'params', null);
+    let fromScreen = get(navState, 'fromScreen', false);
+    if (fromScreen) {
+      this.setState({
+        showImages: get(navState, 'showImages', []),
+        errorSteps: get(navState, 'errorSteps', []),
+      });
+    }
+    this.setState({
+      fromScreen: fromScreen,
+      businessName: get(basicDetail, 'businessName', ''),
+      businessType: get(basicDetail, 'businessType', ''),
+      yearsInBusiness: get(basicDetail, 'yearsInBusiness', ''),
+      monthlyCarSales: get(basicDetail, 'monthlyCarSales', ''),
+      ownerName: get(basicDetail, 'ownerName', ''),
+      mobileNumber: get(basicDetail, 'mobileNumber', ''),
+      emailAddress: get(basicDetail, 'emailAddress', ''),
+    });
   }
 
   onSelectBusinessType = item => {
@@ -112,6 +137,8 @@ class AddPartnerBasicDetail extends Component {
       mobileNumber,
       emailAddress,
       errors,
+      showImages,
+      errorSteps,
     } = this.state;
     return (
       <>
@@ -148,6 +175,7 @@ class AddPartnerBasicDetail extends Component {
               value: businessName,
               isError: errors.businessName,
               statusMsg: errors.businessName,
+              autoCapitalize: 'words',
             },
             businessType: {
               value: businessType,
@@ -168,6 +196,7 @@ class AddPartnerBasicDetail extends Component {
               value: ownerName,
               isError: errors.ownerName,
               statusMsg: errors.ownerName,
+              autoCapitalize: 'words',
             },
             mobileNumber: {
               value: mobileNumber,
@@ -180,6 +209,8 @@ class AddPartnerBasicDetail extends Component {
               statusMsg: errors.emailAddress,
             },
           }}
+          showImages={showImages}
+          errorSteps={errorSteps}
         />
       </>
     );
@@ -191,6 +222,7 @@ const mapStateToProps = state => {
   return {
     isInternetConnected: state.appState.isInternetConnected,
     isLoading: state.appState.loading,
+    basicDetail: state.partnerForm.basicDetails,
   };
 };
 export default connect(

@@ -8,32 +8,38 @@ import {
 import React from 'react';
 import {StyleSheet} from 'react-native';
 
-const dropdownOptions = [
-  {label: 'Corporate', value: 'a'},
-  {label: 'Salaried', value: 'b'},
-  {label: 'Self-Employed', value: 'c'},
-  {label: 'Business Owner', value: 'c'},
-  {label: 'Freelancer', value: 'c'},
-  {label: 'Consultant', value: 'c'},
-  {label: 'Retired', value: 'c'},
-  {label: 'Unemployed', value: 'c'},
-];
-
 const Partner_Basic_Details_Component = ({
   onBackPress,
   handleNextPress,
   onSelectBusinessType,
   businessType,
+  restInputProps,
+  dropdownOptions,
+  onBusinessTypePress,
+  onChangeBusinessName,
+  onChangeYearsInBusiness,
+  onChangeMonthlyCarSales,
+  onChangeOwnerName,
+  onChangeMobileNumber,
+  onChangeEmail,
 }) => {
   return (
     <SafeAreaWrapper>
       <Header title="Partner Details" onBackPress={onBackPress} />
-      <StepTracker showImages={[1, 2, 3, 4]} errorSteps={[]} />
+      <StepTracker showImages={[1, 2, 3, 4]} errorSteps={[3]} />
       <BasicDetailsForm
         onSelectBusinessType={onSelectBusinessType}
         businessType={businessType}
         dropdownOptions={dropdownOptions}
         handleNextPress={handleNextPress}
+        onBusinessTypePress={onBusinessTypePress}
+        onChangeBusinessName={onChangeBusinessName}
+        onChangeYearsInBusiness={onChangeYearsInBusiness}
+        onChangeMonthlyCarSales={onChangeMonthlyCarSales}
+        onChangeOwnerName={onChangeOwnerName}
+        onChangeMobileNumber={onChangeMobileNumber}
+        onChangeEmail={onChangeEmail}
+        restInputProps={restInputProps}
         contentContainerStyle={styles.wrapper}
       />
     </SafeAreaWrapper>

@@ -42,7 +42,6 @@ export default class ApplicationsScreen extends Component {
   };
 
   onTrackApplicationPress = item => {
-    console.log({item});
     navigate(ScreenNames.TrackApplication);
   };
 

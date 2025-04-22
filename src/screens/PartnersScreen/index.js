@@ -80,6 +80,10 @@ class PartnersScreen extends Component {
 
   callToAction = () => {
     navigate(ScreenNames.PartnerBasicDetails);
+    return;
+    navigate(ScreenNames.AddPartnerBasicDetail, {
+      params: {fromScreen: true, errorSteps: [3], showImages: [1, 2, 3, 4]},
+    });
   };
 
   onAddButtonPress = () => {

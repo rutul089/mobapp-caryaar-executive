@@ -23,11 +23,18 @@ const Partner_Basic_Form_Component = ({
   dropdownOptions,
   onSelectBusinessType,
   restInputProps,
+  showImages = [],
+  errorSteps = [],
 }) => {
   return (
     <SafeAreaWrapper>
       <Header title="Add New Partner" onBackPress={() => goBack()} />
-      <StepTracker selectedId={1} />
+      <StepTracker
+        selectedId={1}
+        showImages={showImages}
+        errorSteps={errorSteps}
+        onStepPress={stepId => console.log({stepId})}
+      />
       <BasicDetailsForm
         onSelectBusinessType={onSelectBusinessType}
         businessType={businessType}

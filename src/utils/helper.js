@@ -161,7 +161,6 @@ export const handleViewFilePreview = (
 };
 
 export const validateField = (key, value) => {
-  console.log({key, value});
   const trimmedValue = value?.trim();
 
   // Regular Expressions
