@@ -26,7 +26,7 @@ const Partner_Success_Component = ({
         <Spacing size="md_lg" />
         <Text
           size="h2"
-          hankenGroteskSemiBold
+          hankenGroteskBold
           textAlign="center"
           style={styles.center}>
           Partner Registration{'\n'}Submitted Successfully

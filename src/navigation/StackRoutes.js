@@ -129,6 +129,10 @@ const StackRoutes = () => {
         name={ScreenNames.TrackApplication}
         component={Screens.TrackApplicationScreen}
       />
+      <Stack.Screen
+        name={ScreenNames.PrivacyPolicy}
+        component={Screens.PrivacyPolicyScreen}
+      />
     </Stack.Navigator>
   );
 };

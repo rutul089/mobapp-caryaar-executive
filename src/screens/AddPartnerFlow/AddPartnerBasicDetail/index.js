@@ -145,14 +145,10 @@ class AddPartnerBasicDetail extends Component {
         <Partner_Basic_Form_Component
           onSelectBusinessType={this.onSelectBusinessType}
           dropdownOptions={[
-            {label: 'Corporate', value: 'a'},
-            {label: 'Salaried', value: 'b'},
-            {label: 'Self-Employed', value: 'c'},
-            {label: 'Business Owner', value: 'c'},
-            {label: 'Freelancer', value: 'c'},
-            {label: 'Consultant', value: 'c'},
-            {label: 'Retired', value: 'c'},
-            {label: 'Unemployed', value: 'c'},
+            {label: 'PVT Limited', value: 'a'},
+            {label: 'LLP', value: 'b'},
+            {label: 'Self-Employed', value: 'd'},
+            {label: 'Proprietorship/Individual', value: 'e'},
           ]}
           businessType={businessType}
           handleNextPress={this.handleNextPress}

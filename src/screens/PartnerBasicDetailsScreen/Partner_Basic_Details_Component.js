@@ -7,6 +7,7 @@ import {
 } from '@caryaar/components';
 import React from 'react';
 import {StyleSheet} from 'react-native';
+import {goBack} from '../../navigation/NavigationUtils';
 
 const Partner_Basic_Details_Component = ({
   onBackPress,
@@ -25,7 +26,7 @@ const Partner_Basic_Details_Component = ({
 }) => {
   return (
     <SafeAreaWrapper>
-      <Header title="Partner Details" onBackPress={onBackPress} />
+      <Header title="Partner Details" onBackPress={() => goBack()} />
       <StepTracker showImages={[1, 2, 3, 4]} errorSteps={[3]} />
       <BasicDetailsForm
         onSelectBusinessType={onSelectBusinessType}

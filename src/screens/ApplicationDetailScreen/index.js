@@ -1,17 +1,12 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
-import Application_Detail_Component from './Application_Detail_Component';
+import ScreenNames from '../../constants/ScreenNames';
 import {
   getScreenParam,
   goBack,
   navigate,
 } from '../../navigation/NavigationUtils';
-import {
-  formatIndianNumber,
-  handleViewFilePreview,
-  handleViewImage,
-} from '../../utils/helper';
-import ScreenNames from '../../constants/ScreenNames';
+import {formatIndianNumber, handleViewFilePreview} from '../../utils/helper';
+import Application_Detail_Component from './Application_Detail_Component';
 // import {handleViewImage} from './DocumentList';
 
 export default class ApplicationDetailScreen extends Component {

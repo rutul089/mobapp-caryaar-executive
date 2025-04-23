@@ -64,6 +64,9 @@ const Partner_Detail_Component = ({
             showButton
             buttonLabel="Edit Details"
             onButtonPress={() => {}}
+            customerNameProp={{
+              hankenGroteskBold: true,
+            }}
           />
         </View>
         <View style={{padding: theme.sizes.padding}}>

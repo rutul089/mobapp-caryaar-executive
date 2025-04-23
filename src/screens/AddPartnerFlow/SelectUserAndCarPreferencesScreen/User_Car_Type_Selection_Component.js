@@ -68,7 +68,7 @@ const User_Car_Type_Selection_Component = ({
           />
           <OptionCard
             value={vehicleType.used}
-            label={'New Car'}
+            label={'Used Car'}
             icon={images.usedVehicle}
             onSelect={onCarTypeSelect}
             isSelected={selectedCarType === vehicleType.used}

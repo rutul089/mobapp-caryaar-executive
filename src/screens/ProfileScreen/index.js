@@ -28,7 +28,6 @@ class ProfileScreen extends Component {
   }
 
   fetchUser = () => {
-    return;
     this.props.fetchUser(
       5,
       user => {
@@ -78,7 +77,6 @@ class ProfileScreen extends Component {
   render() {
     const {showLogoutModal} = this.state;
     const {userDetail, user} = this.props;
-    console.log(JSON.stringify(user));
 
     return (
       <>

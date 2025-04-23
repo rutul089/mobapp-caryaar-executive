@@ -33,6 +33,7 @@ const ScreenNames = {
   AddPartnersBankDetail: 'AddPartnersBankDetailScreen',
   NotificationPreference: 'NotificationPreferenceScreen',
   TrackApplication: 'TrackApplicationScreen',
+  PrivacyPolicy: 'PrivacyPolicyScreen',
 };
 
 export default ScreenNames;

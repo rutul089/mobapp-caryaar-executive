@@ -110,13 +110,13 @@ const Home_Component = ({onRightIconPress, onAddPartner}) => {
             </Text>
           </View>
           <View style={styles.statsContainer}>
-            {renderBox(1211, '#F8A902', 'Active Partners', () =>
+            {renderBox(1211, '#696EFF', 'Active Partners', () =>
               navigateToTab(ScreenNames.Partners),
             )}
-            {renderBox(3, '#6EEE87', 'Pending Approvals', () =>
+            {renderBox(3, '#F8A902', 'Pending Approvals', () =>
               navigateToTab(ScreenNames.Applications),
             )}
-            {renderBox(2, '#696EFF', 'Loan Approved', () =>
+            {renderBox(2, '#6EEE87', 'Loan Approved', () =>
               navigateToTab(ScreenNames.Applications),
             )}
           </View>
@@ -131,7 +131,7 @@ const Home_Component = ({onRightIconPress, onAddPartner}) => {
                 justifyContent: 'space-between',
                 paddingBottom: 16,
               }}>
-              <Text type={'h4'} hankenGroteskSemiBold={true} lineHeight={24}>
+              <Text type={'h4'} hankenGroteskBold={true} lineHeight={24}>
                 Partner Performance
               </Text>
               <Pressable onPress={onAddPartner}>

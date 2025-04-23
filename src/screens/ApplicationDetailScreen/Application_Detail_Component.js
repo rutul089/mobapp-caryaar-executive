@@ -33,6 +33,8 @@ const Application_Detail_Component = ({
         <View style={styles.wrapper}>
           <CardWrapper
             showLeftText
+            isLeftTextBold
+            isStatusBold
             leftText={'849363'}
             status={applicationDetail.status?.toUpperCase()}
             gradientColors={getGradientColors(applicationDetail.type)}>

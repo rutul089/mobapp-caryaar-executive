@@ -45,12 +45,14 @@ const Profile_Component = ({
             color={theme.colors.primary}>
             {userID}
           </Text>
-          <Text hankenGroteskExtraBold={true} color={theme.colors.white}>
+          <Text hankenGroteskBold={true} color={theme.colors.white}>
             {name}
           </Text>
           <View style={{flexDirection: 'row', marginTop: 5}}>
             <Image source={images.locationPin} style={styles.locationStyle} />
-            <Text color={theme.colors.textSecondary}>{address}</Text>
+            <Text hankenGroteskMedium color={theme.colors.textSecondary}>
+              {address}
+            </Text>
           </View>
         </View>
       </View>
@@ -65,7 +67,7 @@ const Profile_Component = ({
             icon: images.businessSuitcase,
             label: 'CarYaar Designation Name',
           },
-          {icon: images.user, label: 'Dealer Type'},
+          // {icon: images.user, label: 'Dealer Type'},
           {icon: images.email, label: email},
           {icon: images.phoneOutline, label: phone},
         ].map((item, index) => (
@@ -131,9 +133,14 @@ const Profile_Component = ({
                 screenName: ScreenNames.FAQS,
               },
               {
-                label: 'Contact Support',
+                label: 'Help & Support',
                 icon: images.icon_support,
                 screenName: ScreenNames.ContactSupport,
+              },
+              {
+                label: 'Privacy Policy',
+                icon: images.description,
+                screenName: ScreenNames.PrivacyPolicy,
               },
               {
                 label: 'Logout',

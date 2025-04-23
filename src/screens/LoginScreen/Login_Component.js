@@ -62,7 +62,7 @@ const Login_Component = ({
                 />
                 <Text
                   type={'helper-text'}
-                  color={theme.colors.primary}
+                  color={theme.colors.textSecondary}
                   lineHeight={theme.typography.lineHeights.small}>
                   {strings.enterMobile}
                 </Text>

@@ -57,6 +57,8 @@ const Applications_Component = ({
           <>
             <CardWrapper
               showLeftText
+              isLeftTextBold
+              isStatusBold
               leftText={'849363'}
               status={item.status?.toUpperCase()}
               gradientColors={getGradientColors(item.type)}
