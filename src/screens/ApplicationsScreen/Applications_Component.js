@@ -92,6 +92,7 @@ const Applications_Component = ({
         isScrollableContent={true}
         isPrimaryButtonVisible={true}
         onPressPrimaryButton={handleApplyFilter}
+        isTextCenter={false}
         title="Filter by">
         <View style={{paddingVertical: 10}}>
           <RadioButton

@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {transferModes} from '../../../constants/enums';
+import {connect} from 'react-redux';
+import {SettlementPreference} from '../../../constants/enums';
 import ScreenNames from '../../../constants/ScreenNames';
 import {navigate} from '../../../navigation/NavigationUtils';
-import Partner_Bank_Detail_Component from './Partner_Bank_Detail_Component';
-import {connect} from 'react-redux';
 import {setBankingDetails} from '../../../redux/actions';
 import {handleFieldChange, validateField} from '../../../utils/helper';
+import Partner_Bank_Detail_Component from './Partner_Bank_Detail_Component';
 
 class AddPartnersBankDetail extends Component {
   constructor(props) {
@@ -16,7 +16,7 @@ class AddPartnersBankDetail extends Component {
       bankName: '',
       ifscCode: '',
       branchName: '',
-      selectedTransferMode: transferModes.imps,
+      selectedTransferMode: SettlementPreference.IMPS,
       errors: {
         accountNumber: '',
         accountHolderName: '',
@@ -110,8 +110,8 @@ class AddPartnersBankDetail extends Component {
       <>
         <Partner_Bank_Detail_Component
           transferModes={[
-            {label: 'NEFT', value: transferModes.neft},
-            {label: 'IMPS', value: transferModes.imps},
+            {label: 'NEFT', value: SettlementPreference.NEFT},
+            {label: 'IMPS', value: SettlementPreference.IMPS},
           ]}
           dropdownOptions={[
             {label: 'HDFC Bank', value: 'hdfc'},

@@ -12,6 +12,7 @@ class UserAndCarTypeSelection extends Component {
     this.state = {
       selectedCarType: vehicleType.used,
       selectedUserType: userType.multiUser,
+      isMultiUser: true,
     };
     this.onUserTypeSelect = this.onUserTypeSelect.bind(this);
     this.onCarTypeSelect = this.onCarTypeSelect.bind(this);
@@ -20,7 +21,10 @@ class UserAndCarTypeSelection extends Component {
   }
 
   onUserTypeSelect = value => {
-    this.setState({selectedUserType: value});
+    this.setState({
+      selectedUserType: value,
+      isMultiUser: value === userType.multiUser,
+    });
   };
 
   onCarTypeSelect = value => {
@@ -30,10 +34,17 @@ class UserAndCarTypeSelection extends Component {
   };
 
   handleNextPress = () => {
-    let {selectedCarType, selectedUserType} = this.state;
-    this.props.setCarType(selectedCarType);
-    this.props.setUserType(selectedUserType);
-    navigate(ScreenNames.SelectPartnerRole);
+    const {selectedCarType, selectedUserType} = this.state;
+
+    setCarType(selectedCarType);
+    setUserType(selectedUserType);
+
+    const nextScreen =
+      selectedUserType === userType.singleUser
+        ? ScreenNames.AddPartnerBasicDetail
+        : ScreenNames.SelectPartnerRole;
+
+    navigate(nextScreen);
   };
 
   onBackPress = () => {

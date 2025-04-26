@@ -42,6 +42,14 @@ class ManageMemberScreen extends Component {
       isVisible: false,
       fullName: '',
       mobileNumber: '',
+      selectedSalesExec: '',
+      salesExecOptions: [
+        {id: '1', label: 'Junior Sales Executive', value: 'junior'},
+        {id: '2', label: 'Senior Sales Executive', value: 'senior'},
+        {id: '3', label: 'Regional Sales Manager', value: 'regional_manager'},
+        {id: '4', label: 'National Sales Director', value: 'national_director'},
+        {id: '5', label: 'International Sales Head', value: 'intl_head'},
+      ],
     };
     this.handleDeleteMemberPress = this.handleDeleteMemberPress.bind(this);
     this.handleAddNewMemberPress = this.handleAddNewMemberPress.bind(this);
@@ -87,8 +95,15 @@ class ManageMemberScreen extends Component {
     });
   };
 
+  setSelectedSalesExec = item => {
+    this.setState({
+      selectedSalesExec: item?.label,
+    });
+  };
+
   render() {
-    const {mobileNumber, fullName} = this.state;
+    const {mobileNumber, fullName, selectedSalesExec, salesExecOptions} =
+      this.state;
     return (
       <>
         <Manage_Members_Component
@@ -102,6 +117,9 @@ class ManageMemberScreen extends Component {
           fullName={fullName}
           onChangeFullName={this.onChangeFullName}
           onChangeMobileNumber={this.onChangeMobileNumber}
+          setSelectedSalesExec={this.setSelectedSalesExec}
+          selectedSalesExec={selectedSalesExec}
+          salesExecOptions={salesExecOptions}
         />
       </>
     );

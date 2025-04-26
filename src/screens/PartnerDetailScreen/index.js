@@ -1,36 +1,74 @@
+import {get} from 'lodash';
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
-import Partner_Detail_Component from './Partner_Detail_Component';
+import {connect} from 'react-redux';
 import {getScreenParam, goBack} from '../../navigation/NavigationUtils';
-
-export default class PartnerDetailScreen extends Component {
+import {fetchPartnerFromId} from '../../redux/actions';
+import {
+  buildDocumentsArray,
+  getPartnerAddress,
+  handleViewFilePreview,
+} from '../../utils/helper';
+import Partner_Detail_Component from './Partner_Detail_Component';
+class PartnerDetailScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       partnerDetail: {},
+      partnerId: null,
+      isFetchingDocument: {
+        loading: false,
+        documentType: '',
+      },
     };
     this.onBackPress = this.onBackPress.bind(this);
   }
 
   componentDidMount() {
     let route = this.props.route;
-    let partnerDetail = getScreenParam(route, 'params');
+    let partnerId = getScreenParam(route, 'params')?.id;
     this.setState(
       {
-        partnerDetail,
+        partnerId,
       },
       () => {
-        console.log({partnerDetail: this.state.partnerDetail});
+        this.fetchPartnerFromId(partnerId);
       },
     );
   }
+
+  fetchPartnerFromId = partnerID => {
+    console.log({partnerID});
+    this.props.fetchPartnerFromId(partnerID);
+  };
 
   onBackPress = () => {
     goBack();
   };
 
+  viewDocument = (type, link) => {
+    handleViewFilePreview(
+      link,
+      imageUri => {
+        console.log({imageUri});
+        // Callback when image preview is available
+        this.setState({previewImage: imageUri});
+      },
+      type,
+      isProcessing => {
+        // Callback for loading state
+        this.setState({
+          isFetchingDocument: {
+            loading: isProcessing,
+            documentType: type,
+          },
+        });
+      },
+    );
+  };
+
   render() {
-    const {partnerDetail} = this.state;
+    const {partnerDetail} = this.props;
+
     return (
       <>
         <Partner_Detail_Component
@@ -48,57 +86,64 @@ export default class PartnerDetailScreen extends Component {
           locationDetail={[
             {
               label: 'Company Name',
-              value: 'Automax Motors PVT Limited',
+              value: get(partnerDetail, 'companyName', '-'),
               full: true,
             },
             {
               label: 'Address',
-              value:
-                '603, One World Capital, 2 Center Street, Balaji Chowk, Hadapsar, Darjeeling, West Bengal 263982',
+              value: getPartnerAddress(partnerDetail),
               full: true,
             },
           ]}
           accountDetail={[
-            {label: 'Account Number', value: '5984075872581'},
-            {label: 'Account Holder Name', value: 'Vijay Dugar'},
-            {label: 'Bank Name', value: 'HDFC Bank'},
-            {label: 'IFSC Code', value: 'HDFC0009842'},
-            {label: 'Branch Name', value: 'Branch Name'},
-            {label: 'Settlement Preference', value: 'NEFT'},
-          ]}
-          documents={[
             {
-              label: 'GST Registration',
-              onPress: () => console.log('GST clicked'),
+              label: 'Account Number',
+              value: get(partnerDetail?.bankDetail, 'accountNumber', '-'),
             },
             {
-              label: 'Shop License',
-              onPress: () => console.log('Shop License clicked'),
-            },
-            {label: 'PAN Card', onPress: () => console.log('PAN Card clicked')},
-            {
-              label: 'Aadhar Card Front',
-              onPress: () => console.log('Aadhar Front clicked'),
+              label: 'Account Holder Name',
+              value: get(partnerDetail?.bankDetail, 'accountHolderName', '-'),
             },
             {
-              label: 'Aadhar Card Back',
-              onPress: () => console.log('Aadhar Back clicked'),
+              label: 'Bank Name',
+              value: get(partnerDetail?.bankDetail, 'bankName', '-'),
             },
             {
-              label: 'Photograph',
-              onPress: () => console.log('Photograph clicked'),
+              label: 'IFSC Code',
+              value: get(partnerDetail?.bankDetail, 'ifscCode', '-'),
             },
             {
-              label: 'Bank Statement',
-              onPress: () => console.log('Bank Statement clicked'),
+              label: 'Branch Name',
+              value: get(partnerDetail?.bankDetail, 'branchName', '-'),
             },
             {
-              label: 'Cancelled Cheque',
-              onPress: () => console.log('Cancelled Cheque clicked'),
+              label: 'Settlement Preference',
+              value: get(
+                partnerDetail?.bankDetail,
+                'settlementPreference',
+                '-',
+              ),
             },
           ]}
+          documents={buildDocumentsArray(partnerDetail, this.viewDocument)}
+          isFetchingDocument={this.state.isFetchingDocument}
         />
       </>
     );
   }
 }
+
+const mapDispatchToProps = {
+  fetchPartnerFromId,
+};
+const mapStateToProps = state => {
+  return {
+    isInternetConnected: state.appState.isInternetConnected,
+    isLoading: state.appState.loading,
+    partnerDetail: state.partners?.partnerDetail?.data,
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PartnerDetailScreen);

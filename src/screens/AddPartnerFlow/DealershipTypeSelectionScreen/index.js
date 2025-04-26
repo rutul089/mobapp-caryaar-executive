@@ -10,7 +10,7 @@ class DealershipTypeSelectionScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDealershipType: DealershipType.MULTI_BRAND_DEALER,
+      selectedDealershipType: DealershipType.MULTI_BRAND,
     };
     this.handleNextPress = this.handleNextPress.bind(this);
   }

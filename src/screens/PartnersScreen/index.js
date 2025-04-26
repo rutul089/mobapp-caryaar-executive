@@ -3,67 +3,24 @@ import ScreenNames from '../../constants/ScreenNames';
 import {navigate} from '../../navigation/NavigationUtils';
 import Partner_Component from './Partner_Component';
 import {connect} from 'react-redux';
-import {resetRegistration} from '../../redux/actions';
+import {fetchPartners, resetRegistration} from '../../redux/actions';
 
 class PartnersScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       TAB_OPTIONS: ['active', 'pending'],
-      partnersData: [
-        {
-          id: '1',
-          name: 'Automax Motors',
-          phone: '91448 82901',
-          location: 'Mumbai, Maharashtra',
-        },
-        {
-          id: '2',
-          name: 'Prestige Motors',
-          phone: '91448 82901',
-          location: 'Mumbai, Maharashtra',
-        },
-        {
-          id: '3',
-          name: 'Carville Motors',
-          phone: '91448 82901',
-          location: 'Mumbai, Maharashtra',
-        },
-        {
-          id: '4',
-          name: 'Car Express',
-          phone: '91448 82901',
-          location: 'Mumbai, Maharashtra',
-        },
-        {
-          id: '3',
-          name: 'Carville Motors',
-          phone: '91448 82901',
-          location: 'Mumbai, Maharashtra',
-        },
-        {
-          id: '4',
-          name: 'Car Express',
-          phone: '91448 82901',
-          location: 'Mumbai, Maharashtra',
-        },
-        {
-          id: '3',
-          name: 'Carville Motors',
-          phone: '91448 82901',
-          location: 'Mumbai, Maharashtra',
-        },
-        {
-          id: '4',
-          name: 'Car Express',
-          phone: '91448 82901',
-          location: 'Mumbai, Maharashtra',
-        },
-      ],
+      partnersData: [],
+      refreshing: false,
     };
     this.onTabPress = this.onTabPress.bind(this);
     this.onRightIconPress = this.onRightIconPress.bind(this);
     this.onItemPress = this.onItemPress.bind(this);
+    this.pullToRefresh = this.pullToRefresh.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.fetchPartners();
   }
 
   onTabPress = value => {
@@ -91,8 +48,20 @@ class PartnersScreen extends Component {
     navigate(ScreenNames.DealershipTypeSelection);
   };
 
+  pullToRefresh = async () => {
+    try {
+      this.setState({refreshing: true});
+      await this.props.fetchPartners(); // your API call function
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.setState({refreshing: false});
+    }
+  };
+
   render() {
-    const {TAB_OPTIONS, partnersData} = this.state;
+    const {TAB_OPTIONS, partnersData, refreshing} = this.state;
+    const {partnersList} = this.props;
 
     return (
       <>
@@ -100,10 +69,12 @@ class PartnersScreen extends Component {
           onTabPress={this.onTabPress}
           TAB_OPTIONS={TAB_OPTIONS}
           onRightIconPress={this.onRightIconPress}
-          partnersData={partnersData}
+          partnersData={partnersList}
           onItemPress={this.onItemPress}
           callToAction={this.callToAction}
           onAddButtonPress={this.onAddButtonPress}
+          onRefresh={this.pullToRefresh}
+          refreshing={refreshing}
         />
       </>
     );
@@ -112,10 +83,12 @@ class PartnersScreen extends Component {
 
 const mapDispatchToProps = {
   resetRegistration,
+  fetchPartners,
 };
 const mapStateToProps = state => {
   return {
     isInternetConnected: state.appState.isInternetConnected,
+    partnersList: state.partners?.partnersList?.data,
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(PartnersScreen);

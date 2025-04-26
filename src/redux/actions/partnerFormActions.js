@@ -1,3 +1,4 @@
+import {fetchPartnersList, fetchPartnerById} from '../../api/userService';
 import types from './types';
 
 export const setBasicDetails = payload => ({
@@ -46,4 +47,62 @@ export const setPartnerRole = role => ({
 
 export const resetRegistration = () => ({
   type: types.RESET_REGISTRATION,
+});
+
+export const fetchPartners = (onSuccess, onFailure) => {
+  return async dispatch => {
+    dispatch({type: types.FETCH_PARTNERS_REQUEST});
+
+    try {
+      const user = await fetchPartnersList();
+      dispatch({
+        type: types.FETCH_PARTNERS_SUCCESS,
+        payload: user,
+      });
+      if (onSuccess) {
+        onSuccess(user);
+      }
+    } catch (error) {
+      dispatch({
+        type: types.FETCH_PARTNERS_FAILURE,
+        payload: error.message,
+      });
+      if (onFailure) {
+        onFailure(error.message);
+      }
+    }
+  };
+};
+
+export const fetchPartnerFromId = (partnerId, onSuccess, onFailure) => {
+  return async dispatch => {
+    dispatch({type: types.FETCH_PARTNER_REQUEST});
+
+    try {
+      const user = await fetchPartnerById(partnerId);
+      dispatch({
+        type: types.FETCH_PARTNER_SUCCESS,
+        payload: user,
+      });
+      if (onSuccess) {
+        onSuccess(user);
+      }
+    } catch (error) {
+      dispatch({
+        type: types.FETCH_PARTNER_FAILURE,
+        payload: error.message,
+      });
+      if (onFailure) {
+        onFailure(error.message);
+      }
+    }
+  };
+};
+
+export const resetPartnerDetail = () => ({
+  type: types.RESET_PARTNER,
+});
+
+export const resetPartnersDetail = () => ({
+  type: types.RESET_PARTNERS,
 });

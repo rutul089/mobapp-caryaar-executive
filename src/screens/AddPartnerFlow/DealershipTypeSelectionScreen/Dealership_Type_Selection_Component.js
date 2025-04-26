@@ -27,24 +27,22 @@ const Dealership_Type_Selection_Component = ({
         <Spacing size="smd" />
         <View style={styles.row}>
           <OptionCard
-            value={DealershipType.OEM_DEALER}
+            value={DealershipType.OEM}
             label={'OEM Dealer'}
             icon={images.userCircle}
             onSelect={onDealerShipType}
-            isSelected={selectedDealershipType === DealershipType.OEM_DEALER}
+            isSelected={selectedDealershipType === DealershipType.OEM}
             textProps={{
               size: 'small',
               hankenGroteskMedium: true,
             }}
           />
           <OptionCard
-            value={DealershipType.MULTI_BRAND_DEALER}
+            value={DealershipType.MULTI_BRAND}
             label={'Multi-Brand Dealer'}
             icon={images.userCircle}
             onSelect={onDealerShipType}
-            isSelected={
-              selectedDealershipType === DealershipType.MULTI_BRAND_DEALER
-            }
+            isSelected={selectedDealershipType === DealershipType.MULTI_BRAND}
             textProps={{
               size: 'small',
               hankenGroteskMedium: true,

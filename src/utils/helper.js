@@ -1,9 +1,10 @@
+import moment from 'moment';
 import {Alert} from 'react-native';
 import FileViewer from 'react-native-file-viewer';
 import RNFS from 'react-native-fs';
-import {launchImageLibrary} from 'react-native-image-picker';
 import theme from '../theme';
 import colors from '../theme/colors';
+import {documentLabelsMap} from '../constants/enums';
 
 export const formatIndianNumber = (value, showSign = true) => {
   const [intPart, decimalPart] = value?.toString().split('.');
@@ -287,6 +288,79 @@ export const handleFieldChange = (component, key, value) => {
       [key]: value,
       errors: updatedErrors,
       isFormValid,
+    };
+  });
+};
+
+/**
+ * Returns a formatted location string based on city and state.
+ * If both are present, returns "City, State".
+ * If only one is present, returns that one.
+ * If neither is present, returns an empty string.
+ *
+ * @param {string} city - The name of the city.
+ * @param {string} state - The name of the state.
+ * @returns {string} The formatted location string.
+ */
+export const getLocationText = (city, state) => {
+  return [city, state].filter(Boolean).join(', ');
+};
+
+/**
+ * Format ISO date string into a readable format
+ * @param {string} isoDate - ISO formatted date string (e.g. '2025-04-26T03:52:04.254Z')
+ * @param {string} format - Desired output format (e.g. 'DD MMM YYYY, hh:mm A')
+ * @returns {string} - Formatted date string
+ */
+export const formatDate = (isoDate, format = 'DD MMM YYYY') => {
+  const date = moment(isoDate);
+  return date.isValid() ? date.format(format) : '';
+};
+
+export const getPartnerAddress = d =>
+  [
+    // d?.shopNo && `Shop No: ${d.shopNo}`,
+    d?.shopNo,
+    d?.buildingName,
+    d?.streetAddress,
+    d?.area,
+    d?.city,
+    d?.state,
+    d?.pincode,
+  ]
+    .filter(Boolean)
+    .join(', ');
+
+/**
+ * Helper to find uploaded document by type
+ * @param {string} type
+ * @param {Array} uploadedDocs
+ * @returns {Object|undefined}
+ */
+const findUploadedDoc = (type, uploadedDocs = []) =>
+  uploadedDocs.find(doc => doc.documentType === type);
+
+/**
+ * Builds a full document list with uploaded and missing flags
+ * @param {Object} partnerDetail
+ * @param {Function} onPressHandler - function to call when document is clicked
+ * @returns {Array}
+ */
+export const buildDocumentsArray = (partnerDetail, onPressHandler) => {
+  const allDocTypes = Object.keys(documentLabelsMap);
+  const uploadedDocs = partnerDetail?.documents || [];
+  const missingDocs = partnerDetail?.missingDocuments || [];
+
+  return allDocTypes.map(type => {
+    const uploadedDoc = findUploadedDoc(type, uploadedDocs);
+
+    return {
+      label: documentLabelsMap[type],
+      documentType: type,
+      uploaded: !!uploadedDoc,
+      isMissing: missingDocs.includes(type),
+      ...uploadedDoc, // Spread all fields from uploaded doc if exists
+      onPress: () => onPressHandler(type, uploadedDoc?.documentUrl),
     };
   });
 };

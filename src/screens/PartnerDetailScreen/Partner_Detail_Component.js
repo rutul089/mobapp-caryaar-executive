@@ -12,6 +12,8 @@ import {
   images,
   theme,
 } from '@caryaar/components';
+import {getLocationText} from '../../utils/helper';
+import {DocumentRow} from '../../components';
 
 const Partner_Detail_Component = ({
   onBackPress,
@@ -20,6 +22,7 @@ const Partner_Detail_Component = ({
   locationDetail,
   accountDetail,
   documents,
+  isFetchingDocument,
 }) => {
   return (
     <SafeAreaWrapper backgroundColor={theme.colors.background}>
@@ -37,23 +40,29 @@ const Partner_Detail_Component = ({
           }}>
           <CustomerCard
             hideLogo
-            brandName={'PVT Limited'}
-            customerName={partnerDetail.name}
+            brandName={partnerDetail?.businessName}
+            customerName={partnerDetail?.name}
             infoRowDetails={[
               {
-                value: partnerDetail.phone,
+                value: partnerDetail.phone ?? '-',
                 icon: images.callOutline,
                 color: 'white',
               },
               {
-                value: partnerDetail.location,
+                value: getLocationText(partnerDetail.city, partnerDetail.state),
                 icon: images.locationPin,
                 color: 'white',
               },
             ]}
             footerInfo={[
-              {label: 'Years in Business', value: '60 Month'},
-              {label: 'Monthly Car Sales', value: '75'},
+              {
+                label: 'Years in Business',
+                value: partnerDetail?.yearInBusiness,
+              },
+              {
+                label: 'Monthly Car Sales',
+                value: partnerDetail?.monthlyCarSale,
+              },
             ]}
             noMargin
             noShadow
@@ -92,31 +101,32 @@ const Partner_Detail_Component = ({
           </DetailInfoCard>
           <Spacing size="lg" />
           <DetailInfoCard label={'Business Document'} isSemiBold={false}>
-            {documents.map((doc, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.row,
-                  {
-                    marginBottom:
+            {documents.map((doc, index) => {
+              return (
+                <>
+                  <DocumentRow
+                    label={doc.label}
+                    actionLabel={
+                      doc.isMissing || !doc.uploaded ? 'Required' : 'View'
+                    }
+                    showError={doc.isMissing || !doc.uploaded}
+                    onPress={doc?.onPress}
+                    disabled={doc.isMissing || !doc.uploaded}
+                    isLoading={
+                      isFetchingDocument.loading &&
+                      isFetchingDocument.documentType === doc.documentType
+                    }
+                  />
+                  <Spacing
+                    size={
                       index !== documents.length - 1
                         ? theme.sizes.spacing.smd
-                        : 0,
-                  },
-                ]}>
-                <Text size="small" hankenGroteskMedium={true}>
-                  {doc.label}
-                </Text>
-                <TouchableOpacity onPress={doc.onPress}>
-                  <Text
-                    hankenGroteskBold={true}
-                    size="small"
-                    color={theme.colors.primary}>
-                    View
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ))}
+                        : 0
+                    }
+                  />
+                </>
+              );
+            })}
           </DetailInfoCard>
           <Spacing size="lg" />
           <DetailInfoCard

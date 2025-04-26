@@ -29,25 +29,102 @@ export const loanType = Object.freeze({
   subscribe: 8,
 });
 
-export const transferModes = Object.freeze({
-  neft: 1,
-  imps: 2,
-});
-
-export const DealershipType = Object.freeze({
-  OEM_DEALER: 'OEM Dealer',
-  MULTI_BRAND_DEALER: 'Multi-Brand Dealer',
-  DSA: 'DSA',
-  BROKER: 'Broker',
-});
-
 export const userType = Object.freeze({
-  singleUser: 1,
-  multiUser: 2,
+  singleUser: 'SINGLE_USER',
+  multiUser: 'MULTI_USER',
 });
 
-export const partnerRole = Object.freeze({
-  dealerPrinciple: 1,
-  seniorManagement: 2,
-  employee: 3,
-});
+// enums.js
+
+export const EVehicleStatus = {
+  INVENTORY: 'inventory',
+  COLLATERALIZED: 'collateralized',
+  DELISTED: 'delisted',
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
+  SOLD: 'sold',
+  BLACKLISTED: 'blacklisted',
+  OTHER: 'other',
+  AVAILABLE: 'available',
+};
+
+export const EVehicleCondition = {
+  EXCELLENT: 'excellent',
+  GOOD: 'good',
+  AVERAGE: 'average',
+  POOR: 'poor',
+  NEW: 'new',
+  USED: 'used',
+};
+
+export const UserRole = {
+  ADMIN: 'ADMIN',
+  PARTNER: 'PARTNER',
+  SALES_EXECUTIVE: 'SALES_EXECUTIVE',
+};
+
+export const DealershipType = {
+  OEM: 'OEM',
+  MULTI_BRAND: 'MULTI_BRAND',
+  DSA: 'DSA',
+  BROKER: 'BROKER',
+};
+
+export const PartnerOnboardingStatus = {
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  PENDING: 'PENDING',
+};
+
+export const BusinessType = {
+  PVT_LTD: 'PVT_LTD',
+  PROPRIETORSHIP: 'PROPRIETORSHIP',
+  PARTNERSHIP: 'PARTNERSHIP',
+  LLP: 'LLP',
+  OTHER: 'OTHER',
+};
+
+export const PartnerUserPosition = {
+  DEALER_PRINCIPLE: 'DEALER_PRINCIPLE',
+  SENIOR_MANAGEMENT: 'SENIOR_MANAGEMENT',
+  EMPLOYEE: 'EMPLOYEE',
+};
+
+export const PartnerDocumentType = {
+  GST_REGISTRATION: 'GST_REGISTRATION',
+  SHOP_LICENCE: 'SHOP_LICENCE',
+  PAN_CARD: 'PAN_CARD',
+  AADHAR_CARD_FRONT: 'AADHAR_CARD_FRONT',
+  AADHAR_CARD_BACK: 'AADHAR_CARD_BACK',
+  BANK_STATEMENT: 'BANK_STATEMENT',
+  CANCELLED_CHEQUE: 'CANCELLED_CHEQUE',
+};
+
+export const SettlementPreference = {
+  NEFT: 'NEFT',
+  IMPS: 'IMPS',
+};
+
+export const CommonStatus = {
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  PENDING: 'PENDING',
+};
+
+export const SalesExecutivePosition = {
+  SALES_EXECUTIVE: 'SALES_EXECUTIVE',
+  SENIOR_SALES_EXECUTIVE: 'SENIOR_SALES_EXECUTIVE',
+  TEAM_LEAD: 'TEAM_LEAD',
+  MANAGER: 'MANAGER',
+};
+
+export const documentLabelsMap = {
+  GST_REGISTRATION: 'GST Registration',
+  SHOP_LICENCE: 'Shop License',
+  PAN_CARD: 'PAN Card',
+  AADHAR_CARD_FRONT: 'Aadhar Card Front',
+  AADHAR_CARD_BACK: 'Aadhar Card Back',
+  PHOTOGRAPH: 'Photograph',
+  BANK_STATEMENT: 'Bank Statement',
+  CANCELLED_CHEQUE: 'Cancelled Cheque',
+};

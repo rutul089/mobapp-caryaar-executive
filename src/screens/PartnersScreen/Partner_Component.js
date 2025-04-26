@@ -8,8 +8,11 @@ import {
   images,
   theme,
 } from '@caryaar/components';
-import React from 'react';
-import {FlatList, Pressable, ScrollView, StyleSheet, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {FlatList, Image, Pressable, StyleSheet, View} from 'react-native';
+import {formatDate, getLocationText} from '../../utils/helper';
+
+const limit = 10;
 
 const Partner_Component = ({
   onRightIconPress,
@@ -20,25 +23,71 @@ const Partner_Component = ({
   partnersData,
   onItemPress,
   callToAction,
+  onRefresh,
+  refreshing,
 }) => {
   const [activeTab, setActiveTab] = React.useState('active');
+  const [filteredPartners, setFilteredPartners] = React.useState([]);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
+
+  const selectedStatus = activeTab === 'active' ? 'ACTIVE' : 'PENDING';
+
+  useEffect(() => {
+    filterAndPaginate();
+  }, [activeTab, partnersData, currentPage]);
 
   const handleTabSelection = value => {
     setActiveTab(value);
     onTabPress(value);
+    setCurrentPage(1);
   };
 
-  const renderPartner = ({item}) => (
-    <>
-      <PartnerCard
-        name={item.name}
-        location={item.location}
-        phone={item.phone}
-        onPress={() => onItemPress && onItemPress(item)}
-      />
-      <Spacing size="md" />
-    </>
-  );
+  const filterAndPaginate = () => {
+    const filtered = partnersData?.filter(
+      p => p.onboardingStatus === selectedStatus,
+    );
+    const paginated = filtered?.slice(0, currentPage * limit);
+    setFilteredPartners(paginated);
+  };
+
+  const renderPartner = ({item}) => {
+    const isMissingDocs = item?.missingDocuments?.length > 0;
+    const statusObject = {
+      text: isMissingDocs ? 'Missing Documents' : 'All Documents Submitted',
+      icon: isMissingDocs ? images.infoStatus : images.successCheck,
+      color: isMissingDocs ? theme.colors.error : '#4CAF50',
+    };
+    return activeTab === 'active' ? (
+      <>
+        <PartnerCard
+          name={item.companyName}
+          location={getLocationText(item.city, item.state)}
+          phone={item.phone ?? '-'}
+          textColor={theme.colors.textPrimary}
+          onPress={() => onItemPress && onItemPress(item)}
+        />
+        <Spacing size="md" />
+      </>
+    ) : (
+      <>
+        <PartnerCard
+          name={item?.companyName}
+          showPersonalInfo={false}
+          subtitle={`Submitted on: ${formatDate(item.createdAt)}`}
+          statusObject={statusObject}
+          documentError={
+            item?.missingDocuments?.map(doc => ({value: doc})) || []
+          }
+          isCTAShow={isMissingDocs}
+          buttonLabel={'Upload Docs'}
+          callToAction={callToAction}
+          onPress={() => onItemPress && onItemPress(item)}
+        />
+        <Spacing size="md" />
+      </>
+    );
+  };
 
   const renderTabButton = tab => {
     const isActive = activeTab === tab;
@@ -72,7 +121,29 @@ const Partner_Component = ({
           {TAB_OPTIONS.map(renderTabButton)}
         </Card>
       </View>
-      {activeTab === TAB_OPTIONS[0] ? (
+      <FlatList
+        data={filteredPartners}
+        keyExtractor={(item, index) => index}
+        renderItem={renderPartner}
+        initialNumToRender={5}
+        contentContainerStyle={styles.listContent}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        ListEmptyComponent={
+          <View
+            style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+            <Image
+              source={images.noData}
+              style={{height: 100, width: 90, marginBottom: 15}}
+              resizeMode="contain"
+            />
+            <Text type={'caption'} hankenGroteskMedium size={'h4'}>
+              No Result Found
+            </Text>
+          </View>
+        }
+      />
+      {/* {activeTab === TAB_OPTIONS[0] ? (
         <FlatList
           data={partnersData}
           keyExtractor={(item, index) => index}
@@ -115,7 +186,7 @@ const Partner_Component = ({
             callToAction={callToAction}
           />
         </ScrollView>
-      )}
+      )} */}
     </SafeAreaWrapper>
   );
 };

@@ -14,6 +14,15 @@ import {
 import React from 'react';
 import {FlatList, Image, StyleSheet, View} from 'react-native';
 import {goBack} from '../../../navigation/NavigationUtils';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
+const mockAddresses = [
+  {id: '1', label: 'Junior Sales Executive', value: 'junior'},
+  {id: '2', label: 'Senior Sales Executive', value: 'senior'},
+  {id: '3', label: 'Regional Sales Manager', value: 'regional_manager'},
+  {id: '4', label: 'National Sales Director', value: 'national_director'},
+  {id: '5', label: 'International Sales Head', value: 'intl_head'},
+];
 
 const Manage_Members_Component = ({
   handleAddNewMemberPress,
@@ -27,8 +36,11 @@ const Manage_Members_Component = ({
   mobileNumber,
   onChangeFullName,
   onChangeMobileNumber,
+  selectedSalesExec,
+  setSelectedSalesExec = () => {},
+  salesExecOptions,
 }) => {
-  const [showModal, setShowModal] = React.useState(false);
+  const [showDropdown, setShowDropdown] = React.useState(false);
 
   const renderItem = ({item, index}) => (
     <>
@@ -75,13 +87,23 @@ const Manage_Members_Component = ({
         primaryButtonLabel={'Send Invite'}
         isScrollableContent={true}
         isPrimaryButtonVisible={true}
+        modalHeight={'75%'}
         onPressPrimaryButton={onPressPrimaryButton}
         title="Add New Member">
-        <View style={{paddingVertical: 15}}>
+        <View
+          enableOnAndroid={true}
+          extraScrollHeight={0}
+          extraHeight={0}
+          keyboardVerticalOffset={0}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{paddingVertical: 15}}>
           <Input
             label="Full Name"
             value={fullName}
             onChangeText={onChangeFullName}
+            onFocus={() => {
+              setShowDropdown(false);
+            }}
           />
           <Spacing size="lg" />
           <Input
@@ -90,7 +112,49 @@ const Manage_Members_Component = ({
             value={mobileNumber}
             onChangeText={onChangeMobileNumber}
             maxLength={10}
+            onFocus={() => {
+              setShowDropdown(false);
+            }}
           />
+          <Spacing size="lg" />
+          <Input
+            label="Select Sales Executive Position"
+            keyboardType="default"
+            isRightIconVisible
+            isAsDropdown
+            onPress={() => setShowDropdown(!showDropdown)}
+            value={selectedSalesExec}
+          />
+          {salesExecOptions?.length > 0 && showDropdown && (
+            <View style={styles.dropdown}>
+              <FlatList
+                data={salesExecOptions}
+                keyExtractor={(item, index) => index}
+                renderItem={({item, index}) => (
+                  <Pressable
+                    style={[
+                      styles.item,
+                      {
+                        borderBottomWidth:
+                          index === salesExecOptions.length - 1 ? 0 : 1,
+                      },
+                    ]}
+                    onPress={() => {
+                      setShowDropdown(false);
+                      setSelectedSalesExec(item);
+                    }}>
+                    <Text
+                      hankenGroteskSemiBold={selectedSalesExec === item?.label}
+                      size="small"
+                      lineHeight="small">
+                      {item?.label}
+                    </Text>
+                  </Pressable>
+                )}
+              />
+            </View>
+          )}
+          <Spacing size="lg" />
         </View>
       </CommonModal>
     </SafeAreaWrapper>
@@ -114,6 +178,21 @@ const styles = StyleSheet.create({
     width: 24,
   },
   textWrapper: {flex: 1, marginHorizontal: 12},
+  dropdown: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    marginTop: 2,
+    maxHeight: 200,
+    backgroundColor: '#fff',
+  },
+  item: {
+    height: 45,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
 });
 
 export default Manage_Members_Component;
