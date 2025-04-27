@@ -128,3 +128,26 @@ export const documentLabelsMap = {
   BANK_STATEMENT: 'Bank Statement',
   CANCELLED_CHEQUE: 'Cancelled Cheque',
 };
+
+export const salesExecOptions = [
+  {id: '1', label: 'Sales Executive', value: 'SALES_EXECUTIVE'},
+  {id: '2', label: 'Senior Sales Executive', value: 'SENIOR_SALES_EXECUTIVE'},
+  {id: '3', label: 'Team Lead', value: 'TEAM_LEAD'},
+  {id: '4', label: 'Manager', value: 'MANAGER'},
+];
+
+export const SalesExecutiveValue = {
+  SALES_EXECUTIVE: 'Sales Executive',
+  SENIOR_SALES_EXECUTIVE: 'SENSenior Sales Executive',
+  TEAM_LEAD: 'Team Lead',
+  MANAGER: 'Manager',
+};
+
+/**
+ * Function to get label based on the value.
+ * @param {string} value - The value you want to look up (e.g., 'SALES_EXECUTIVE').
+ * @returns {string} The corresponding label.
+ */
+export const getSalesExecutiveLabel = value => {
+  return SalesExecutiveValue[value] || 'Unknown Position'; // Default to 'Unknown Position' if not found
+};

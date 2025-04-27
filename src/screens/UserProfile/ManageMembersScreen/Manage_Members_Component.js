@@ -12,22 +12,20 @@ import {
   theme,
 } from '@caryaar/components';
 import React from 'react';
-import {FlatList, Image, StyleSheet, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {goBack} from '../../../navigation/NavigationUtils';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
-const mockAddresses = [
-  {id: '1', label: 'Junior Sales Executive', value: 'junior'},
-  {id: '2', label: 'Senior Sales Executive', value: 'senior'},
-  {id: '3', label: 'Regional Sales Manager', value: 'regional_manager'},
-  {id: '4', label: 'National Sales Director', value: 'national_director'},
-  {id: '5', label: 'International Sales Head', value: 'intl_head'},
-];
+import {NoDataFound} from '../../../components';
+import {getSalesExecutiveLabel} from '../../../constants/enums';
 
 const Manage_Members_Component = ({
   handleAddNewMemberPress,
   handleDeleteMemberPress,
-  memberList,
   isVisible,
   onCloseVerifyOTP,
   onModalHide,
@@ -36,20 +34,41 @@ const Manage_Members_Component = ({
   mobileNumber,
   onChangeFullName,
   onChangeMobileNumber,
+  onChangeEmail,
   selectedSalesExec,
   setSelectedSalesExec = () => {},
   salesExecOptions,
+  salesExecutives,
+  handleLoadMore,
+  isLoading,
+  restInputProps = {},
 }) => {
+  console.log('isLoading-<', isLoading);
   const [showDropdown, setShowDropdown] = React.useState(false);
 
   const renderItem = ({item, index}) => (
     <>
       <Card cardContainerStyle={styles.cardWrapper} padding={12}>
-        <Image source={{uri: item.avatar}} style={styles.avatar} />
+        <Image
+          source={item.avatar ? {uri: item.avatar} : images.placeholder_image}
+          style={styles.avatar}
+          defaultSource={images.placeholder_image}
+        />
         <View style={styles.textWrapper}>
-          <Text>{item.name}</Text>
-          <Text size={'small'} color={theme.colors.textSecondary}>
-            {item.phone}
+          <Text
+            lineHeight={'caption'}
+            size={'caption'}
+            hankenGroteskBold
+            color={theme.colors.primary}>
+            {getSalesExecutiveLabel(item?.position)}
+          </Text>
+          <Text lineHeight={'body'}>{item?.user?.name}</Text>
+          <Text
+            size={'small'}
+            lineHeight={'small'}
+            hankenGroteskMedium
+            color={theme.colors.textSecondary}>
+            {item?.user?.mobileNumber}
           </Text>
         </View>
         <Pressable
@@ -64,22 +83,21 @@ const Manage_Members_Component = ({
   );
   return (
     <SafeAreaWrapper>
-      <Header title="Manage Members" onBackPress={() => goBack()} />
+      <Header
+        title={'Manage Members' + isLoading + ' '}
+        onBackPress={() => goBack()}
+      />
       <FlatList
         bounces={false}
-        data={memberList}
+        data={salesExecutives}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.wrapper}
-        ListFooterComponent={
-          <>
-            <Spacing size="xl" />
-            <Button
-              label={'Add New Member'}
-              onPress={handleAddNewMemberPress}
-            />
-          </>
+        ListEmptyComponent={
+          !isLoading && <NoDataFound text="No data available." />
         }
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
       />
       <CommonModal
         isVisible={isVisible}
@@ -97,6 +115,21 @@ const Manage_Members_Component = ({
           keyboardVerticalOffset={0}
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{paddingVertical: 15}}>
+          {isLoading && (
+            <View
+              style={{
+                justifyContent: 'center',
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                pointerEvents: 'none',
+              }}>
+              <ActivityIndicator size={'large'} />
+            </View>
+          )}
+
           <Input
             label="Full Name"
             value={fullName}
@@ -104,6 +137,7 @@ const Manage_Members_Component = ({
             onFocus={() => {
               setShowDropdown(false);
             }}
+            {...(restInputProps.fullName || {})}
           />
           <Spacing size="lg" />
           <Input
@@ -115,6 +149,17 @@ const Manage_Members_Component = ({
             onFocus={() => {
               setShowDropdown(false);
             }}
+            {...(restInputProps.mobileNumber || {})}
+          />
+          <Spacing size="lg" />
+          <Input
+            label="Email"
+            keyboardType="email-address"
+            onChangeText={onChangeEmail}
+            onFocus={() => {
+              setShowDropdown(false);
+            }}
+            {...(restInputProps.email || {})}
           />
           <Spacing size="lg" />
           <Input
@@ -124,6 +169,7 @@ const Manage_Members_Component = ({
             isAsDropdown
             onPress={() => setShowDropdown(!showDropdown)}
             value={selectedSalesExec}
+            {...(restInputProps.selectedSalesExec || {})}
           />
           {salesExecOptions?.length > 0 && showDropdown && (
             <View style={styles.dropdown}>
@@ -157,6 +203,13 @@ const Manage_Members_Component = ({
           <Spacing size="lg" />
         </View>
       </CommonModal>
+      <View
+        style={{
+          padding: theme.sizes.padding,
+          backgroundColor: theme.colors.background,
+        }}>
+        <Button label={'Add New Member'} onPress={handleAddNewMemberPress} />
+      </View>
     </SafeAreaWrapper>
   );
 };
@@ -166,6 +219,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: theme.colors.background,
     padding: theme.sizes.padding,
+    paddingBottom: 0,
   },
   cardWrapper: {flexDirection: 'row', alignItems: 'center'},
   avatar: {

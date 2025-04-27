@@ -6,7 +6,12 @@ import {
   navigate,
   navigateAndSimpleReset,
 } from '../../navigation/NavigationUtils';
-import {fetchUser, resetAppState, setLoginStatus} from '../../redux/actions';
+import {
+  fetchUser,
+  resetAppState,
+  resetSalesExecutive,
+  setLoginStatus,
+} from '../../redux/actions';
 import {clearLoginStatus} from '../../utils/storage';
 import Profile_Component from './Profile_Component';
 
@@ -42,6 +47,10 @@ class ProfileScreen extends Component {
   handleMenuPress = (index, item) => {
     if (item.screenName === ScreenNames.Logout) {
       return this.handleLogout();
+    }
+
+    if (item.screenName === ScreenNames.ManageMember) {
+      this.props.resetSalesExecutive();
     }
     navigate(item.screenName);
   };
@@ -103,6 +112,7 @@ const mapDispatchToProps = {
   setLoginStatus,
   resetAppState,
   fetchUser,
+  resetSalesExecutive,
 };
 const mapStateToProps = state => {
   return {

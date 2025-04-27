@@ -2,54 +2,39 @@ import React, {Component} from 'react';
 
 import Manage_Members_Component from './Manage_Members_Component';
 import {Alert} from 'react-native';
+import {connect} from 'react-redux';
+import {
+  createSalesExecutiveThunk,
+  deleteSalesExecutiveByIdThunk,
+  fetchSalesExecutivesThunk,
+  removeSalesExecutive,
+} from '../../../redux/actions';
+import {salesExecOptions} from '../../../constants/enums';
+import {Loader} from '../../../components';
+import {
+  getErrorMessage,
+  handleFieldChange,
+  validateField,
+} from '../../../utils/helper';
 
 class ManageMemberScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      memberList: [
-        {
-          id: '1',
-          name: 'Aarav Mehta',
-          phone: '98765 43210',
-          avatar: 'https://i.pravatar.cc/150?img=11',
-        },
-        {
-          id: '2',
-          name: 'Kavya Sharma',
-          phone: '91234 56789',
-          avatar: 'https://i.pravatar.cc/150?img=12',
-        },
-        {
-          id: '3',
-          name: 'Rohan Desai',
-          phone: '99887 66554',
-          avatar: 'https://i.pravatar.cc/150?img=13',
-        },
-        {
-          id: '4',
-          name: 'Ishita Verma',
-          phone: '90123 45678',
-          avatar: 'https://i.pravatar.cc/150?img=14',
-        },
-        {
-          id: '5',
-          name: 'Devansh Kapoor',
-          phone: '98701 11223',
-          avatar: 'https://i.pravatar.cc/150?img=15',
-        },
-      ],
       isVisible: false,
-      fullName: '',
-      mobileNumber: '',
+      fullName: 'Rutul Mehta',
+      mobileNumber: '7405598341',
       selectedSalesExec: '',
-      salesExecOptions: [
-        {id: '1', label: 'Junior Sales Executive', value: 'junior'},
-        {id: '2', label: 'Senior Sales Executive', value: 'senior'},
-        {id: '3', label: 'Regional Sales Manager', value: 'regional_manager'},
-        {id: '4', label: 'National Sales Director', value: 'national_director'},
-        {id: '5', label: 'International Sales Head', value: 'intl_head'},
-      ],
+      selectedSalesExecValue: '',
+      email: 'rutul08u9@gmail.com',
+      isLoading: true,
+      errors: {
+        fullName: '',
+        mobileNumber: '',
+        selectedSalesExecValue: '',
+        email: '',
+      },
+      isFormValid: false,
     };
     this.handleDeleteMemberPress = this.handleDeleteMemberPress.bind(this);
     this.handleAddNewMemberPress = this.handleAddNewMemberPress.bind(this);
@@ -59,10 +44,40 @@ class ManageMemberScreen extends Component {
     this.onChangeMobileNumber = this.onChangeMobileNumber.bind(this);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.fetchSalesExecutives();
+  }
+
+  fetchSalesExecutives = (page = this.props.page, limit = this.props.limit) => {
+    this.props.fetchSalesExecutivesThunk(
+      page,
+      limit,
+      () => {},
+      () => {},
+    );
+  };
 
   handleDeleteMemberPress = (item, index) => {
-    Alert.alert(JSON.stringify(item));
+    Alert.alert(
+      'Delete Member',
+      `Are you sure you want to delete ${item.fullName || 'this member'}?`,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel', // Makes the button bold
+        },
+        {
+          text: 'OK',
+          onPress: () => this.deleteMember(item, index),
+        },
+      ],
+      {cancelable: true},
+    );
+  };
+
+  deleteMember = (item, index) => {
+    this.props.deleteSalesExecutiveByIdThunk(item?.id);
   };
 
   handleAddNewMemberPress = () => {
@@ -74,13 +89,38 @@ class ManageMemberScreen extends Component {
   onModalHide = () => {
     this.setState({
       isVisible: false,
+      // fullName: '',
+      // mobileNumber: '',
+      // selectedSalesExec: '',
+      // selectedSalesExecValue: '',
     });
   };
 
   onPressPrimaryButton = () => {
-    const {mobileNumber, fullName} = this.state;
+    const {mobileNumber, fullName, selectedSalesExecValue, email} = this.state;
+    const isFormValid = this.validateAllFields();
 
-    Alert.alert(mobileNumber + ' ' + fullName);
+    if (isFormValid && !this.props.loading) {
+      let param = {
+        name: fullName,
+        mobileNumber: mobileNumber,
+        email: email,
+        position: selectedSalesExecValue,
+      };
+      this.props.createSalesExecutiveThunk(
+        param,
+        response => {
+          if (response.success) {
+            Alert.alert(response.message);
+            this.onModalHide();
+          }
+        },
+        error => {
+          Alert.alert(getErrorMessage(error));
+        },
+      );
+      console.log({mobileNumber, fullName, selectedSalesExecValue});
+    }
   };
 
   onChangeFullName = value => {
@@ -96,14 +136,66 @@ class ManageMemberScreen extends Component {
   };
 
   setSelectedSalesExec = item => {
-    this.setState({
-      selectedSalesExec: item?.label,
+    this.setState(
+      {
+        selectedSalesExec: item,
+      },
+      () => {
+        this.onChangeField('selectedSalesExecValue', item?.value);
+      },
+    );
+  };
+
+  handleLoadMore = () => {
+    const {page, totalPages, limit, loading} = this.props;
+    setTimeout(() => {
+      if (!loading && page < totalPages) {
+        this.setState({
+          isLoading: false,
+        });
+        this.fetchSalesExecutives(page + 1, limit);
+      }
+    }, 100); // small delay to wait for loading flag
+  };
+
+  onChangeField = (key, value) => {
+    handleFieldChange(this, key, value);
+  };
+
+  validateAllFields = () => {
+    const fieldsToValidate = [
+      'fullName',
+      'mobileNumber',
+      'selectedSalesExecValue',
+      'email',
+    ];
+
+    const errors = {};
+    let isFormValid = true;
+
+    fieldsToValidate.forEach(key => {
+      const value = this.state[key];
+      const error = validateField(key, value);
+      errors[key] = error;
+      if (error !== '') {
+        isFormValid = false;
+      }
     });
+
+    this.setState({errors, isFormValid});
+    return isFormValid;
   };
 
   render() {
-    const {mobileNumber, fullName, selectedSalesExec, salesExecOptions} =
-      this.state;
+    const {
+      mobileNumber,
+      fullName,
+      selectedSalesExec,
+      isLoading,
+      errors,
+      email,
+    } = this.state;
+    const {salesExecutives, loading} = this.props;
     return (
       <>
         <Manage_Members_Component
@@ -115,15 +207,64 @@ class ManageMemberScreen extends Component {
           onPressPrimaryButton={this.onPressPrimaryButton}
           mobileNumber={mobileNumber}
           fullName={fullName}
-          onChangeFullName={this.onChangeFullName}
-          onChangeMobileNumber={this.onChangeMobileNumber}
+          onChangeFullName={value => this.onChangeField('fullName', value)}
+          onChangeMobileNumber={value =>
+            this.onChangeField('mobileNumber', value)
+          }
+          onChangeEmail={value => this.onChangeField('email', value)}
           setSelectedSalesExec={this.setSelectedSalesExec}
-          selectedSalesExec={selectedSalesExec}
+          selectedSalesExec={selectedSalesExec?.label}
           salesExecOptions={salesExecOptions}
+          salesExecutives={salesExecutives}
+          handleLoadMore={this.handleLoadMore}
+          isLoading={isLoading && loading}
+          restInputProps={{
+            fullName: {
+              value: fullName,
+              isError: errors.fullName,
+              statusMsg: errors.fullName,
+              autoCapitalize: 'words',
+            },
+            mobileNumber: {
+              value: mobileNumber,
+              isError: errors.mobileNumber,
+              statusMsg: errors.mobileNumber,
+            },
+            selectedSalesExec: {
+              isError: errors.selectedSalesExecValue,
+              statusMsg: errors.selectedSalesExecValue,
+            },
+            email: {
+              value: email,
+              isError: errors.email,
+              statusMsg: errors.email,
+            },
+          }}
         />
+        {isLoading && loading && <Loader visible={isLoading && loading} />}
       </>
     );
   }
 }
 
-export default ManageMemberScreen;
+const mapDispatchToProps = {
+  fetchSalesExecutivesThunk,
+  deleteSalesExecutiveByIdThunk,
+  removeSalesExecutive,
+  createSalesExecutiveThunk,
+};
+const mapStateToProps = ({appState, salesExecutives}) => {
+  return {
+    isInternetConnected: appState.isInternetConnected,
+    isLoading: appState.loading,
+    salesExecutives: salesExecutives.salesExecutives,
+    page: salesExecutives.page,
+    limit: salesExecutives.limit,
+    total: salesExecutives.total,
+    totalPages: salesExecutives.totalPages,
+    loading: salesExecutives.loading,
+    success: salesExecutives.success,
+    message: salesExecutives.message,
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ManageMemberScreen);

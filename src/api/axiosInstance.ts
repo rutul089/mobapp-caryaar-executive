@@ -8,15 +8,51 @@ const axiosInstance = axios.create({
   headers: {'Content-Type': 'application/json'},
 });
 
-axiosInstance.interceptors.request.use(async config => {
-  // Only attach token if skipAuth flag is NOT true
-  if (!config?.skipAuth) {
-    const token = await AsyncStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+// Request Interceptor
+axiosInstance.interceptors.request.use(
+  async config => {
+    if (!config?.skipAuth) {
+      const token = await AsyncStorage.getItem('accessToken');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
-  }
-  return config;
-});
+
+    // 🔵 Log the request
+    console.log(
+      '🚀 [Request]',
+      config.method?.toUpperCase(),
+      config.url,
+      config,
+    );
+
+    return config;
+  },
+  error => {
+    console.error('❌ [Request Error]', error);
+    return Promise.reject(error);
+  },
+);
+
+// Response Interceptor
+axiosInstance.interceptors.response.use(
+  response => {
+    // 🟢 Log the response
+    console.log('📦 [Response]', response.config.url, response);
+    return response;
+  },
+  error => {
+    if (error.response) {
+      console.error(
+        '❌ [Response Error]',
+        error.response.config.url,
+        error.response,
+      );
+    } else {
+      console.error('❌ [Network Error]', error.message);
+    }
+    return Promise.reject(error);
+  },
+);
 
 export default axiosInstance;

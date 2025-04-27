@@ -202,11 +202,16 @@ export const validateField = (key, value) => {
         : '';
 
     // Names
+    case 'fullName':
     case 'ownerName':
     case 'accountHolderName':
       return trimmedValue === ''
         ? `Please enter a valid ${
-            key === 'ownerName' ? 'owner name' : 'account holder name'
+            key === 'ownerName'
+              ? 'owner name'
+              : key === 'fullName'
+              ? 'Full Name'
+              : 'account holder name'
           }`
         : !nameRegex.test(trimmedValue)
         ? 'Name should contain only alphabets'
@@ -227,6 +232,9 @@ export const validateField = (key, value) => {
       return trimmedValue === '' ? 'Please select a valid State Name' : '';
     case 'businessType':
       return trimmedValue === '' ? 'Please select a valid business type' : '';
+    case 'selectedSalesExec':
+    case 'selectedSalesExecValue':
+      return trimmedValue === '' ? 'Please select a valid Position' : '';
 
     // Pincode
     case 'pincode':
@@ -244,6 +252,7 @@ export const validateField = (key, value) => {
 
     // Email
     case 'emailAddress':
+    case 'email':
       return trimmedValue === ''
         ? 'Please enter an email address'
         : !emailRegex.test(trimmedValue)
@@ -363,4 +372,17 @@ export const buildDocumentsArray = (partnerDetail, onPressHandler) => {
       onPress: () => onPressHandler(type, uploadedDoc?.documentUrl),
     };
   });
+};
+
+export const getErrorMessage = error => {
+  try {
+    const message = error?.response?.data?.message;
+    if (message) {
+      return message;
+    } else {
+      return 'Something went wrong';
+    }
+  } catch (err) {
+    return 'Something went wrong';
+  }
 };
