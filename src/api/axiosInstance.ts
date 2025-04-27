@@ -29,7 +29,7 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   error => {
-    console.error('❌ [Request Error]', error);
+    console.log('❌ [Request Error]', error);
     return Promise.reject(error);
   },
 );
@@ -43,13 +43,13 @@ axiosInstance.interceptors.response.use(
   },
   error => {
     if (error.response) {
-      console.error(
+      console.log(
         '❌ [Response Error]',
         error.response.config.url,
         error.response,
       );
     } else {
-      console.error('❌ [Network Error]', error.message);
+      console.log('❌ [Network Error]', error.message);
     }
     return Promise.reject(error);
   },

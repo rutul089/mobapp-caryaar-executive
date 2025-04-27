@@ -1,8 +1,10 @@
+import {Toast, toastConfig} from '@caryaar/components';
 import React from 'react';
+import {View} from 'react-native';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import RootNavigator from './src/navigation/RootNavigator';
-import {store, persistor} from './src/redux';
+import {persistor, store} from './src/redux';
 
 export default function App() {
   return (
@@ -12,6 +14,13 @@ export default function App() {
           <RootNavigator />
         </PersistGate>
       </Provider>
+      <View pointerEvents="none" style={{marginHorizontal: 20}}>
+        <Toast
+          pointerEvents="none"
+          config={toastConfig}
+          // ref={ref => Toast.setRef(ref)}
+        />
+      </View>
     </>
   );
 }

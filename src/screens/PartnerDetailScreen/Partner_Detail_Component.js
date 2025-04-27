@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 
 import {
   CustomerCard,
@@ -8,12 +8,11 @@ import {
   Header,
   SafeAreaWrapper,
   Spacing,
-  Text,
   images,
   theme,
 } from '@caryaar/components';
-import {getLocationText} from '../../utils/helper';
 import {DocumentRow} from '../../components';
+import {getLocationText} from '../../utils/helper';
 
 const Partner_Detail_Component = ({
   onBackPress,
@@ -44,12 +43,15 @@ const Partner_Detail_Component = ({
             customerName={partnerDetail?.name}
             infoRowDetails={[
               {
-                value: partnerDetail.phone ?? '-',
-                icon: images.callOutline,
+                value: partnerDetail?.phone ?? '-',
+                icon: images.phoneOutline,
                 color: 'white',
               },
               {
-                value: getLocationText(partnerDetail.city, partnerDetail.state),
+                value: getLocationText(
+                  partnerDetail?.city,
+                  partnerDetail?.state,
+                ),
                 icon: images.locationPin,
                 color: 'white',
               },

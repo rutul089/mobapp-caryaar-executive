@@ -1,4 +1,4 @@
-import React, {Component, use} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Loader} from '../../components';
 import ScreenNames from '../../constants/ScreenNames';

@@ -5,7 +5,11 @@ import {
   fetchSalesExecutives,
   createSalesExecutive,
 } from '../../api/salesExecutiveService';
-import {getErrorMessage} from '../../utils/helper';
+import {
+  getErrorMessage,
+  showApiErrorToast,
+  showToast,
+} from '../../utils/helper';
 // Action Creators
 export const addSalesExecutive = executive => ({
   type: types.ADD_SALES_EXECUTIVE,
@@ -53,6 +57,7 @@ export const fetchSalesExecutivesThunk = (
         onSuccess(response);
       }
     } catch (error) {
+      showApiErrorToast(error);
       dispatch({
         type: types.FETCH_SALES_EXECUTIVE_FAILURE,
         payload: {
@@ -89,7 +94,7 @@ export const deleteSalesExecutiveByIdThunk = (
         onSuccess(response);
       }
     } catch (error) {
-      console.log('error', JSON.stringify(error));
+      showApiErrorToast(error);
       dispatch({
         type: types.REMOVE_SALES_EXECUTIVE_FAILURE,
         payload: error.message,
@@ -127,10 +132,13 @@ export const createSalesExecutiveThunk = (param, onSuccess, onFailure) => {
         },
       });
 
+      showToast('success', response?.message || 'Member created successfully!');
+
       if (onSuccess) {
         onSuccess(response);
       }
     } catch (error) {
+      showApiErrorToast(error);
       dispatch({
         type: types.FETCH_SALES_EXECUTIVE_FAILURE,
         payload: {

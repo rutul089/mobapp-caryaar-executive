@@ -22,11 +22,11 @@ class ManageMemberScreen extends Component {
     super(props);
     this.state = {
       isVisible: false,
-      fullName: 'Rutul Mehta',
-      mobileNumber: '7405598341',
+      fullName: '',
+      mobileNumber: '',
       selectedSalesExec: '',
       selectedSalesExecValue: '',
-      email: 'rutul08u9@gmail.com',
+      email: '',
       isLoading: true,
       errors: {
         fullName: '',
@@ -89,10 +89,11 @@ class ManageMemberScreen extends Component {
   onModalHide = () => {
     this.setState({
       isVisible: false,
-      // fullName: '',
-      // mobileNumber: '',
-      // selectedSalesExec: '',
-      // selectedSalesExecValue: '',
+      fullName: '',
+      mobileNumber: '',
+      selectedSalesExec: '',
+      selectedSalesExecValue: '',
+      email: '',
     });
   };
 
@@ -111,7 +112,6 @@ class ManageMemberScreen extends Component {
         param,
         response => {
           if (response.success) {
-            Alert.alert(response.message);
             this.onModalHide();
           }
         },

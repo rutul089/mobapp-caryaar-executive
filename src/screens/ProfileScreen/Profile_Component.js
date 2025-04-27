@@ -1,20 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
 import {
   Card,
+  CommonModal,
   ImageHeader,
+  images,
   Pressable,
   SafeAreaWrapper,
   Spacing,
   Text,
   theme,
-  images,
-  CommonModal,
 } from '@caryaar/components';
 import React from 'react';
 import {Image, ScrollView, StyleSheet, View} from 'react-native';
 
-import ScreenNames from '../../constants/ScreenNames';
 import {ImageComponent} from '../../components';
+import ScreenNames from '../../constants/ScreenNames';
 
 const Profile_Component = ({
   params,

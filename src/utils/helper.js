@@ -5,6 +5,7 @@ import RNFS from 'react-native-fs';
 import theme from '../theme';
 import colors from '../theme/colors';
 import {documentLabelsMap} from '../constants/enums';
+import Toast from 'react-native-toast-message';
 
 export const formatIndianNumber = (value, showSign = true) => {
   const [intPart, decimalPart] = value?.toString().split('.');
@@ -376,6 +377,9 @@ export const buildDocumentsArray = (partnerDetail, onPressHandler) => {
 
 export const getErrorMessage = error => {
   try {
+    if (error?.message === 'Network Error') {
+      return 'Please check your internet connection.';
+    }
     const message = error?.response?.data?.message;
     if (message) {
       return message;
@@ -385,4 +389,31 @@ export const getErrorMessage = error => {
   } catch (err) {
     return 'Something went wrong';
   }
+};
+
+export const showToast = (
+  type = 'warning',
+  message = '',
+  position = 'bottom',
+  visibilityTime = 2000,
+) => {
+  Toast.show({
+    type: type,
+    text1: message,
+    position: position,
+    bottomOffset: 100,
+    topOffset: 100,
+    visibilityTime,
+  });
+};
+
+export const showApiErrorToast = error => {
+  const message = getErrorMessage(error);
+  Toast.show({
+    type: 'error',
+    text1: message,
+    position: 'bottom',
+    bottomOffset: 100,
+    visibilityTime: 3000,
+  });
 };
