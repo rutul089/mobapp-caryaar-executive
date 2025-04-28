@@ -14,7 +14,11 @@ import {
 const Tab = createBottomTabNavigator();
 
 const renderTabIcon = image => (
-  <Image source={image} style={{height: 24, width: 24}} />
+  <Image
+    source={image}
+    style={{height: 24, width: 24, marginBottom: 5}}
+    resizeMode="contain"
+  />
 );
 
 const renderTabLabel = (focused, label) => (
@@ -41,9 +45,16 @@ const TabNavigator = () => {
           backgroundColor: 'white',
           minHeight: 60,
           maxHeight: 90,
+          top: 0,
+          bottom: 0,
+          margin: 0,
+          // alignContent: 'center',
+          // alignItems: 'center',
+          // justifyContent: 'center',
         },
         tabBarItemStyle: {
-          padding: 0,
+          // padding: 0,
+          // margin: 0,
         },
       }}>
       <Tab.Screen

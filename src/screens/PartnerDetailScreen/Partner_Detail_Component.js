@@ -107,6 +107,7 @@ const Partner_Detail_Component = ({
               return (
                 <>
                   <DocumentRow
+                    key={`doc-${index}`}
                     label={doc.label}
                     actionLabel={
                       doc.isMissing || !doc.uploaded ? 'Required' : 'View'

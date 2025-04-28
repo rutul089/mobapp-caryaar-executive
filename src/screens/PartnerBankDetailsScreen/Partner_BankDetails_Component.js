@@ -23,6 +23,9 @@ const Partner_BankDetails_Component = ({
         buttonName={'Close'}
         onButtonPress={onClosePress}
         contentContainerStyle={styles.wrapper}
+        transferModes={transferModes}
+        onTransferModeSelect={onTransferModeSelect}
+        selectedTransferMode={selectedTransferMode}
       />
     </SafeAreaWrapper>
   );

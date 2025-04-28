@@ -6,12 +6,19 @@ import {setBasicDetails} from '../../../redux/actions';
 import Partner_Basic_Form_Component from './Partner_Basic_Form_Component';
 import {handleFieldChange, validateField} from '../../../utils/helper';
 import {get} from 'lodash';
+import {
+  businessTypeOption,
+  businessTypeOptions,
+  generateOptionsAndValueMap,
+  salesExecutivePosition,
+} from '../../../constants/enums';
 class AddPartnerBasicDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
       businessName: '',
       businessType: '',
+      businessTypeValue: '',
       yearsInBusiness: '',
       monthlyCarSales: '',
       ownerName: '',
@@ -59,6 +66,7 @@ class AddPartnerBasicDetail extends Component {
     this.setState(
       {
         businessType: item.label,
+        businessTypeValue: item.value,
       },
       () => {
         this.onChangeField('businessType', this.state.businessType);
@@ -140,16 +148,12 @@ class AddPartnerBasicDetail extends Component {
       showImages,
       errorSteps,
     } = this.state;
+
     return (
       <>
         <Partner_Basic_Form_Component
           onSelectBusinessType={this.onSelectBusinessType}
-          dropdownOptions={[
-            {label: 'PVT Limited', value: 'a'},
-            {label: 'LLP', value: 'b'},
-            {label: 'Self-Employed', value: 'd'},
-            {label: 'Proprietorship/Individual', value: 'e'},
-          ]}
+          dropdownOptions={businessTypeOptions}
           businessType={businessType}
           handleNextPress={this.handleNextPress}
           onChangeBusinessName={value =>

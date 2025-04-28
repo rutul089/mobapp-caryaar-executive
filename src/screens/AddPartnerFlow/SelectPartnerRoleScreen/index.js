@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {PartnerUserPosition} from '../../../constants/enums';
+import {partnerUserPosition} from '../../../constants/enums';
 import ScreenNames from '../../../constants/ScreenNames';
 import {goBack, navigate} from '../../../navigation/NavigationUtils';
 import {setPartnerRole} from '../../../redux/actions';
@@ -10,7 +10,7 @@ class SelectPartnerRole extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedRole: PartnerUserPosition.DEALER_PRINCIPLE,
+      selectedRole: partnerUserPosition.DEALER_PRINCIPLE,
     };
   }
 

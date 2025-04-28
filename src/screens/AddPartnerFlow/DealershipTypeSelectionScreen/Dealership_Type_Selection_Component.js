@@ -10,7 +10,7 @@ import {
   Text,
   theme,
 } from '@caryaar/components';
-import {DealershipType} from '../../../constants/enums';
+import {dealershipType} from '../../../constants/enums';
 import {goBack} from '../../../navigation/NavigationUtils';
 
 const Dealership_Type_Selection_Component = ({
@@ -27,22 +27,22 @@ const Dealership_Type_Selection_Component = ({
         <Spacing size="smd" />
         <View style={styles.row}>
           <OptionCard
-            value={DealershipType.OEM}
+            value={dealershipType.OEM}
             label={'OEM Dealer'}
             icon={images.userCircle}
             onSelect={onDealerShipType}
-            isSelected={selectedDealershipType === DealershipType.OEM}
+            isSelected={selectedDealershipType === dealershipType.OEM}
             textProps={{
               size: 'small',
               hankenGroteskMedium: true,
             }}
           />
           <OptionCard
-            value={DealershipType.MULTI_BRAND}
+            value={dealershipType.MULTI_BRAND}
             label={'Multi-Brand Dealer'}
             icon={images.userCircle}
             onSelect={onDealerShipType}
-            isSelected={selectedDealershipType === DealershipType.MULTI_BRAND}
+            isSelected={selectedDealershipType === dealershipType.MULTI_BRAND}
             textProps={{
               size: 'small',
               hankenGroteskMedium: true,
@@ -52,11 +52,11 @@ const Dealership_Type_Selection_Component = ({
         <Spacing size="md" />
         <View style={styles.row}>
           <OptionCard
-            value={DealershipType.DSA}
+            value={dealershipType.DSA}
             label={'DSA'}
             icon={images.userCircle}
             onSelect={onDealerShipType}
-            isSelected={selectedDealershipType === DealershipType.DSA}
+            isSelected={selectedDealershipType === dealershipType.DSA}
             isMedium
             textProps={{
               size: 'small',
@@ -64,11 +64,11 @@ const Dealership_Type_Selection_Component = ({
             }}
           />
           <OptionCard
-            value={DealershipType.BROKER}
+            value={dealershipType.BROKER}
             label={'Broker'}
             icon={images.userCircle}
             onSelect={onDealerShipType}
-            isSelected={selectedDealershipType === DealershipType.BROKER}
+            isSelected={selectedDealershipType === dealershipType.BROKER}
             textProps={{
               size: 'small',
               hankenGroteskMedium: true,

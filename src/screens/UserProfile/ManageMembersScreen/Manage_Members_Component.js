@@ -3,12 +3,12 @@ import {
   Card,
   CommonModal,
   Header,
+  images,
   Input,
   Pressable,
   SafeAreaWrapper,
   Spacing,
   Text,
-  images,
   theme,
 } from '@caryaar/components';
 import React from 'react';
@@ -19,9 +19,9 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {goBack} from '../../../navigation/NavigationUtils';
 import {NoDataFound} from '../../../components';
-import {getSalesExecutiveLabel} from '../../../constants/enums';
+import {getLabelFromEnum, salesExecutiveValue} from '../../../constants/enums';
+import {goBack} from '../../../navigation/NavigationUtils';
 
 const Manage_Members_Component = ({
   handleAddNewMemberPress,
@@ -60,7 +60,7 @@ const Manage_Members_Component = ({
             size={'caption'}
             hankenGroteskBold
             color={theme.colors.primary}>
-            {getSalesExecutiveLabel(item?.position)}
+            {getLabelFromEnum(salesExecutiveValue, item?.position)}
           </Text>
           <Text lineHeight={'body'}>{item?.user?.name}</Text>
           <Text

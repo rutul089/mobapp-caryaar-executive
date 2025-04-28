@@ -11,7 +11,7 @@ import {
 } from '@caryaar/components';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {PartnerUserPosition} from '../../../constants/enums';
+import {partnerUserPosition} from '../../../constants/enums';
 
 const Select_Partner_Role_Component = ({
   onBackPress,
@@ -27,22 +27,22 @@ const Select_Partner_Role_Component = ({
         <Spacing size="smd" />
         <View style={styles.row}>
           <OptionCard
-            value={PartnerUserPosition.DEALER_PRINCIPLE}
+            value={partnerUserPosition.DEALER_PRINCIPLE}
             label={'Dealer Principle'}
             icon={images.userCircle}
             onSelect={onRoleSelect}
-            isSelected={selectedRole === PartnerUserPosition.DEALER_PRINCIPLE}
+            isSelected={selectedRole === partnerUserPosition.DEALER_PRINCIPLE}
             textProps={{
               size: 'small',
               hankenGroteskMedium: true,
             }}
           />
           <OptionCard
-            value={PartnerUserPosition.SENIOR_MANAGEMENT}
+            value={partnerUserPosition.SENIOR_MANAGEMENT}
             label={'Senior Management'}
             icon={images.userCircle}
             onSelect={onRoleSelect}
-            isSelected={selectedRole === PartnerUserPosition.SENIOR_MANAGEMENT}
+            isSelected={selectedRole === partnerUserPosition.SENIOR_MANAGEMENT}
             textProps={{
               size: 'small',
               hankenGroteskMedium: true,
@@ -52,11 +52,11 @@ const Select_Partner_Role_Component = ({
         <Spacing size="md" />
         <View style={styles.row}>
           <OptionCard
-            value={PartnerUserPosition.EMPLOYEE}
+            value={partnerUserPosition.EMPLOYEE}
             label={'Employee'}
             icon={images.userCircle}
             onSelect={onRoleSelect}
-            isSelected={selectedRole === PartnerUserPosition.EMPLOYEE}
+            isSelected={selectedRole === partnerUserPosition.EMPLOYEE}
             isMedium
             textProps={{
               size: 'small',
@@ -65,11 +65,11 @@ const Select_Partner_Role_Component = ({
           />
 
           <OptionCard
-            value={PartnerUserPosition.EMPLOYEE}
+            value={partnerUserPosition.EMPLOYEE}
             label={'Employee'}
             icon={images.userCircle}
             onSelect={onRoleSelect}
-            isSelected={selectedRole === PartnerUserPosition.EMPLOYEE}
+            isSelected={selectedRole === partnerUserPosition.EMPLOYEE}
             isMedium
             textProps={{
               size: 'small',

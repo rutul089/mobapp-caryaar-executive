@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Dealership_Type_Selection_Component from './Dealership_Type_Selection_Component.js';
-import {DealershipType} from '../../../constants/enums.js';
+import {dealershipType} from '../../../constants/enums.js';
 import {navigate} from '../../../navigation/NavigationUtils.js';
 import ScreenNames from '../../../constants/ScreenNames.js';
 import {connect} from 'react-redux';
@@ -10,7 +10,7 @@ class DealershipTypeSelectionScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDealershipType: DealershipType.MULTI_BRAND,
+      selectedDealershipType: dealershipType.MULTI_BRAND,
     };
     this.handleNextPress = this.handleNextPress.bind(this);
   }

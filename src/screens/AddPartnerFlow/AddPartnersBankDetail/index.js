@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {SettlementPreference} from '../../../constants/enums';
+import {
+  settlementPreference,
+  settlementPreferenceOptions,
+} from '../../../constants/enums';
 import ScreenNames from '../../../constants/ScreenNames';
 import {navigate} from '../../../navigation/NavigationUtils';
 import {setBankingDetails} from '../../../redux/actions';
@@ -16,7 +19,7 @@ class AddPartnersBankDetail extends Component {
       bankName: '',
       ifscCode: '',
       branchName: '',
-      selectedTransferMode: SettlementPreference.IMPS,
+      selectedTransferMode: settlementPreference.IMPS,
       errors: {
         accountNumber: '',
         accountHolderName: '',
@@ -109,10 +112,7 @@ class AddPartnersBankDetail extends Component {
     return (
       <>
         <Partner_Bank_Detail_Component
-          transferModes={[
-            {label: 'NEFT', value: SettlementPreference.NEFT},
-            {label: 'IMPS', value: SettlementPreference.IMPS},
-          ]}
+          transferModes={settlementPreferenceOptions}
           dropdownOptions={[
             {label: 'HDFC Bank', value: 'hdfc'},
             {label: 'ICICI Bank', value: 'icici'},
