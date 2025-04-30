@@ -3,7 +3,11 @@ import ScreenNames from '../../constants/ScreenNames';
 import {navigate} from '../../navigation/NavigationUtils';
 import Partner_Component from './Partner_Component';
 import {connect} from 'react-redux';
-import {fetchPartners, resetRegistration} from '../../redux/actions';
+import {
+  fetchPartners,
+  resetPartnerDetail,
+  resetRegistration,
+} from '../../redux/actions';
 
 class PartnersScreen extends Component {
   constructor(props) {
@@ -32,6 +36,7 @@ class PartnersScreen extends Component {
   };
 
   onItemPress = item => {
+    this.props.resetPartnerDetail();
     navigate(ScreenNames.PartnerDetail, {params: item});
   };
 
@@ -84,6 +89,7 @@ class PartnersScreen extends Component {
 const mapDispatchToProps = {
   resetRegistration,
   fetchPartners,
+  resetPartnerDetail,
 };
 const mapStateToProps = state => {
   return {

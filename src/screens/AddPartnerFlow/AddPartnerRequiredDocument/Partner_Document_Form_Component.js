@@ -17,6 +17,8 @@ const Partner_Document_Form_Component = ({
   onBackPress,
   documentGroups,
   handleNextPress,
+  showImages,
+  errorSteps,
 }) => {
   const renderDocumentGroup = (title, documents) => (
     <View key={title}>
@@ -48,7 +50,11 @@ const Partner_Document_Form_Component = ({
   return (
     <SafeAreaWrapper>
       <Header title="Add New Partner" onBackPress={() => goBack()} />
-      <StepTracker showImages={[1, 2]} selectedId={3} />
+      <StepTracker
+        showImages={showImages}
+        selectedId={3}
+        errorSteps={errorSteps}
+      />
       <ScrollView contentContainerStyle={styles.wrapper}>
         {documentGroups.map(group =>
           renderDocumentGroup(group.title, group.documents),

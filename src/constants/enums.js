@@ -207,11 +207,41 @@ export const commonStatusValue = {
   [commonStatus.PENDING]: 'Pending',
 };
 
+// ===================== Partner Document Types =====================
+
+/**
+ * Enum for Partner Document Types.
+ */
+export const partnerDocumentType = Object.freeze({
+  GST_REGISTRATION: 'GST_REGISTRATION',
+  SHOP_LICENSE: 'SHOP_LICENSE',
+  PAN_CARD: 'PAN_CARD',
+  AADHAR_CARD_FRONT: 'AADHAR_CARD_FRONT',
+  AADHAR_CARD_BACK: 'AADHAR_CARD_BACK',
+  BANK_STATEMENT: 'BANK_STATEMENT',
+  CANCELLED_CHEQUE: 'CANCELLED_CHEQUE',
+  PHOTOGRAPH: 'PHOTOGRAPH',
+});
+
+/**
+ * Mapping of Partner Document Type value to its display label.
+ */
+export const partnerDocumentLabelMap = {
+  [partnerDocumentType.GST_REGISTRATION]: 'GST Registration',
+  [partnerDocumentType.SHOP_LICENSE]: 'Shop License',
+  [partnerDocumentType.PAN_CARD]: 'PAN Card',
+  [partnerDocumentType.AADHAR_CARD_FRONT]: 'Aadhar Card Front',
+  [partnerDocumentType.AADHAR_CARD_BACK]: 'Aadhar Card Back',
+  [partnerDocumentType.PHOTOGRAPH]: 'Photograph',
+  [partnerDocumentType.BANK_STATEMENT]: 'Bank Statement',
+  [partnerDocumentType.CANCELLED_CHEQUE]: 'Cancelled Cheque',
+};
+
 // ===================== Other Static Constants =====================
 
 export const vehicleType = Object.freeze({
-  used: 'used',
-  new: 'new',
+  used: 'USED_CAR',
+  new: 'NEW_CAR',
 });
 
 export const customerCategory = Object.freeze({
@@ -278,27 +308,6 @@ export const dealershipType = Object.freeze({
   DSA: 'DSA',
   BROKER: 'BROKER',
 });
-
-export const partnerDocumentType = Object.freeze({
-  GST_REGISTRATION: 'GST_REGISTRATION',
-  SHOP_LICENCE: 'SHOP_LICENCE',
-  PAN_CARD: 'PAN_CARD',
-  AADHAR_CARD_FRONT: 'AADHAR_CARD_FRONT',
-  AADHAR_CARD_BACK: 'AADHAR_CARD_BACK',
-  BANK_STATEMENT: 'BANK_STATEMENT',
-  CANCELLED_CHEQUE: 'CANCELLED_CHEQUE',
-});
-
-export const documentLabelsMap = {
-  GST_REGISTRATION: 'GST Registration',
-  SHOP_LICENCE: 'Shop License',
-  PAN_CARD: 'PAN Card',
-  AADHAR_CARD_FRONT: 'Aadhar Card Front',
-  AADHAR_CARD_BACK: 'Aadhar Card Back',
-  PHOTOGRAPH: 'Photograph',
-  BANK_STATEMENT: 'Bank Statement',
-  CANCELLED_CHEQUE: 'Cancelled Cheque',
-};
 
 // ======================================================================
 

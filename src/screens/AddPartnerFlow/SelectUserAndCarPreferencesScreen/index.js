@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {userType, vehicleType} from '../../../constants/enums';
 import ScreenNames from '../../../constants/ScreenNames';
 import {goBack, navigate} from '../../../navigation/NavigationUtils';
-import {setCarType, setUserType} from '../../../redux/actions';
+import {setSellerType, setUserType} from '../../../redux/actions';
 import User_Car_Type_Selection_Component from './User_Car_Type_Selection_Component';
 
 class UserAndCarTypeSelection extends Component {
@@ -36,8 +36,8 @@ class UserAndCarTypeSelection extends Component {
   handleNextPress = () => {
     const {selectedCarType, selectedUserType} = this.state;
 
-    setCarType(selectedCarType);
-    setUserType(selectedUserType);
+    this.props.setSellerType(selectedCarType);
+    this.props.setUserType(this.state.isMultiUser);
 
     const nextScreen =
       selectedUserType === userType.singleUser
@@ -69,7 +69,7 @@ class UserAndCarTypeSelection extends Component {
 }
 
 const mapDispatchToProps = {
-  setCarType,
+  setSellerType,
   setUserType,
 };
 const mapStateToProps = state => {

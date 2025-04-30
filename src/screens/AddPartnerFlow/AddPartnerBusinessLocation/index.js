@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
-import {goBack, navigate} from '../../../navigation/NavigationUtils';
-import Partner_Location_Form_Component from './Partner_Location_Form_Component';
-import ScreenNames from '../../../constants/ScreenNames';
 import {connect} from 'react-redux';
+import ScreenNames from '../../../constants/ScreenNames';
+import {
+  getScreenParam,
+  goBack,
+  navigate,
+} from '../../../navigation/NavigationUtils';
 import {setLocationDetails} from '../../../redux/actions';
 import {handleFieldChange, validateField} from '../../../utils/helper';
+import Partner_Location_Form_Component from './Partner_Location_Form_Component';
+import {get} from 'lodash';
 
 class AddPartnerBusinessLocation extends Component {
   constructor(props) {
@@ -28,7 +33,33 @@ class AddPartnerBusinessLocation extends Component {
         stateName: '',
       },
       isFormValid: false,
+      fromScreen: false,
+      errorSteps: [],
+      showImages: [1],
     };
+  }
+
+  componentDidMount() {
+    const {locationDetails, route} = this.props;
+    let navState = getScreenParam(route, 'params', null);
+    let fromScreen = get(navState, 'fromScreen', false);
+    if (fromScreen) {
+      this.setState({
+        showImages: get(navState, 'showImages', []),
+        errorSteps: get(navState, 'errorSteps', []),
+      });
+    }
+    this.setState({
+      fromScreen: fromScreen,
+      companyName: get(locationDetails, 'companyName', ''),
+      shopNo: get(locationDetails, 'shopNo', ''),
+      buildingName: get(locationDetails, 'buildingName', ''),
+      street: get(locationDetails, 'streetAddress', ''),
+      area: get(locationDetails, 'area', ''),
+      stateName: get(locationDetails, 'state', ''),
+      pincode: get(locationDetails, 'pincode', ''),
+      cityName: get(locationDetails, 'city', ''),
+    });
   }
 
   onBackPress = () => {
@@ -88,13 +119,22 @@ class AddPartnerBusinessLocation extends Component {
       companyName,
       shopNo,
       buildingName,
-      street,
+      streetAddress: street,
       area,
-      stateName,
+      state: stateName,
       pincode,
+      latitude: '19.076',
+      longitude: '72.877',
+      city: 'Mumbai',
     });
 
-    navigate(ScreenNames.AddPartnerRequiredDocument);
+    navigate(ScreenNames.AddPartnerRequiredDocument, {
+      params: {
+        fromScreen: this.state.fromScreen,
+        showImages: this.state.showImages,
+        errorSteps: this.state.errorSteps,
+      },
+    });
   };
 
   onGoogleMapPress = () => {
@@ -123,6 +163,9 @@ class AddPartnerBusinessLocation extends Component {
       pincode,
       errors,
       isFormValid,
+      showImages,
+      errorSteps,
+      cityName,
     } = this.state;
 
     return (
@@ -176,14 +219,18 @@ class AddPartnerBusinessLocation extends Component {
               value: pincode,
               isError: errors.pincode,
               statusMsg: errors.pincode,
-              rightLabel: 'City Name',
+              rightLabel: cityName,
               rightLabelPress: () => {},
               keyboardType: 'numeric',
+              returnKeyType: 'done',
+              onSubmitEditing: this.handleNextPress,
             },
           }}
           nextButtonDisabled={!isFormValid} // Disable the button if form is not valid
           onSelectState={this.onSelectState}
           stateName={stateName}
+          showImages={showImages}
+          errorSteps={errorSteps}
         />
       </>
     );
@@ -193,10 +240,11 @@ class AddPartnerBusinessLocation extends Component {
 const mapDispatchToProps = {
   setLocationDetails,
 };
-const mapStateToProps = state => {
+const mapStateToProps = ({appState, partnerForm}) => {
   return {
-    isInternetConnected: state.appState.isInternetConnected,
-    isLoading: state.appState.loading,
+    isInternetConnected: appState.isInternetConnected,
+    isLoading: appState.loading,
+    locationDetails: partnerForm.locationDetails,
   };
 };
 export default connect(

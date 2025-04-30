@@ -1,17 +1,16 @@
+import {get} from 'lodash';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {
+  businessTypeOptions,
+  businessTypeValue,
+  getLabelFromEnum,
+} from '../../../constants/enums';
 import ScreenNames from '../../../constants/ScreenNames';
 import {getScreenParam, navigate} from '../../../navigation/NavigationUtils';
 import {setBasicDetails} from '../../../redux/actions';
-import Partner_Basic_Form_Component from './Partner_Basic_Form_Component';
 import {handleFieldChange, validateField} from '../../../utils/helper';
-import {get} from 'lodash';
-import {
-  businessTypeOption,
-  businessTypeOptions,
-  generateOptionsAndValueMap,
-  salesExecutivePosition,
-} from '../../../constants/enums';
+import Partner_Basic_Form_Component from './Partner_Basic_Form_Component';
 class AddPartnerBasicDetail extends Component {
   constructor(props) {
     super(props);
@@ -54,18 +53,18 @@ class AddPartnerBasicDetail extends Component {
       fromScreen: fromScreen,
       businessName: get(basicDetail, 'businessName', ''),
       businessType: get(basicDetail, 'businessType', ''),
-      yearsInBusiness: get(basicDetail, 'yearsInBusiness', ''),
-      monthlyCarSales: get(basicDetail, 'monthlyCarSales', ''),
+      yearsInBusiness: get(basicDetail, 'yearInBusiness', ''),
+      monthlyCarSales: get(basicDetail, 'monthlyCarSale', ''),
       ownerName: get(basicDetail, 'ownerName', ''),
-      mobileNumber: get(basicDetail, 'mobileNumber', ''),
-      emailAddress: get(basicDetail, 'emailAddress', ''),
+      mobileNumber: get(basicDetail, 'ownerMobileNumber', ''),
+      emailAddress: get(basicDetail, 'ownerEmail', ''),
     });
   }
 
   onSelectBusinessType = item => {
     this.setState(
       {
-        businessType: item.label,
+        businessType: item.value,
         businessTypeValue: item.value,
       },
       () => {
@@ -77,12 +76,12 @@ class AddPartnerBasicDetail extends Component {
   handleNextPress = () => {
     const {
       businessName,
-      businessType,
       yearsInBusiness,
       monthlyCarSales,
       ownerName,
       mobileNumber,
       emailAddress,
+      businessType,
     } = this.state;
     const isFormValid = this.validateAllFields();
 
@@ -93,15 +92,21 @@ class AddPartnerBasicDetail extends Component {
 
     this.props.setBasicDetails({
       businessName,
-      businessType,
-      yearsInBusiness,
-      monthlyCarSales,
+      businessType: businessType,
+      yearInBusiness: yearsInBusiness,
+      monthlyCarSale: monthlyCarSales,
       ownerName,
-      mobileNumber,
-      emailAddress,
+      ownerMobileNumber: mobileNumber,
+      ownerEmail: emailAddress,
     });
 
-    navigate(ScreenNames.AddPartnerBusinessLocation);
+    navigate(ScreenNames.AddPartnerBusinessLocation, {
+      params: {
+        fromScreen: this.state.fromScreen,
+        showImages: this.state.showImages,
+        errorSteps: this.state.errorSteps,
+      },
+    });
   };
 
   validateAllFields = () => {
@@ -154,7 +159,7 @@ class AddPartnerBasicDetail extends Component {
         <Partner_Basic_Form_Component
           onSelectBusinessType={this.onSelectBusinessType}
           dropdownOptions={businessTypeOptions}
-          businessType={businessType}
+          businessType={getLabelFromEnum(businessTypeValue, businessType)}
           handleNextPress={this.handleNextPress}
           onChangeBusinessName={value =>
             this.onChangeField('businessName', value)
@@ -178,7 +183,7 @@ class AddPartnerBasicDetail extends Component {
               autoCapitalize: 'words',
             },
             businessType: {
-              value: businessType,
+              value: getLabelFromEnum(businessTypeValue, businessType),
               isError: errors.businessType,
               statusMsg: errors.businessType,
             },
@@ -218,11 +223,11 @@ class AddPartnerBasicDetail extends Component {
 }
 
 const mapDispatchToProps = {setBasicDetails};
-const mapStateToProps = state => {
+const mapStateToProps = ({appState, partnerForm}) => {
   return {
-    isInternetConnected: state.appState.isInternetConnected,
-    isLoading: state.appState.loading,
-    basicDetail: state.partnerForm.basicDetails,
+    isInternetConnected: appState.isInternetConnected,
+    isLoading: appState.loading,
+    basicDetail: partnerForm.basicDetails,
   };
 };
 export default connect(

@@ -14,6 +14,7 @@ import {
 } from '../../redux/actions';
 import {clearLoginStatus} from '../../utils/storage';
 import Profile_Component from './Profile_Component';
+import {formatMobileNumber, removeCountryCode} from '../../utils/helper';
 
 class ProfileScreen extends Component {
   constructor(props) {
@@ -85,7 +86,7 @@ class ProfileScreen extends Component {
 
   render() {
     const {showLogoutModal} = this.state;
-    const {userDetail, user} = this.props;
+    const {user} = this.props;
 
     return (
       <>
@@ -96,11 +97,13 @@ class ProfileScreen extends Component {
           showLogoutModal={showLogoutModal}
           onPressPrimaryButton={this.onPressPrimaryButton}
           onModalHide={this.onModalHide}
-          address={userDetail?.address}
+          address={user?.address}
           name={user?.name}
           email={user?.email}
-          phone={user?.phone}
-          userID={user?.company?.name}
+          phone={removeCountryCode(user?.phone)}
+          userID={user?.id}
+          avatar={user?.avatar}
+          designation={user?.designation}
         />
         {this.props.loading && <Loader visible={this.props.loading} />}
       </>

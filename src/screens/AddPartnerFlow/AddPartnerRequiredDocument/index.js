@@ -1,11 +1,13 @@
 import {ImagePreviewModal} from '@caryaar/components';
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import ScreenNames from '../../../constants/ScreenNames';
-import {navigate} from '../../../navigation/NavigationUtils';
+import {getScreenParam, navigate} from '../../../navigation/NavigationUtils';
+import {setDocumentDetails} from '../../../redux/actions';
 import DocumentUtils from '../../../utils/DocumentUtils';
 import Partner_Document_Form_Component from './Partner_Document_Form_Component';
-import {connect} from 'react-redux';
-import {setDocumentDetails} from '../../../redux/actions';
+import {partnerDocumentType} from '../../../constants/enums';
+import {get} from 'lodash';
 
 class AddPartnerRequiredDocument extends Component {
   constructor(props) {
@@ -15,10 +17,25 @@ class AddPartnerRequiredDocument extends Component {
       initialDocuments: {},
       previewImage: null,
       isImageViewerVisible: false,
+      showImages: [1, 2],
+      errorSteps: [],
+      fromScreen: false,
     };
   }
 
   componentDidMount() {
+    const {route} = this.props;
+    let navState = getScreenParam(route, 'params', null);
+    let fromScreen = get(navState, 'fromScreen', false);
+    if (fromScreen) {
+      this.setState({
+        showImages: get(navState, 'showImages', []),
+        errorSteps: get(navState, 'errorSteps', []),
+      });
+    }
+    this.setState({
+      fromScreen: fromScreen,
+    });
     this.fetchDocumentDataFromAPI();
   }
   fetchDocumentDataFromAPI = () => {
@@ -53,24 +70,56 @@ class AddPartnerRequiredDocument extends Component {
       {
         title: 'Business Documents',
         documents: [
-          {label: 'GST', stateName: 'gst'},
-          {label: 'Shop License', stateName: 'shopLicense'},
-          {label: 'PAN Card', stateName: 'panCard'},
+          {
+            label: 'GST',
+            stateName: 'gst',
+            documentType: partnerDocumentType.GST_REGISTRATION,
+          },
+          {
+            label: 'Shop License',
+            stateName: 'shopLicense',
+            documentType: partnerDocumentType.SHOP_LICENSE,
+          },
+          {
+            label: 'PAN Card',
+            stateName: 'panCard',
+            documentType: partnerDocumentType.PAN_CARD,
+          },
         ],
       },
       {
         title: 'Personal Documents',
         documents: [
-          {label: 'Aadhar Card Front', stateName: 'aadharCardFront'},
-          {label: 'Aadhar Card Back', stateName: 'aadharCardBack'},
-          {label: 'Photograph', stateName: 'photograph'},
+          {
+            label: 'Aadhar Card Front',
+            stateName: 'aadharCardFront',
+            documentType: partnerDocumentType.AADHAR_CARD_FRONT,
+          },
+          {
+            label: 'Aadhar Card Back',
+            stateName: 'aadharCardBack',
+            documentType: partnerDocumentType.AADHAR_CARD_BACK,
+          },
+          {
+            label: 'Photograph',
+            stateName: 'photograph',
+            documentType: partnerDocumentType.PHOTOGRAPH,
+          },
         ],
       },
       {
         title: 'Bank Documents',
         documents: [
-          {label: 'Bank Statement', stateName: 'bankStatement'},
-          {label: 'Cancelled Cheque', stateName: 'cancelledCheque'},
+          {
+            label: 'Bank Statement',
+            stateName: 'bankStatement',
+            documentType: partnerDocumentType.BANK_STATEMENT,
+          },
+          {
+            label: 'Cancelled Cheque',
+            stateName: 'cancelledCheque',
+            documentType: partnerDocumentType.CANCELLED_CHEQUE,
+          },
         ],
       },
     ];
@@ -132,14 +181,20 @@ class AddPartnerRequiredDocument extends Component {
   // };
 
   handleNextPress = () => {
-    const changedDocuments = {};
+    const changedDocuments = [];
 
     this.state.documentGroups.forEach(group => {
       group.documents.forEach(doc => {
         const initialUri = this.state.initialDocuments[doc.label] || null;
         const currentUri = doc.image ? doc.image.uri : null;
-        // changedDocuments[doc.label] = doc.image;
-        changedDocuments[doc.stateName] = doc.image;
+        if (currentUri !== null) {
+          changedDocuments.push({
+            documentType: doc.documentType || '', // safe fallback
+            // documentUrl: currentUri,
+            documentUrl:
+              'https://file-examples.com/wp-content/storage/2017/02/file-sample_1MB.doc',
+          });
+        }
 
         // if (currentUri !== initialUri) {
         //   changedDocuments[doc.label] = doc.image;
@@ -147,10 +202,15 @@ class AddPartnerRequiredDocument extends Component {
       });
     });
 
-    console.log('Changed Documents with details:', changedDocuments);
+    console.log('changedDocuments,', JSON.stringify(changedDocuments));
     this.props.setDocumentDetails(changedDocuments);
-    navigate(ScreenNames.AddPartnersBankDetail);
-    return changedDocuments;
+    navigate(ScreenNames.AddPartnersBankDetail, {
+      params: {
+        fromScreen: this.state.fromScreen,
+        showImages: this.state.showImages,
+        errorSteps: this.state.errorSteps,
+      },
+    });
   };
 
   render() {
@@ -168,6 +228,8 @@ class AddPartnerRequiredDocument extends Component {
         <Partner_Document_Form_Component
           documentGroups={documentGroupsWithHandlers}
           handleNextPress={this.handleNextPress}
+          showImages={this.state.showImages}
+          errorSteps={this.state.errorSteps}
         />
         <ImagePreviewModal
           visible={this.state.isImageViewerVisible}

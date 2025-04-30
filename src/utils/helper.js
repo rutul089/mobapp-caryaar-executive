@@ -4,7 +4,7 @@ import FileViewer from 'react-native-file-viewer';
 import RNFS from 'react-native-fs';
 import theme from '../theme';
 import colors from '../theme/colors';
-import {documentLabelsMap} from '../constants/enums';
+import {partnerDocumentLabelMap} from '../constants/enums';
 import Toast from 'react-native-toast-message';
 
 export const formatIndianNumber = (value, showSign = true) => {
@@ -179,11 +179,12 @@ export const validateField = (key, value) => {
     // Company & Business Names
     case 'companyName':
     case 'businessName':
-      return trimmedValue === ''
-        ? 'Please enter a valid company name'
-        : !nameRegex.test(trimmedValue)
-        ? 'Name should contain only alphabets'
-        : '';
+      return trimmedValue === '' ? 'Please enter a valid company name' : '';
+    // return trimmedValue === ''
+    //   ? 'Please enter a valid company name'
+    //   : !nameRegex.test(trimmedValue)
+    //   ? 'Name should contain only alphabets'
+    //   : '';
 
     // Numeric only fields with optional decimal — no leading decimal
     case 'yearsInBusiness':
@@ -357,7 +358,7 @@ const findUploadedDoc = (type, uploadedDocs = []) =>
  * @returns {Array}
  */
 export const buildDocumentsArray = (partnerDetail, onPressHandler) => {
-  const allDocTypes = Object.keys(documentLabelsMap);
+  const allDocTypes = Object.keys(partnerDocumentLabelMap);
   const uploadedDocs = partnerDetail?.documents || [];
   const missingDocs = partnerDetail?.missingDocuments || [];
 
@@ -365,7 +366,7 @@ export const buildDocumentsArray = (partnerDetail, onPressHandler) => {
     const uploadedDoc = findUploadedDoc(type, uploadedDocs);
 
     return {
-      label: documentLabelsMap[type],
+      label: partnerDocumentLabelMap[type],
       documentType: type,
       uploaded: !!uploadedDoc,
       isMissing: missingDocs.includes(type),
@@ -416,4 +417,30 @@ export const showApiErrorToast = error => {
     bottomOffset: 100,
     visibilityTime: 3000,
   });
+};
+
+export const formatMobileNumber = num => {
+  return num.startsWith('+91') ? num : `+91${num}`;
+};
+
+export const removeCountryCode = (phoneNumber, defaultCountryCode = '91') => {
+  if (!phoneNumber) {
+    return '';
+  }
+
+  // Remove any non-digit characters
+  const digitsOnly = phoneNumber.replace(/\D/g, '');
+
+  // If it starts with the default country code, remove it
+  if (digitsOnly.startsWith(defaultCountryCode)) {
+    return digitsOnly.slice(defaultCountryCode.length);
+  }
+
+  // If it starts with '0', assume it's already local
+  if (digitsOnly.startsWith('0')) {
+    return digitsOnly.slice(1);
+  }
+
+  // Fallback: return last 10 digits (typical for mobile numbers)
+  return digitsOnly.length > 10 ? digitsOnly.slice(-10) : digitsOnly;
 };

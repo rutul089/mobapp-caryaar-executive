@@ -8,20 +8,22 @@ import {
   Header,
   SafeAreaWrapper,
   Spacing,
-  images,
   theme,
 } from '@caryaar/components';
 import {DocumentRow} from '../../components';
-import {getLocationText} from '../../utils/helper';
 
 const Partner_Detail_Component = ({
   onBackPress,
-  partnerDetail,
+  selectedPartner,
   contactDetails,
   locationDetail,
   accountDetail,
   documents,
   isFetchingDocument,
+  businessType,
+  infoRowDetails,
+  footerInfo,
+  onEditPartnerDetail,
 }) => {
   return (
     <SafeAreaWrapper backgroundColor={theme.colors.background}>
@@ -39,33 +41,10 @@ const Partner_Detail_Component = ({
           }}>
           <CustomerCard
             hideLogo
-            brandName={partnerDetail?.businessName}
-            customerName={partnerDetail?.name}
-            infoRowDetails={[
-              {
-                value: partnerDetail?.phone ?? '-',
-                icon: images.phoneOutline,
-                color: 'white',
-              },
-              {
-                value: getLocationText(
-                  partnerDetail?.city,
-                  partnerDetail?.state,
-                ),
-                icon: images.locationPin,
-                color: 'white',
-              },
-            ]}
-            footerInfo={[
-              {
-                label: 'Years in Business',
-                value: partnerDetail?.yearInBusiness,
-              },
-              {
-                label: 'Monthly Car Sales',
-                value: partnerDetail?.monthlyCarSale,
-              },
-            ]}
+            brandName={businessType}
+            customerName={selectedPartner?.businessName}
+            infoRowDetails={infoRowDetails}
+            footerInfo={footerInfo}
             noMargin
             noShadow
             wrapperColor={theme.colors.gray900}
@@ -74,7 +53,7 @@ const Partner_Detail_Component = ({
             infoValueColor={theme.colors.white}
             showButton
             buttonLabel="Edit Details"
-            onButtonPress={() => {}}
+            onButtonPress={onEditPartnerDetail}
             customerNameProp={{
               hankenGroteskBold: true,
             }}

@@ -3,17 +3,24 @@ import {types} from '../actions';
 const initialState = {
   loading: false,
   partnersList: [],
-  partnerDetail: {},
+  success: false,
+  selectedPartner: {},
 };
 
 export default function partnerFormReducer(state = initialState, action) {
   switch (action.type) {
+    case types.FETCH_PARTNER_REQUEST:
     case types.FETCH_PARTNERS_REQUEST:
+    case types.CREATE_PARTNER_REQUEST:
+    case types.UPDATE_PARTNER_REQUEST:
       return {
         ...state,
         loading: true,
       };
     case types.FETCH_PARTNERS_FAILURE:
+    case types.FETCH_PARTNER_FAILURE:
+    case types.CREATE_PARTNER_FAILURE:
+    case types.UPDATE_PARTNER_FAILURE:
       return {
         ...state,
         loading: false,
@@ -24,32 +31,39 @@ export default function partnerFormReducer(state = initialState, action) {
         partnersList: action.payload,
         loading: false,
       };
-    case types.FETCH_PARTNER_REQUEST:
-      return {
-        ...state,
-        loading: true,
-      };
-    case types.FETCH_PARTNER_FAILURE:
-      return {
-        ...state,
-        loading: false,
-      };
+
     case types.FETCH_PARTNER_SUCCESS:
       return {
         ...state,
-        partnerDetail: action.payload,
+        selectedPartner: action.payload,
         loading: false,
       };
     case types.RESET_PARTNER:
       return {
         ...state,
-        partnerDetail: {},
+        selectedPartner: {},
         loading: false,
       };
     case types.RESET_PARTNERS:
       return {
         ...state,
         partnersList: [],
+        loading: false,
+      };
+    case types.CREATE_PARTNER_SUCCESS:
+      return {
+        ...state,
+        // partnersList: [action.payload.data, ...state.partnersList],
+        message: action.payload.message,
+        success: action.payload.success,
+        loading: false,
+      };
+    case types.UPDATE_PARTNER_SUCCESS:
+      return {
+        ...state,
+        selectedPartner: action.payload.data,
+        message: action.payload.message,
+        success: action.payload.success,
         loading: false,
       };
     case types.RESET_APP_STATE:

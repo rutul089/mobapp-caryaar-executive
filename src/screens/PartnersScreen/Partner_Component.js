@@ -11,6 +11,7 @@ import {
 import React, {useEffect} from 'react';
 import {FlatList, Image, Pressable, StyleSheet, View} from 'react-native';
 import {formatDate, getLocationText} from '../../utils/helper';
+import {partnerDocumentLabelMap} from '../../constants/enums';
 
 const limit = 10;
 
@@ -77,7 +78,9 @@ const Partner_Component = ({
           subtitle={`Submitted on: ${formatDate(item.createdAt)}`}
           statusObject={statusObject}
           documentError={
-            item?.missingDocuments?.map(doc => ({value: doc})) || []
+            item?.missingDocuments?.map(doc => ({
+              value: partnerDocumentLabelMap[doc],
+            })) || []
           }
           isCTAShow={isMissingDocs}
           buttonLabel={'Upload Docs'}

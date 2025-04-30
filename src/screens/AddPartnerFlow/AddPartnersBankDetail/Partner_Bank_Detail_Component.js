@@ -22,11 +22,17 @@ const Partner_Bank_Detail_Component = ({
   dropdownOptions,
   bankName,
   onSelectBank,
+  showImages,
+  errorSteps,
 }) => {
   return (
     <SafeAreaWrapper>
       <Header title="Add New Partner" onBackPress={() => goBack()} />
-      <StepTracker selectedId={4} showImages={[1, 2, 3]} />
+      <StepTracker
+        selectedId={4}
+        showImages={showImages}
+        errorSteps={errorSteps}
+      />
       <AccountDetailsForm
         transferModes={transferModes}
         selectedTransferMode={selectedTransferMode}

@@ -33,6 +33,8 @@ const Partner_Location_Form_Component = ({
   restInputProps,
   onSelectState = () => {},
   stateName,
+  showImages = [],
+  errorSteps = [],
 }) => {
   const formRef = React.useRef();
   // formRef.current?.focusNext('buildingName');
@@ -40,7 +42,11 @@ const Partner_Location_Form_Component = ({
   return (
     <SafeAreaWrapper>
       <Header title="Add New Partner" onBackPress={onBackPress} />
-      <StepTracker selectedId={2} showImages={[1]} />
+      <StepTracker
+        selectedId={2}
+        showImages={showImages}
+        errorSteps={errorSteps}
+      />
       <LocationDetailsForm
         contentContainerStyle={styles.wrapper}
         handleNextPress={handleNextPress}

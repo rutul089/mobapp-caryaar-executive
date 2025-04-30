@@ -25,10 +25,18 @@ export const fetchUser = (userId, onSuccess, onFailure) => {
     dispatch({type: types.FETCH_USER_REQUEST});
 
     try {
-      const user = await getUser(userId);
+      // const user = await getUser(userId);
       dispatch({
         type: types.FETCH_USER_SUCCESS,
-        payload: user,
+        payload: {
+          id: 'u123456',
+          name: 'Jane Doe',
+          email: 'jane.doe@example.com',
+          phone: '+1-555-123-4567',
+          avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
+          address: 'Ahmedabad,Gujarat',
+          designation: 'Senior Product Manager',
+        },
       });
       if (onSuccess) {
         onSuccess(user);

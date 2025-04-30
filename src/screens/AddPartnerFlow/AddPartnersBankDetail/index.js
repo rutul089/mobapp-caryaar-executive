@@ -1,14 +1,25 @@
+import {get} from 'lodash';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {Loader} from '../../../components';
 import {
   settlementPreference,
   settlementPreferenceOptions,
 } from '../../../constants/enums';
 import ScreenNames from '../../../constants/ScreenNames';
-import {navigate} from '../../../navigation/NavigationUtils';
-import {setBankingDetails} from '../../../redux/actions';
-import {handleFieldChange, validateField} from '../../../utils/helper';
+import {getScreenParam, navigate} from '../../../navigation/NavigationUtils';
+import {
+  createPartnerThunk,
+  setBankingDetails,
+  updatePartnerThunk,
+} from '../../../redux/actions';
+import {
+  handleFieldChange,
+  showToast,
+  validateField,
+} from '../../../utils/helper';
 import Partner_Bank_Detail_Component from './Partner_Bank_Detail_Component';
+import {formatPartnerPayload} from '../../../utils/partnerHelpers';
 
 class AddPartnersBankDetail extends Component {
   constructor(props) {
@@ -17,6 +28,7 @@ class AddPartnersBankDetail extends Component {
       accountNumber: '',
       accountHolderName: '',
       bankName: '',
+      bankNameValue: '',
       ifscCode: '',
       branchName: '',
       selectedTransferMode: settlementPreference.IMPS,
@@ -28,7 +40,35 @@ class AddPartnersBankDetail extends Component {
         branchName: '',
       },
       isFormValid: false,
+      showImages: [1, 2, 3],
+      errorSteps: [],
+      fromScreen: false,
     };
+  }
+  componentDidMount() {
+    const {bankingDetails, route} = this.props;
+
+    let navState = getScreenParam(route, 'params', null);
+    let fromScreen = get(navState, 'fromScreen', false);
+    if (fromScreen) {
+      this.setState({
+        showImages: get(navState, 'showImages', []),
+        errorSteps: get(navState, 'errorSteps', []),
+      });
+    }
+
+    this.setState({
+      fromScreen: fromScreen,
+      accountNumber: get(bankingDetails, 'accountNumber', ''),
+      ifscCode: get(bankingDetails, 'ifscCode', ''),
+      bankName: get(bankingDetails, 'bankName', ''),
+      accountHolderName: get(bankingDetails, 'accountHolderName', ''),
+      selectedTransferMode: get(
+        bankingDetails,
+        'settlementPreference',
+        settlementPreference.IMPS,
+      ),
+    });
   }
 
   onTransferModeSelect = value => {
@@ -38,13 +78,16 @@ class AddPartnersBankDetail extends Component {
   };
 
   handleSubmitPress = () => {
+    const {partnerForm, selectedPartner} = this.props;
     const {
       accountNumber,
       accountHolderName,
       bankName,
+      bankNameValue,
       ifscCode,
       branchName,
       selectedTransferMode,
+      fromScreen,
     } = this.state;
 
     const isFormValid = this.validateAllFields();
@@ -54,20 +97,54 @@ class AddPartnersBankDetail extends Component {
       return;
     }
 
-    this.props.setBankingDetails({
+    let bankingDetail = {
       accountNumber,
       accountHolderName,
-      bankName,
+      bankName: bankNameValue,
       ifscCode,
       branchName,
-      selectedTransferMode,
-    });
-    navigate(ScreenNames.PartnerRegistrationSuccess);
+      settlementPreference: selectedTransferMode,
+    };
+
+    this.props.setBankingDetails(bankingDetail);
+
+    const requestPayload = formatPartnerPayload(partnerForm, bankingDetail);
+
+    if (fromScreen) {
+      let partnerID = selectedPartner.id;
+      delete requestPayload.documents;
+      delete requestPayload.sellerType;
+      delete requestPayload.partnerType;
+      delete requestPayload.isMultiUser;
+      delete requestPayload.partnerRole;
+      console.log('requestPayload---------->', requestPayload);
+      this.props.updatePartnerThunk(
+        partnerID,
+        requestPayload,
+        onSuccess => {
+          showToast(onSuccess.message);
+        },
+        error => {},
+      );
+      return;
+    }
+    console.log('requestPayload---------->', requestPayload);
+
+    this.props.createPartnerThunk(
+      requestPayload,
+      onSuccess => {
+        console.log({onSuccess});
+        if (onSuccess?.success) {
+          navigate(ScreenNames.PartnerRegistrationSuccess);
+        }
+      },
+      onFail => {},
+    );
   };
 
   onSelectBank = (item, index) => {
-    this.setState({bankName: item.label}, () => {
-      this.onChangeField('bankName', this.state.bankName);
+    this.setState({bankName: item?.label}, () => {
+      this.onChangeField('bankNameValue', item?.value);
     });
   };
 
@@ -109,19 +186,18 @@ class AddPartnersBankDetail extends Component {
       branchName,
       errors,
     } = this.state;
+    const {isLoading} = this.props;
     return (
       <>
         <Partner_Bank_Detail_Component
           transferModes={settlementPreferenceOptions}
           dropdownOptions={[
-            {label: 'HDFC Bank', value: 'hdfc'},
-            {label: 'ICICI Bank', value: 'icici'},
-            {label: 'State Bank of India', value: 'sbi'},
-            {label: 'Axis Bank', value: 'axis'},
-            {label: 'Kotak Mahindra Bank', value: 'kotak'},
-            {label: 'Punjab National Bank', value: 'pnb'},
-            {label: 'Bank of Baroda', value: 'bob'},
-            {label: 'Yes Bank', value: 'yes'},
+            {label: 'HDFC Bank', value: 'HDFC'},
+            {label: 'ICICI Bank', value: 'ICICI'},
+            {label: 'State Bank of India', value: 'SBI'},
+            {label: 'Axis Bank', value: 'AXIS'},
+            {label: 'Kotak Mahindra Bank', value: 'KOTAK'},
+            {label: 'Other Bank', value: 'OTHER'},
           ]}
           bankName={bankName}
           selectedTransferMode={selectedTransferMode}
@@ -160,17 +236,30 @@ class AddPartnersBankDetail extends Component {
               statusMsg: errors.bankName,
             },
           }}
+          showImages={this.state.showImages}
+          errorSteps={this.state.errorSteps}
         />
+        {isLoading && <Loader visible={isLoading} />}
       </>
     );
   }
 }
 
-const mapDispatchToProps = {setBankingDetails};
-const mapStateToProps = state => {
+const mapDispatchToProps = {
+  setBankingDetails,
+  createPartnerThunk,
+  updatePartnerThunk,
+};
+const mapStateToProps = ({appState, partnerForm, partners}) => {
   return {
-    isInternetConnected: state.appState.isInternetConnected,
-    isLoading: state.appState.loading,
+    isInternetConnected: appState.isInternetConnected,
+    isLoading: partners.loading,
+    success: partners.success,
+    documentDetails: partnerForm.documentDetails,
+    bankingDetails: partnerForm.bankingDetails,
+    basicDetails: partnerForm.basicDetails,
+    partnerForm: partnerForm,
+    selectedPartner: partners?.selectedPartner,
   };
 };
 export default connect(

@@ -3,12 +3,12 @@ import {types} from '../actions';
 const initialState = {
   basicDetails: {},
   locationDetails: {},
-  documentDetails: {},
+  documentDetails: [],
   bankingDetails: {},
-  dealershipType: null,
-  userType: null,
-  carType: null,
+  partnerType: null,
   partnerRole: null,
+  isMultiUser: true,
+  sellerType: null,
 };
 
 export default function partnerFormReducer(state = initialState, action) {
@@ -24,17 +24,18 @@ export default function partnerFormReducer(state = initialState, action) {
     case types.SET_DEALERSHIP_TYPE:
       return {
         ...state,
-        dealershipType: action.payload,
+        partnerType: action.payload,
       };
     case types.SET_USER_TYPE:
       return {
         ...state,
-        userType: action.payload,
+        isMultiUser: action.payload,
+        partnerRole: action.payload ? state.partnerRole : null,
       };
-    case types.SET_CAR_TYPE:
+    case types.SET_SELLER_TYPE:
       return {
         ...state,
-        carType: action.payload,
+        sellerType: action.payload,
       };
     case types.SET_PARTNER_ROLE:
       return {

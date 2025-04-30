@@ -1,4 +1,11 @@
-import {fetchPartnersList, fetchPartnerById} from '../../api/userService';
+import moment from 'moment';
+import {
+  fetchPartnersList,
+  fetchPartnerById,
+  createPartner,
+  updatePartnerById,
+} from '../../api/userService';
+import {showApiErrorToast, showToast} from '../../utils/helper';
 import types from './types';
 
 export const setBasicDetails = payload => ({
@@ -35,9 +42,9 @@ export const setUserType = userType => ({
   payload: userType,
 });
 
-export const setCarType = carType => ({
-  type: types.SET_CAR_TYPE,
-  payload: carType,
+export const setSellerType = sellerType => ({
+  type: types.SET_SELLER_TYPE,
+  payload: sellerType,
 });
 
 export const setPartnerRole = role => ({
@@ -82,8 +89,9 @@ export const fetchPartnerFromId = (partnerId, onSuccess, onFailure) => {
       const user = await fetchPartnerById(partnerId);
       dispatch({
         type: types.FETCH_PARTNER_SUCCESS,
-        payload: user,
+        payload: user.data,
       });
+
       if (onSuccess) {
         onSuccess(user);
       }
@@ -92,6 +100,7 @@ export const fetchPartnerFromId = (partnerId, onSuccess, onFailure) => {
         type: types.FETCH_PARTNER_FAILURE,
         payload: error.message,
       });
+      showApiErrorToast(error);
       if (onFailure) {
         onFailure(error.message);
       }
@@ -106,3 +115,71 @@ export const resetPartnerDetail = () => ({
 export const resetPartnersDetail = () => ({
   type: types.RESET_PARTNERS,
 });
+
+export const createPartnerThunk = (param, onSuccess, onFailure) => {
+  return async dispatch => {
+    dispatch({type: types.CREATE_PARTNER_REQUEST});
+
+    try {
+      const response = await createPartner(param);
+
+      dispatch({
+        type: types.CREATE_PARTNER_SUCCESS,
+        payload: {
+          data: {
+            id: response.data?.partnerId,
+            createdAt: moment().toISOString(),
+            companyName: param.companyName,
+          },
+          message: response.message,
+          success: response.success,
+        },
+      });
+
+      if (onSuccess) {
+        onSuccess(response);
+      }
+    } catch (error) {
+      dispatch({
+        type: types.CREATE_PARTNER_FAILURE,
+        payload: error.message,
+      });
+      showApiErrorToast(error);
+      if (onFailure) {
+        onFailure(error.message);
+      }
+    }
+  };
+};
+
+export const updatePartnerThunk = (partnerID, param, onSuccess, onFailure) => {
+  return async dispatch => {
+    dispatch({type: types.UPDATE_PARTNER_REQUEST});
+
+    try {
+      const response = await updatePartnerById(param, partnerID);
+
+      dispatch({
+        type: types.UPDATE_PARTNER_SUCCESS,
+        payload: {
+          data: response.data,
+          message: response.message,
+          success: response.success,
+        },
+      });
+
+      if (onSuccess) {
+        onSuccess(response);
+      }
+    } catch (error) {
+      dispatch({
+        type: types.UPDATE_PARTNER_FAILURE,
+        payload: error.message,
+      });
+      showApiErrorToast(error);
+      if (onFailure) {
+        onFailure(error.message);
+      }
+    }
+  };
+};

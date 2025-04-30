@@ -29,14 +29,13 @@ const Profile_Component = ({
   email,
   phone,
   userID,
+  avatar,
+  designation,
 }) => {
   const profileCard = () => {
     return (
       <View style={styles.profileCard}>
-        <ImageComponent
-          source="https://randomuser.me/api/portraits/men/1.jpg"
-          style={styles.profilePic}
-        />
+        <ImageComponent source={avatar} style={styles.profilePic} />
         {/* <Image source={images.placeholder_image} style={styles.profilePic} /> */}
         <View style={styles.infoSection}>
           <Text
@@ -65,7 +64,7 @@ const Profile_Component = ({
         {[
           {
             icon: images.businessSuitcase,
-            label: 'CarYaar Designation Name',
+            label: designation,
           },
           // {icon: images.user, label: 'Dealer Type'},
           {icon: images.email, label: email},
