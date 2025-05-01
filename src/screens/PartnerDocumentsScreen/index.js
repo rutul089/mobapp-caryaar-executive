@@ -4,6 +4,8 @@ import ScreenNames from '../../constants/ScreenNames';
 import {navigate} from '../../navigation/NavigationUtils';
 import DocumentUtils from '../../utils/DocumentUtils';
 import Partner_Documents_Component from './Partner_Documents_Component';
+import {FilePickerModal} from '../../components';
+import {handleFileSelection} from '../../utils/filePicker';
 
 export default class PartnerDocumentsScreen extends Component {
   constructor(props) {
@@ -13,6 +15,7 @@ export default class PartnerDocumentsScreen extends Component {
       initialDocuments: {},
       previewImage: null,
       isImageViewerVisible: false,
+      isModalVisible: false,
     };
   }
 
@@ -87,13 +90,15 @@ export default class PartnerDocumentsScreen extends Component {
   // };
 
   // Bind utility handlers with this.state & this.setState
-  handleUploadMedia = (groupTitle, label) =>
-    DocumentUtils.handleUploadMedia(
-      this.state,
-      this.setState.bind(this),
-      groupTitle,
-      label,
-    );
+  handleUploadMedia = (groupTitle, label) => {
+    this.setState({isModalVisible: true});
+    // DocumentUtils.handleUploadMedia(
+    //   this.state,
+    //   this.setState.bind(this),
+    //   groupTitle,
+    //   label,
+    // );
+  };
 
   handleDeleteMedia = (groupTitle, label) =>
     DocumentUtils.handleDeleteMedia(
@@ -117,6 +122,7 @@ export default class PartnerDocumentsScreen extends Component {
       this.state,
       this.uploadDocumentsToServer,
       () => {
+        // navigate(ScreenNames.AddPartnersBankDetail);
         navigate(ScreenNames.PartnerBankDetails);
       },
     );
@@ -153,6 +159,26 @@ export default class PartnerDocumentsScreen extends Component {
     // }
   };
 
+  handleFile = type => {
+    handleFileSelection(type, result => {
+      if (result) {
+        console.log('Selected File:', result);
+        this.setState({selectedFile: result, isModalVisible: false});
+      } else {
+        console.log('No file selected or cancelled');
+      }
+    });
+  };
+
+  onFileSelected = file => {
+    if (file) {
+      console.log('Selected file:', file);
+      // Proceed with file upload
+    } else {
+      console.log('User cancelled selection');
+    }
+  };
+
   render() {
     const documentGroupsWithHandlers =
       DocumentUtils.getDocumentGroupsWithHandlers(
@@ -162,6 +188,7 @@ export default class PartnerDocumentsScreen extends Component {
         this.handleDeleteMedia,
         this.handleViewImage,
       );
+
     return (
       <>
         <Partner_Documents_Component
@@ -174,6 +201,13 @@ export default class PartnerDocumentsScreen extends Component {
           onClose={() =>
             this.setState({isImageViewerVisible: false, previewImage: null})
           }
+        />
+        <FilePickerModal
+          isVisible={this.state.isModalVisible}
+          onSelect={this.handleFile}
+          onClose={() => {
+            this.setState({isModalVisible: false});
+          }}
         />
       </>
     );

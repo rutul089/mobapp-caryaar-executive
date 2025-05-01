@@ -1,6 +1,7 @@
-// src/api/axiosInstance.ts
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getAccessToken} from '../utils/storage';
+import {logApiEvent} from './apiLogger';
+import {getCachedToken} from './tokenCache';
 
 const axiosInstance = axios.create({
   baseURL: 'https://caryaar.onrender.com/api/v1',
@@ -11,25 +12,47 @@ const axiosInstance = axios.create({
 // Request Interceptor
 axiosInstance.interceptors.request.use(
   async config => {
-    if (!config?.skipAuth) {
-      const token = await AsyncStorage.getItem('accessToken');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+    try {
+      config.metadata = {startTime: new Date().getTime()}; // 👈 Track request start time
+
+      if (!config?.skipAuth) {
+        // const token = await getAccessToken();
+        const token = await getCachedToken();
+
+        if (token) {
+          config.headers = {
+            ...config.headers,
+            Authorization: `Bearer ${token}`,
+          };
+        }
       }
+
+      logApiEvent({
+        type: 'request',
+        method: config.method,
+        url: config.url,
+        headers: config.headers,
+        data: config.data,
+      });
+
+      return config;
+    } catch (error) {
+      logApiEvent({
+        type: 'request_error',
+        method: config?.method,
+        url: config?.url,
+        error: error?.message,
+      });
+      return Promise.reject(error);
     }
-
-    // 🔵 Log the request
-    console.log(
-      '🚀 [Request]',
-      config.method?.toUpperCase(),
-      config.url,
-      config,
-    );
-
-    return config;
   },
   error => {
-    console.log('❌ [Request Error]', error);
+    logApiEvent({
+      type: 'request_error',
+      method: error?.config?.method,
+      url: error?.config?.url,
+      error: error.message,
+    });
     return Promise.reject(error);
   },
 );
@@ -37,20 +60,30 @@ axiosInstance.interceptors.request.use(
 // Response Interceptor
 axiosInstance.interceptors.response.use(
   response => {
-    // 🟢 Log the response
-    console.log('📦 [Response]', response.config.url, response);
+    const duration =
+      new Date().getTime() - (response.config?.metadata?.startTime || 0);
+    logApiEvent({
+      type: 'response',
+      method: response?.config?.method,
+      url: response?.config?.url,
+      status: response?.status,
+      duration, // ⏱️ log time in ms
+      data: response?.data,
+    });
     return response;
   },
   error => {
-    if (error.response) {
-      console.log(
-        '❌ [Response Error]',
-        error.response.config.url,
-        error.response,
-      );
-    } else {
-      console.log('❌ [Network Error]', error.message);
-    }
+    const config = error?.response?.config || error?.config || {};
+    const duration = new Date().getTime() - (config?.metadata?.startTime || 0);
+
+    logApiEvent({
+      type: 'response_error',
+      method: config.method,
+      url: config.url,
+      status: error?.response?.status,
+      error: error.message,
+      duration, // ⏱️ log time in ms
+    });
     return Promise.reject(error);
   },
 );

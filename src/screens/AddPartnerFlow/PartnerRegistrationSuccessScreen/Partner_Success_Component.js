@@ -39,7 +39,7 @@ const Partner_Success_Component = ({
             color={theme.colors.primary}
             hankenGroteskBold={true}
             style={styles.center}>
-            {'partnerId'}
+            {partnerId}
           </Text>
         </Text>
 

@@ -54,3 +54,49 @@ export const pickDocument = async () => {
     throw err;
   }
 };
+
+/**
+ * Show file picker based on user selection: Camera, Gallery, or Documents
+ * @param {('camera'|'gallery'|'document')} type - Type of picker to open
+ * @param {(file: object | null) => void} callback - Callback with selected file or null
+ */
+export const handleFileSelection = async (type, callback) => {
+  try {
+    if (type === 'camera') {
+      const result = await launchCamera({
+        mediaType: 'photo',
+        quality: 0.8,
+      });
+
+      if (!result.didCancel && result.assets?.length > 0) {
+        callback(result.assets[0]);
+      } else {
+        callback(null);
+      }
+    } else if (type === 'gallery') {
+      const result = await launchImageLibrary({
+        mediaType: 'photo',
+        quality: 0.8,
+      });
+
+      if (!result.didCancel && result.assets?.length > 0) {
+        callback(result.assets[0]);
+      } else {
+        callback(null);
+      }
+    } else if (type === 'document') {
+      const res = await pick({
+        allowMultiSelection: false,
+        // type: ['*/*'], // for all files
+        type: [types.pdf, types.docx, types.images],
+      });
+
+      callback(res[0]);
+    }
+  } catch (err) {
+    if (err?.code === 'DOCUMENT_PICKER_CANCELED') {
+      callback(null);
+    }
+    callback(null);
+  }
+};

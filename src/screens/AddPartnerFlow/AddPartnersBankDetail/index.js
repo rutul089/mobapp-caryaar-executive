@@ -1,3 +1,4 @@
+import {theme} from '@caryaar/components';
 import {get} from 'lodash';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
@@ -7,19 +8,25 @@ import {
   settlementPreferenceOptions,
 } from '../../../constants/enums';
 import ScreenNames from '../../../constants/ScreenNames';
-import {getScreenParam, navigate} from '../../../navigation/NavigationUtils';
+import {
+  getScreenParam,
+  navigateAndSimpleResetWithParam,
+  navigateToTab,
+} from '../../../navigation/NavigationUtils';
 import {
   createPartnerThunk,
+  searchBanksThunk,
   setBankingDetails,
   updatePartnerThunk,
+  verifyBankByIFSCThunk,
 } from '../../../redux/actions';
 import {
   handleFieldChange,
   showToast,
   validateField,
 } from '../../../utils/helper';
-import Partner_Bank_Detail_Component from './Partner_Bank_Detail_Component';
 import {formatPartnerPayload} from '../../../utils/partnerHelpers';
+import Partner_Bank_Detail_Component from './Partner_Bank_Detail_Component';
 
 class AddPartnersBankDetail extends Component {
   constructor(props) {
@@ -28,7 +35,6 @@ class AddPartnersBankDetail extends Component {
       accountNumber: '',
       accountHolderName: '',
       bankName: '',
-      bankNameValue: '',
       ifscCode: '',
       branchName: '',
       selectedTransferMode: settlementPreference.IMPS,
@@ -43,11 +49,12 @@ class AddPartnersBankDetail extends Component {
       showImages: [1, 2, 3],
       errorSteps: [],
       fromScreen: false,
+      loading: false,
     };
+    this.searchBankNameFromAPI = this.searchBankNameFromAPI.bind(this);
   }
   componentDidMount() {
     const {bankingDetails, route} = this.props;
-
     let navState = getScreenParam(route, 'params', null);
     let fromScreen = get(navState, 'fromScreen', false);
     if (fromScreen) {
@@ -62,6 +69,7 @@ class AddPartnersBankDetail extends Component {
       accountNumber: get(bankingDetails, 'accountNumber', ''),
       ifscCode: get(bankingDetails, 'ifscCode', ''),
       bankName: get(bankingDetails, 'bankName', ''),
+      branchName: get(bankingDetails, 'branchName', ''),
       accountHolderName: get(bankingDetails, 'accountHolderName', ''),
       selectedTransferMode: get(
         bankingDetails,
@@ -83,7 +91,6 @@ class AddPartnersBankDetail extends Component {
       accountNumber,
       accountHolderName,
       bankName,
-      bankNameValue,
       ifscCode,
       branchName,
       selectedTransferMode,
@@ -93,14 +100,14 @@ class AddPartnersBankDetail extends Component {
     const isFormValid = this.validateAllFields();
 
     if (!isFormValid) {
-      console.log('Form is invalid. Please correct the fields.');
+      showToast('error', 'Required field cannot be empty.', 'bottom', 3500);
       return;
     }
 
     let bankingDetail = {
       accountNumber,
       accountHolderName,
-      bankName: bankNameValue,
+      bankName: bankName,
       ifscCode,
       branchName,
       settlementPreference: selectedTransferMode,
@@ -117,25 +124,32 @@ class AddPartnersBankDetail extends Component {
       delete requestPayload.partnerType;
       delete requestPayload.isMultiUser;
       delete requestPayload.partnerRole;
-      console.log('requestPayload---------->', requestPayload);
       this.props.updatePartnerThunk(
         partnerID,
         requestPayload,
         onSuccess => {
-          showToast(onSuccess.message);
+          showToast('success', onSuccess.message);
+          if (onSuccess?.success) {
+            navigateToTab(ScreenNames.Partners);
+          }
         },
         error => {},
       );
       return;
     }
-    console.log('requestPayload---------->', requestPayload);
 
     this.props.createPartnerThunk(
       requestPayload,
       onSuccess => {
-        console.log({onSuccess});
         if (onSuccess?.success) {
-          navigate(ScreenNames.PartnerRegistrationSuccess);
+          navigateAndSimpleResetWithParam(
+            ScreenNames.PartnerRegistrationSuccess,
+            {
+              params: {
+                partnerId: onSuccess?.data?.partnerId,
+              },
+            },
+          );
         }
       },
       onFail => {},
@@ -143,19 +157,20 @@ class AddPartnersBankDetail extends Component {
   };
 
   onSelectBank = (item, index) => {
-    this.setState({bankName: item?.label}, () => {
-      this.onChangeField('bankNameValue', item?.value);
-    });
+    this.handleInputChange('bankName', item?.bank);
+    this.handleInputChange('ifscCode', '');
+    this.handleInputChange('branchName', '');
   };
 
-  validateAllFields = () => {
-    const fieldsToValidate = [
+  validateAllFields = (
+    fieldsToValidate = [
       'accountNumber',
       'accountHolderName',
       'bankName',
       'ifscCode',
-    ];
-
+      'branchName',
+    ],
+  ) => {
     const errors = {};
     let isFormValid = true;
 
@@ -172,8 +187,54 @@ class AddPartnersBankDetail extends Component {
     return isFormValid;
   };
 
-  onChangeField = (key, value) => {
+  handleInputChange = (key, value) => {
     handleFieldChange(this, key, value);
+  };
+
+  searchBankNameFromAPI = async query => {
+    let searchResult = [];
+    await this.props.searchBanksThunk(
+      query,
+      onSuccess => {
+        searchResult = onSuccess;
+      },
+      error => {
+        return [];
+      },
+    );
+    return searchResult;
+  };
+
+  verifyBankDetailsByIFSC = () => {
+    const {bankName, ifscCode} = this.state;
+    const isFormValid = this.validateAllFields(['ifscCode', 'bankName']);
+    if (!isFormValid) {
+      showToast(
+        'error',
+        'Please enter valid IFSC Code or Bank Name...',
+        'bottom',
+        3500,
+      );
+      return;
+    }
+
+    this.setState({loading: true});
+    this.props.verifyBankByIFSCThunk(
+      bankName,
+      ifscCode,
+      response => {
+        this.setState({loading: false});
+        if (!response.isValid) {
+          showToast('error', response.message, 'bottom', 3500);
+          this.handleInputChange('branchName', '');
+          return;
+        }
+        this.handleInputChange('branchName', response?.data?.branch);
+      },
+      error => {
+        this.setState({loading: false});
+      },
+    );
   };
 
   render() {
@@ -185,34 +246,29 @@ class AddPartnersBankDetail extends Component {
       ifscCode,
       branchName,
       errors,
+      loading,
     } = this.state;
     const {isLoading} = this.props;
+
     return (
       <>
         <Partner_Bank_Detail_Component
           transferModes={settlementPreferenceOptions}
-          dropdownOptions={[
-            {label: 'HDFC Bank', value: 'HDFC'},
-            {label: 'ICICI Bank', value: 'ICICI'},
-            {label: 'State Bank of India', value: 'SBI'},
-            {label: 'Axis Bank', value: 'AXIS'},
-            {label: 'Kotak Mahindra Bank', value: 'KOTAK'},
-            {label: 'Other Bank', value: 'OTHER'},
-          ]}
           bankName={bankName}
           selectedTransferMode={selectedTransferMode}
           onTransferModeSelect={this.onTransferModeSelect}
           handleSubmitPress={this.handleSubmitPress}
           onAccountNumberChange={value =>
-            this.onChangeField('accountNumber', value)
+            this.handleInputChange('accountNumber', value)
           }
           onAccountHolderNameChange={value =>
-            this.onChangeField('accountHolderName', value)
+            this.handleInputChange('accountHolderName', value)
           }
-          onBankNamePress={value => this.onChangeField('bankName', value)}
-          onIFSCCodeChange={value =>
-            this.onChangeField('ifscCode', value.toUpperCase())
-          }
+          onBankNamePress={value => this.handleInputChange('bankName', value)}
+          onIFSCCodeChange={value => {
+            this.handleInputChange('ifscCode', value.toUpperCase());
+            this.handleInputChange('branchName', '');
+          }}
           onSelectBank={this.onSelectBank}
           restInputProps={{
             accountNumber: {
@@ -229,17 +285,30 @@ class AddPartnersBankDetail extends Component {
               value: ifscCode,
               isError: errors.ifscCode,
               statusMsg: errors.ifscCode,
+              rightLabel: 'VERIFY',
+              rightLabelColor: theme.colors.primary,
+              rightLabelPress: this.verifyBankDetailsByIFSC,
             },
             bankName: {
               value: bankName,
               isError: errors.bankName,
               statusMsg: errors.bankName,
             },
+            branchName: {
+              value: branchName,
+              isDisabled: true,
+              isError: errors.branchName,
+              statusMsg: errors.branchName,
+              restProps: {
+                multiline: true,
+              },
+            },
           }}
           showImages={this.state.showImages}
           errorSteps={this.state.errorSteps}
+          searchBankNameFromAPI={this.searchBankNameFromAPI}
         />
-        {isLoading && <Loader visible={isLoading} />}
+        {isLoading || (loading && <Loader visible={isLoading || loading} />)}
       </>
     );
   }
@@ -249,8 +318,10 @@ const mapDispatchToProps = {
   setBankingDetails,
   createPartnerThunk,
   updatePartnerThunk,
+  searchBanksThunk,
+  verifyBankByIFSCThunk,
 };
-const mapStateToProps = ({appState, partnerForm, partners}) => {
+const mapStateToProps = ({appState, partnerForm, partners, banks}) => {
   return {
     isInternetConnected: appState.isInternetConnected,
     isLoading: partners.loading,
@@ -260,6 +331,7 @@ const mapStateToProps = ({appState, partnerForm, partners}) => {
     basicDetails: partnerForm.basicDetails,
     partnerForm: partnerForm,
     selectedPartner: partners?.selectedPartner,
+    bankSuggestion: banks?.bankSuggestions,
   };
 };
 export default connect(

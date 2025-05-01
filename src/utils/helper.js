@@ -270,6 +270,10 @@ export const validateField = (key, value) => {
     // Bank Name
     case 'bankName':
       return trimmedValue === '' ? 'Please select a valid bank name' : '';
+    case 'branchName':
+      return trimmedValue === ''
+        ? 'Branch name is required (Verify IFSC code)'
+        : '';
 
     // IFSC Code
     case 'ifscCode':

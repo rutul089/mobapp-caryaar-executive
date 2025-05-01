@@ -7,7 +7,11 @@ import {
   navigate,
 } from '../../../navigation/NavigationUtils';
 import {setLocationDetails} from '../../../redux/actions';
-import {handleFieldChange, validateField} from '../../../utils/helper';
+import {
+  handleFieldChange,
+  showToast,
+  validateField,
+} from '../../../utils/helper';
 import Partner_Location_Form_Component from './Partner_Location_Form_Component';
 import {get} from 'lodash';
 
@@ -112,7 +116,7 @@ class AddPartnerBusinessLocation extends Component {
     const isFormValid = this.validateAllFields();
 
     if (!isFormValid) {
-      console.log('Form is invalid. Please correct the fields.');
+      showToast('error', 'Required field cannot be empty.', 'bottom', 3000);
       return;
     }
     this.props.setLocationDetails({

@@ -321,11 +321,7 @@ export const dealershipType = Object.freeze({
  * @param {string} [defaultLabel='Unknown'] - The default label to return if the key is not found.
  * @returns {string} The label corresponding to the value, or the default label if not found.
  */
-export const getLabelFromEnum = (
-  enumObject,
-  value,
-  defaultLabel = 'Unknown',
-) => {
+export const getLabelFromEnum = (enumObject, value, defaultLabel = '') => {
   return enumObject?.[value] || defaultLabel;
 };
 

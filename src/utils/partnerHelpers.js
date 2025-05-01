@@ -27,6 +27,7 @@ export const formatPartnerDetails = (partnerDetail = {}) => {
       bankName = '',
       ifscCode = '',
       settlementPreference = '',
+      branchName = '',
     } = {},
     sellerType,
     partnerType,
@@ -62,6 +63,7 @@ export const formatPartnerDetails = (partnerDetail = {}) => {
       bankName,
       ifscCode,
       settlementPreference,
+      branchName,
     },
     sellerType,
     partnerType,
@@ -110,6 +112,7 @@ export const formatPartnerPayload = (partnerForm, bankingDetails) => {
       bankName: bankingDetails.bankName,
       accountHolderName: bankingDetails.accountHolderName,
       settlementPreference: bankingDetails.settlementPreference,
+      branchName: bankingDetails.branchName,
     },
     documents: documentDetails.map(doc => ({
       documentType: doc.documentType,

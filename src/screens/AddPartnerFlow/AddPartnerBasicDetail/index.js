@@ -9,7 +9,11 @@ import {
 import ScreenNames from '../../../constants/ScreenNames';
 import {getScreenParam, navigate} from '../../../navigation/NavigationUtils';
 import {setBasicDetails} from '../../../redux/actions';
-import {handleFieldChange, validateField} from '../../../utils/helper';
+import {
+  handleFieldChange,
+  showToast,
+  validateField,
+} from '../../../utils/helper';
 import Partner_Basic_Form_Component from './Partner_Basic_Form_Component';
 class AddPartnerBasicDetail extends Component {
   constructor(props) {
@@ -86,7 +90,7 @@ class AddPartnerBasicDetail extends Component {
     const isFormValid = this.validateAllFields();
 
     if (!isFormValid) {
-      console.log('Form is invalid. Please correct the fields.');
+      showToast('error', 'Required field cannot be empty.', 'bottom', 3000);
       return;
     }
 

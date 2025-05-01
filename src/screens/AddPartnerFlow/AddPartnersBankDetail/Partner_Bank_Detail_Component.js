@@ -24,6 +24,7 @@ const Partner_Bank_Detail_Component = ({
   onSelectBank,
   showImages,
   errorSteps,
+  searchBankNameFromAPI = () => {},
 }) => {
   return (
     <SafeAreaWrapper>
@@ -47,7 +48,8 @@ const Partner_Bank_Detail_Component = ({
         restInputProps={restInputProps}
         dropdownOptions={dropdownOptions}
         bankName={bankName}
-        onSelectBank={onSelectBank}
+        onSelectSuggestion={onSelectBank}
+        searchBankNameFromAPI={searchBankNameFromAPI}
       />
     </SafeAreaWrapper>
   );

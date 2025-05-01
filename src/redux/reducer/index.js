@@ -5,6 +5,7 @@ import partnerFormReducer from './partnerFormReducer';
 import userReducer from './userReducer';
 import partnersReducer from './partnersReducer';
 import salesExecutiveReducer from './salesExecutiveReducer';
+import bankReducer from './bankReducer';
 
 const rootReducer = combineReducers({
   appState: appStateReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   partners: partnersReducer,
   salesExecutives: salesExecutiveReducer,
+  banks: bankReducer,
 });
 
 export default rootReducer;
