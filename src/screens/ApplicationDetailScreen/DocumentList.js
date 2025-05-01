@@ -1,6 +1,6 @@
+import {DocumentRow, Spacing, Text, theme} from '@caryaar/components';
 import React from 'react';
-import {ActivityIndicator, Image, StyleSheet, View} from 'react-native';
-import {images, Pressable, Spacing, Text, theme} from '@caryaar/components';
+import {StyleSheet, View} from 'react-native';
 
 const DocumentList = ({viewPanCard, isLoading}) => {
   return (
@@ -45,65 +45,11 @@ const DocumentList = ({viewPanCard, isLoading}) => {
   );
 };
 
-const DocumentRow = ({
-  label,
-  actionLabel,
-  isLink,
-  showError,
-  onPress,
-  isLoading,
-}) => (
-  <View style={styles.row}>
-    <View style={styles.left}>
-      <Text
-        size={'small'}
-        hankenGroteskMedium={true}
-        color={showError ? theme.colors.error : theme.colors.primaryBlack}>
-        {label}
-      </Text>
-      {showError && (
-        <Image source={images.infoStatus} style={styles.errorIcon} />
-      )}
-    </View>
-    <View style={{flexDirection: 'row'}}>
-      <Pressable onPress={onPress} disabled={isLoading}>
-        <Text
-          color={isLoading ? theme.colors.placeHolder : theme.colors.primary}
-          type={'helper-text'}
-          hankenGroteskSemiBold={true}>
-          {actionLabel}
-        </Text>
-      </Pressable>
-      {isLoading && (
-        <>
-          <Spacing direction={'y'} />
-          <ActivityIndicator />
-        </>
-      )}
-    </View>
-  </View>
-);
-
 const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: '#E0E0E0',
     marginVertical: theme.sizes.spacing.smd,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  left: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  errorIcon: {
-    width: 16,
-    height: 16,
-    marginLeft: 6,
   },
 });
 

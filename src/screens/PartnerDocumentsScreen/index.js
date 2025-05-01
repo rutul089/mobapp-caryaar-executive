@@ -1,10 +1,9 @@
-import {ImagePreviewModal} from '@caryaar/components';
+import {ImagePreviewModal, FilePickerModal} from '@caryaar/components';
 import React, {Component} from 'react';
 import ScreenNames from '../../constants/ScreenNames';
 import {navigate} from '../../navigation/NavigationUtils';
 import DocumentUtils from '../../utils/DocumentUtils';
 import Partner_Documents_Component from './Partner_Documents_Component';
-import {FilePickerModal} from '../../components';
 import {handleFileSelection} from '../../utils/filePicker';
 
 export default class PartnerDocumentsScreen extends Component {

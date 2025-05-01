@@ -9,8 +9,8 @@ import {
   SafeAreaWrapper,
   Spacing,
   theme,
+  DocumentRow,
 } from '@caryaar/components';
-import {DocumentRow} from '../../components';
 
 const Partner_Detail_Component = ({
   onBackPress,
