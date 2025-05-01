@@ -1,11 +1,11 @@
 import moment from 'moment';
 import {
-  fetchPartnersList,
-  fetchPartnerById,
   createPartner,
+  fetchPartnerById,
+  fetchPartnersList,
   updatePartnerById,
-} from '../../api/userService';
-import {showApiErrorToast, showToast} from '../../utils/helper';
+} from '../../api/partnerServices';
+import {showApiErrorToast} from '../../utils/helper';
 import types from './types';
 
 export const setBasicDetails = payload => ({

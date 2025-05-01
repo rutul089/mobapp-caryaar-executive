@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 
@@ -28,17 +27,8 @@ const Partner_Detail_Component = ({
   return (
     <SafeAreaWrapper backgroundColor={theme.colors.background}>
       <Header title="Partner Details" onBackPress={onBackPress} />
-      <ScrollView
-        contentContainerStyle={{
-          backgroundColor: theme.colors.background,
-          flexGrow: 1,
-        }}>
-        <View
-          style={{
-            backgroundColor: theme.colors.primaryBlack,
-            padding: theme.sizes.padding,
-            paddingTop: 12,
-          }}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.customerWrapper}>
           <CustomerCard
             hideLogo
             brandName={businessType}
@@ -59,7 +49,7 @@ const Partner_Detail_Component = ({
             }}
           />
         </View>
-        <View style={{padding: theme.sizes.padding}}>
+        <View style={styles.sectionWrapper}>
           <DetailInfoCard
             label={'Contact Details'}
             data={contactDetails}
@@ -71,44 +61,32 @@ const Partner_Detail_Component = ({
             data={locationDetail}
             bottom
             isSemiBold={false}>
-            <View
-              style={{
-                backgroundColor: '#FF5B5E70',
-                height: 92,
-                marginTop: 12,
-                borderRadius: theme.sizes.borderRadius.card,
-              }}
-            />
+            <View style={styles.mapPlaceholder} />
           </DetailInfoCard>
           <Spacing size="lg" />
           <DetailInfoCard label={'Business Document'} isSemiBold={false}>
-            {documents.map((doc, index) => {
-              return (
-                <>
-                  <DocumentRow
-                    key={`doc-${index}`}
-                    label={doc.label}
-                    actionLabel={
-                      doc.isMissing || !doc.uploaded ? 'Required' : 'View'
-                    }
-                    showError={doc.isMissing || !doc.uploaded}
-                    onPress={doc?.onPress}
-                    disabled={doc.isMissing || !doc.uploaded}
-                    isLoading={
-                      isFetchingDocument.loading &&
-                      isFetchingDocument.documentType === doc.documentType
-                    }
-                  />
-                  <Spacing
-                    size={
-                      index !== documents.length - 1
-                        ? theme.sizes.spacing.smd
-                        : 0
-                    }
-                  />
-                </>
-              );
-            })}
+            {documents.map((doc, index) => (
+              <React.Fragment key={`doc-fragment-${doc.label || index}`}>
+                <DocumentRow
+                  label={doc.label}
+                  actionLabel={
+                    doc.isMissing || !doc.uploaded ? 'Required' : 'View'
+                  }
+                  showError={doc.isMissing || !doc.uploaded}
+                  onPress={doc?.onPress}
+                  disabled={doc.isMissing || !doc.uploaded}
+                  isLoading={
+                    isFetchingDocument.loading &&
+                    isFetchingDocument.documentType === doc.documentType
+                  }
+                />
+                <Spacing
+                  size={
+                    index !== documents.length - 1 ? theme.sizes.spacing.smd : 0
+                  }
+                />
+              </React.Fragment>
+            ))}
           </DetailInfoCard>
           <Spacing size="lg" />
           <DetailInfoCard
@@ -123,10 +101,23 @@ const Partner_Detail_Component = ({
 };
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  scrollContainer: {
+    backgroundColor: theme.colors.background,
+    flexGrow: 1,
+  },
+  customerWrapper: {
+    backgroundColor: theme.colors.primaryBlack,
+    padding: theme.sizes.padding,
+    paddingTop: 12,
+  },
+  sectionWrapper: {
+    padding: theme.sizes.padding,
+  },
+  mapPlaceholder: {
+    backgroundColor: '#FF5B5E70',
+    height: 92,
+    marginTop: 12,
+    borderRadius: theme.sizes.borderRadius.card,
   },
 });
 

@@ -35,6 +35,12 @@ const userReducer = (state = initialState, action) => {
 
     case types.FETCH_USER_FAILURE:
       return {...state, loading: false, error: action.payload};
+    case types.USER_LOADING:
+      return {...state, loading: true};
+    case types.USER_SUCCESS:
+    case types.USER_FAILURE:
+      return {...state, loading: false};
+
     case types.CLEAR_USER_DETAILS:
     case types.RESET_APP_STATE:
       return initialState;

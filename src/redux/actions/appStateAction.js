@@ -19,7 +19,7 @@ export const setNotificationCount = count => ({
 });
 
 export const logoutUser = () => ({
-  type: types.LOGOUT_USER,
+  type: types.RESET_APP_STATE,
 });
 
 export const resetAppState = () => ({

@@ -1,4 +1,9 @@
-import {getUser} from '../../api/userService';
+import {
+  changeUserPassword,
+  loginWithType,
+  updateUserProfile,
+} from '../../api/userApi';
+import {showApiErrorToast} from '../../utils/helper';
 import types from './types';
 
 export const setUserDetails = details => ({
@@ -49,6 +54,79 @@ export const fetchUser = (userId, onSuccess, onFailure) => {
       if (onFailure) {
         onFailure(error.message);
       }
+    }
+  };
+};
+
+export const userLoginThunk = (type, param, onSuccess, onFailure) => {
+  return async dispatch => {
+    dispatch({type: types.USER_LOADING});
+    try {
+      const response = await loginWithType(type, param);
+      console.log('response', JSON.stringify(response));
+      dispatch({
+        type: types.USER_SUCCESS,
+        payload: {
+          message: response.message,
+          success: response.success,
+        },
+      });
+      onSuccess?.(response);
+    } catch (error) {
+      dispatch({
+        type: types.USER_FAILURE,
+        payload: error.message,
+      });
+      showApiErrorToast(error);
+      onFailure?.(error.message);
+    }
+  };
+};
+
+export const updateProfileThunk = (param, onSuccess, onFailure) => {
+  return async dispatch => {
+    dispatch({type: types.USER_LOADING});
+    try {
+      const response = await updateUserProfile(param);
+      dispatch({
+        type: types.UPDATE_USER_SUCCESS,
+        payload: {
+          message: response.message,
+          success: response.success,
+        },
+      });
+      onSuccess?.(response);
+    } catch (error) {
+      dispatch({
+        type: types.UPDATE_USER_FAILURE,
+        payload: error.message,
+      });
+      showApiErrorToast(error);
+      onFailure?.(error.message);
+    }
+  };
+};
+
+export const changePasswordThunk = (param, onSuccess, onFailure) => {
+  return async dispatch => {
+    dispatch({type: types.CHANGE_PASSWORD_REQUEST});
+    try {
+      const response = await changeUserPassword(param);
+      dispatch({
+        type: types.CHANGE_PASSWORD_SUCCESS,
+        payload: {
+          message: response.message,
+          success: response.success,
+        },
+      });
+      onSuccess?.(response);
+    } catch (error) {
+      dispatch({
+        type: types.CHANGE_PASSWORD_FAILURE,
+        payload: error.message,
+      });
+      showApiErrorToast(error);
+      onFailure?.(error.message);
     }
   };
 };

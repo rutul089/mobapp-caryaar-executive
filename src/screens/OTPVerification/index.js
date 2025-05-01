@@ -5,9 +5,12 @@ import {goBack, navigateAndSimpleReset} from '../../navigation/NavigationUtils';
 import {
   setLoginStatus as setReduxLoginStatus,
   setUserDetails,
+  userLoginThunk,
 } from '../../redux/actions';
-import {setLoginStatus} from '../../utils/storage';
+import {setAccessToken, setLoginStatus} from '../../utils/storage';
 import OTP_Verification_Component from './OTP_Verification_Component';
+import {formatMobileNumber, showToast} from '../../utils/helper';
+import {Loader} from '../../components';
 const timerValue = 30;
 
 class OTPVerification extends Component {
@@ -57,7 +60,8 @@ class OTPVerification extends Component {
     if (this.state.isResendDisabled) {
       return;
     }
-    this.startTimer();
+
+    this.setState({isError: false, otp: ''}, this.startTimer);
   };
 
   onBackPress = () => {
@@ -65,52 +69,69 @@ class OTPVerification extends Component {
   };
 
   onOtpComplete = value => {
-    this.setState(
-      {
-        otp: value,
-      },
-      () => {
+    this.setState({otp: value, isError: false}, () => {
+      if (value.length === 4) {
         this.handleVerify();
-      },
-    );
+      }
+    });
   };
 
   handleVerify = async () => {
     const {otp} = this.state;
     const {phone} = this.props;
+    const type = 'PARTNER';
 
-    if (otp.length === 4) {
-      this.props.setUserDetails({
-        name: 'John',
-        email: 'john@example.com',
-        address: 'New York',
-        phone: phone,
-      });
-      await setLoginStatus(true);
-      this.props.setReduxLoginStatus(true);
-      return navigateAndSimpleReset(ScreenNames.HomeTab);
-    } else {
-      this.setState({
-        isError: true,
-      });
+    if (otp.length !== 4) {
+      showToast('error', 'Enter all 4 digits of the OTP to continue.');
+      this.setState({isError: true});
+      return;
     }
-  };
 
+    const param = {
+      mobileNumber: '+919876543210',
+      otp: otp,
+    };
+
+    this.props.userLoginThunk(
+      type,
+      param,
+      async response => {
+        if (response.success && response?.data?.token) {
+          const token = response.data.token;
+          this.props.setUserDetails({
+            name: 'John',
+            email: 'john@example.com',
+            address: 'New York',
+            phone: phone,
+          });
+          await setLoginStatus(true);
+          await setAccessToken(token);
+          this.props.setReduxLoginStatus(true);
+          return navigateAndSimpleReset(ScreenNames.HomeTab);
+        } else {
+          showToast('error', 'Invalid OTP. Please try again.');
+        }
+      },
+      error => {},
+    );
+  };
   render() {
     const {mobileNumber, timer, isResendDisabled} = this.state;
+    let {loading} = this.props;
     return (
       <>
         <OTP_Verification_Component
-          mobileNumber={mobileNumber}
+          mobileNumber={formatMobileNumber(mobileNumber)}
           timer={timer}
           isResendDisabled={isResendDisabled}
           resendOTP={this.resendOTP}
           validateOTP={this.handleVerify}
           onOtpComplete={this.onOtpComplete}
           onBackPress={this.onBackPress}
-          isError={this.state.isError}
+          isError={false}
           errorMessage="Please enter valid OTP"
         />
+        {loading && <Loader visible={loading} />}
       </>
     );
   }
@@ -119,10 +140,12 @@ class OTPVerification extends Component {
 const mapDispatchToProps = {
   setReduxLoginStatus,
   setUserDetails,
+  userLoginThunk,
 };
-const mapStateToProps = state => {
+const mapStateToProps = ({state, user}) => {
   return {
-    phone: state.user.userDetails?.phone,
+    phone: user.userDetails?.phone,
+    loading: user?.loading,
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(OTPVerification);
