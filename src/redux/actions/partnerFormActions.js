@@ -2,6 +2,7 @@ import moment from 'moment';
 import {
   createPartner,
   fetchPartnerById,
+  fetchPartnersByStatus,
   fetchPartnersList,
   searchPartnersByKeyword,
   updatePartnerById,
@@ -239,6 +240,58 @@ export const searchPartnersThunk = (
       showApiErrorToast(error);
 
       onFailure?.(error.message);
+    }
+  };
+};
+
+export const fetchActivePartners = (
+  page = 1,
+  limit = 10,
+  onSuccess,
+  onFailure,
+) => {
+  return async dispatch => {
+    dispatch({type: types.FETCH_ACTIVE_PARTNERS_REQUEST});
+    try {
+      const response = await fetchPartnersByStatus('APPROVED', page, limit);
+      dispatch({
+        type: types.FETCH_ACTIVE_PARTNERS_SUCCESS,
+        payload: {
+          data: response.data,
+          page: response.pagination.page,
+          totalPages: response.pagination.totalPages,
+        },
+      });
+      onSuccess?.(response);
+    } catch (error) {
+      dispatch({type: types.FETCH_ACTIVE_PARTNERS_FAILURE});
+      onFailure?.(error);
+    }
+  };
+};
+
+export const fetchPendingPartners = (
+  page = 1,
+  limit = 10,
+  onSuccess,
+  onFailure,
+) => {
+  return async dispatch => {
+    dispatch({type: types.FETCH_PENDING_PARTNERS_REQUEST});
+    try {
+      const response = await fetchPartnersByStatus('PENDING', page, limit);
+      dispatch({
+        type: types.FETCH_PENDING_PARTNERS_SUCCESS,
+        payload: {
+          data: response.data,
+          page: response.pagination.page,
+          totalPages: response.pagination.totalPages,
+        },
+      });
+      onSuccess?.(response);
+    } catch (error) {
+      dispatch({type: types.FETCH_PENDING_PARTNERS_FAILURE});
+      onFailure?.(error);
     }
   };
 };

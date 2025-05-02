@@ -8,6 +8,12 @@ const initialState = {
   searchPartners: [],
   currentPage: 1,
   totalPages: 1,
+  activePartners: [],
+  pendingPartners: [],
+  activePage: 1,
+  activeTotalPages: 1,
+  pendingPage: 1,
+  pendingTotalPages: 1,
 };
 
 export default function partnerFormReducer(state = initialState, action) {
@@ -92,6 +98,39 @@ export default function partnerFormReducer(state = initialState, action) {
       };
     case types.RESET_APP_STATE:
       return initialState;
+    case types.FETCH_ACTIVE_PARTNERS_REQUEST:
+      return {...state, loading: true};
+
+    case types.FETCH_ACTIVE_PARTNERS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        activePartners:
+          action.payload.page === 1
+            ? action.payload.data
+            : [...state.activePartners, ...action.payload.data],
+        activePage: action.payload.page,
+        activeTotalPages: action.payload.totalPages,
+      };
+
+    case types.FETCH_PENDING_PARTNERS_REQUEST:
+      return {...state, loading: true};
+
+    case types.FETCH_PENDING_PARTNERS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        pendingPartners:
+          action.payload.page === 1
+            ? action.payload.data
+            : [...state.pendingPartners, ...action.payload.data],
+        pendingPage: action.payload.page,
+        pendingTotalPages: action.payload.totalPages,
+      };
+
+    case types.FETCH_ACTIVE_PARTNERS_FAILURE:
+    case types.FETCH_PENDING_PARTNERS_FAILURE:
+      return {...state, loading: false};
     default:
       return state;
   }
