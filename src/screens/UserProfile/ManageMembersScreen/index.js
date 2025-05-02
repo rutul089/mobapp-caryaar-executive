@@ -1,23 +1,22 @@
 import React, {Component} from 'react';
 
-import Manage_Members_Component from './Manage_Members_Component';
 import {Alert} from 'react-native';
 import {connect} from 'react-redux';
+import {Loader} from '../../../components';
+import {salesExecOptions} from '../../../constants/enums';
 import {
   createSalesExecutiveThunk,
   deleteSalesExecutiveByIdThunk,
   fetchSalesExecutivesThunk,
   removeSalesExecutive,
 } from '../../../redux/actions';
-import {salesExecOptions} from '../../../constants/enums';
-import {Loader} from '../../../components';
 import {
-  formatIndianNumber,
   formatMobileNumber,
   getErrorMessage,
   handleFieldChange,
   validateField,
 } from '../../../utils/helper';
+import Manage_Members_Component from './Manage_Members_Component';
 
 class ManageMemberScreen extends Component {
   constructor(props) {

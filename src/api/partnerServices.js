@@ -1,28 +1,35 @@
 import axiosInstance from '../api/axiosInstance';
 
 /**
- * Fetches the list of all partners from the backend.
+ * Fetches partners filtered by onboarding status, with pagination.
  *
- * @returns {Promise<Array>} A promise that resolves to the array of partners.
- * @throws Will throw an error if the API call fails.
+ * @async
+ * @function fetchPartnersByStatus
+ * @param {string} status - The onboarding status to filter partners.
+ * @param {number} [page=1] - Page number for pagination.
+ * @param {number} [limit=10] - Number of results per page.
+ * @returns {Promise<Object>} Resolves with a list of filtered partners.
+ * @throws {Error} Throws error if the API request fails.
  */
-
-export const fetchPartnersList = async (page = 1, limit = 10) => {
+export const fetchPartnersByStatus = async (status, page = 1, limit = 10) => {
   try {
     const response = await axiosInstance.get('/partners', {
-      params: {page, limit},
+      params: {onboardingStatus: status, page, limit},
     });
     return response.data;
   } catch (error) {
     throw error;
   }
 };
+
 /**
  * Fetches the partner details for a specific partner ID from the backend.
  *
+ * @async
+ * @function fetchPartnerById
  * @param {string} partnerId - The unique ID of the partner to be fetched.
- * @returns {Promise<Object>} A promise that resolves to the partner details.
- * @throws Will throw an error if the API call fails.
+ * @returns {Promise<Object>} Resolves with partner details if successful.
+ * @throws {Error} Throws error if the API request fails.
  */
 export const fetchPartnerById = async partnerId => {
   try {
@@ -34,11 +41,43 @@ export const fetchPartnerById = async partnerId => {
 };
 
 /**
+ * Searches for partners using a keyword with optional pagination and status filter.
+ *
+ * @async
+ * @function searchPartnersByKeyword
+ * @param {string} search - Keyword used to search partners.
+ * @param {number} [page=1] - Page number for pagination.
+ * @param {number} [limit=10] - Number of results per page.
+ * @param {string|null} [status=null] - Optional onboarding status filter.
+ * @returns {Promise<Object>} Resolves with a list of matched partners.
+ * @throws {Error} Throws error if the API request fails.
+ */
+export const searchPartnersByKeyword = async (
+  search,
+  page = 1,
+  limit = 10,
+  status = null,
+) => {
+  try {
+    const params = {search, page, limit};
+    if (status) {
+      params.onboardingStatus = status;
+    }
+    const response = await axiosInstance.get('/partners', {params});
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
  * Creates a new partner by sending partner details to the backend.
  *
- * @param {Object} partnerData - The data object containing all partner fields.
- * @returns {Promise<Object>} A promise that resolves to the created partner's response.
- * @throws Will throw an error if the API call fails.
+ * @async
+ * @function createPartner
+ * @param {Object} partnerData - The data object containing all required partner fields.
+ * @returns {Promise<Object>} Resolves with the newly created partner's data.
+ * @throws {Error} Throws error if the API request fails.
  */
 export const createPartner = async partnerData => {
   try {
@@ -50,12 +89,14 @@ export const createPartner = async partnerData => {
 };
 
 /**
- * Updates a partner's details by their ID.
+ * Updates an existing partner's details by their ID.
  *
- * @param {Object} partnerData - The updated partner data to be sent to the server.
- * @param {string|number} partnerId - The unique identifier of the partner to update.
- * @returns {Promise<Object>} The updated partner data from the server response.
- * @throws {Error} Throws an error if the request fails.
+ * @async
+ * @function updatePartnerById
+ * @param {Object} partnerData - Updated partner data.
+ * @param {string|number} partnerId - The unique ID of the partner to update.
+ * @returns {Promise<Object>} Resolves with updated partner data from the backend.
+ * @throws {Error} Throws error if the API request fails.
  */
 export const updatePartnerById = async (partnerData, partnerId) => {
   try {
@@ -63,35 +104,6 @@ export const updatePartnerById = async (partnerData, partnerId) => {
       `/partners/${partnerId}`,
       partnerData,
     );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-/**
- * Searches for partners matching the provided keyword using the backend API.
- *
- * @param {string} search - The keyword or query used to search for partners.
- * @returns {Promise<Object>} A promise that resolves to the list of matched partners.
- * @throws Will throw an error if the API call fails.
- */
-export const searchPartnersByKeyword = async (search, page = 1, limit = 10) => {
-  try {
-    const response = await axiosInstance.get('/partners', {
-      params: {search, page, limit},
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const fetchPartnersByStatus = async (status, page = 1, limit = 10) => {
-  try {
-    const response = await axiosInstance.get('/partners', {
-      params: {onboardingStatus: status, page, limit},
-    });
     return response.data;
   } catch (error) {
     throw error;

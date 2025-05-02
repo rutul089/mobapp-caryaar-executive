@@ -44,17 +44,6 @@ const salesExecutiveReducer = (state = initialState, action) => {
         loading: false,
       };
 
-    case types.UPDATE_SALES_EXECUTIVE:
-      return {
-        ...state,
-        loading: false,
-        salesExecutives: state.salesExecutives.map(executive =>
-          executive.id === action.payload.id
-            ? {...executive, ...action.payload.updatedExecutive}
-            : executive,
-        ),
-      };
-
     case types.REMOVE_SALES_EXECUTIVE:
       return {
         ...state,

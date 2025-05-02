@@ -1,4 +1,3 @@
-// ✅ Updated index.js to avoid redundant API calls on tab change
 import React, {Component} from 'react';
 import ScreenNames from '../../constants/ScreenNames';
 import {navigate} from '../../navigation/NavigationUtils';
@@ -9,9 +8,10 @@ import {
   fetchPendingPartners,
   resetPartnerDetail,
   resetRegistration,
+  clearSearchResults,
+  searchPartnersThunk,
 } from '../../redux/actions';
 import {Loader} from '../../components';
-import {searchPartnersThunk} from '../../redux/actions/partnerFormActions';
 
 class PartnersScreen extends Component {
   constructor(props) {
@@ -21,33 +21,33 @@ class PartnersScreen extends Component {
       refreshing: false,
       searchText: '',
       isSearch: false,
-      apiTrigger: 'default', // 'default' | 'loadMore' | 'pullToRefresh'
+      apiTrigger: 'default',
+      activeTab: 'active',
     };
     this.page = 1;
     this.limit = 10;
   }
 
+  // Initial data load based on tab
   componentDidMount() {
     this.loadPartners();
   }
 
+  // Load partners if not already in store
   loadPartners = () => {
     const {activeTab} = this.state;
     const {activePartners, pendingPartners} = this.props;
 
     if (activeTab === 'active' && activePartners.length === 0) {
-      this.props.fetchActivePartners(this.page, this.limit, () => {
-        this.page++;
-      });
+      this.props.fetchActivePartners(this.page, this.limit, () => this.page++);
     } else if (activeTab === 'pending' && pendingPartners.length === 0) {
-      this.props.fetchPendingPartners(this.page, this.limit, () => {
-        this.page++;
-      });
+      this.props.fetchPendingPartners(this.page, this.limit, () => this.page++);
     }
   };
 
+  // Load more partners when scrolling
   loadMorePartners = () => {
-    const {activeTab} = this.state;
+    const {activeTab, isSearch, searchText} = this.state;
     const {
       loading,
       activePage,
@@ -63,39 +63,64 @@ class PartnersScreen extends Component {
 
     if (!loading && canLoadMore) {
       this.setState({apiTrigger: 'loadMore'});
-      if (activeTab === 'active') {
-        this.props.fetchActivePartners(activePage + 1, this.limit, () => {
-          this.setState({apiTrigger: 'default'});
-        });
+      const pageToLoad =
+        activeTab === 'active' ? activePage + 1 : pendingPage + 1;
+
+      if (isSearch && searchText.length > 2) {
+        this.props.searchPartnersThunk(
+          searchText,
+          pageToLoad,
+          this.limit,
+          () => {
+            this.setState({apiTrigger: 'default'});
+          },
+        );
       } else {
-        this.props.fetchPendingPartners(pendingPage + 1, this.limit, () => {
-          this.setState({apiTrigger: 'default'});
-        });
+        const fetch =
+          activeTab === 'active'
+            ? this.props.fetchActivePartners
+            : this.props.fetchPendingPartners;
+        fetch(pageToLoad, this.limit, () =>
+          this.setState({apiTrigger: 'default'}),
+        );
       }
     }
   };
 
+  // Handle tab change and avoid refetching if data exists
   onTabPress = value => {
-    this.setState({activeTab: value}, () => {
+    const {activePartners, pendingPartners} = this.props;
+    this.setState({activeTab: value, isSearch: false, searchText: ''}, () => {
+      this.props.clearSearchResults();
       this.page = 1;
-      this.loadPartners();
+
+      if (value === 'active' && activePartners.length === 0) {
+        this.props.fetchActivePartners(
+          this.page,
+          this.limit,
+          () => this.page++,
+        );
+      } else if (value === 'pending' && pendingPartners.length === 0) {
+        this.props.fetchPendingPartners(
+          this.page,
+          this.limit,
+          () => this.page++,
+        );
+      }
     });
   };
 
+  // Pull-to-refresh logic
   pullToRefresh = async () => {
     const {activeTab} = this.state;
     try {
       this.setState({refreshing: true, apiTrigger: 'pullToRefresh'});
       this.page = 1;
-      if (activeTab === 'active') {
-        await this.props.fetchActivePartners(this.page, this.limit, () => {
-          this.page++;
-        });
-      } else {
-        await this.props.fetchPendingPartners(this.page, this.limit, () => {
-          this.page++;
-        });
-      }
+      const fetch =
+        activeTab === 'active'
+          ? this.props.fetchActivePartners
+          : this.props.fetchPendingPartners;
+      await fetch(this.page, this.limit, () => this.page++);
     } catch (error) {
       console.error(error);
     } finally {
@@ -103,67 +128,74 @@ class PartnersScreen extends Component {
     }
   };
 
-  onRightIconPress = () => {
-    navigate(ScreenNames.Notification);
-  };
+  // Navigate to Notification screen
+  onRightIconPress = () => navigate(ScreenNames.Notification);
 
+  // Navigate to Partner Detail screen
   onItemPress = item => {
     this.props.resetPartnerDetail();
     navigate(ScreenNames.PartnerDetail, {params: item});
   };
 
-  callToAction = () => {
-    navigate(ScreenNames.DocumentScreen);
-  };
+  // Navigate to Document Screen
+  callToAction = () => navigate(ScreenNames.DocumentScreen);
 
+  // Navigate to Add New Partner
   onAddButtonPress = () => {
     this.props.resetRegistration();
     navigate(ScreenNames.DealershipTypeSelection);
   };
 
-  onSearchText = value => {
-    this.setState({searchText: value});
+  // Handle search text change
+  onSearchText = text => {
+    this.setState({searchText: text}, () => {
+      if (text.trim() === '') {
+        this.setState({isSearch: false});
+        this.props.clearSearchResults();
+      }
+    });
   };
 
+  // Clear search and show original data from reducer
   clearSearch = () => {
-    this.setState({
-      searchText: '',
-      isSearch: false,
-    });
-    this.page = 1;
-    this.props.fetchPartners(this.page, this.limit, () => {
-      this.page++;
-    });
+    this.setState({searchText: '', isSearch: false});
+    this.props.clearSearchResults();
+    this.forceUpdate(); // Optional: to re-render list from reducer
   };
 
+  // Trigger API search if input is valid
   searchFromAPI = _searchText => {
+    const {activeTab} = this.state;
+    const status = activeTab === 'active' ? 'APPROVED' : 'PENDING';
+
     if (_searchText.length > 2) {
       this.page = 1;
-      this.setState(
-        {
-          isSearch: true,
-        },
-        () => {
-          this.props.searchPartnersThunk(
-            _searchText,
-            this.page,
-            this.limit,
-            () => {
-              this.page++;
-            },
-          );
-        },
-      );
-    } else {
-      this.setState({
-        isSearch: false,
+      this.setState({isSearch: true}, () => {
+        this.props.searchPartnersThunk(
+          _searchText,
+          this.page,
+          this.limit,
+          () => {
+            this.page++;
+          },
+          null,
+          status,
+        );
       });
+    } else {
+      this.setState({isSearch: false});
     }
   };
 
   render() {
-    const {TAB_OPTIONS, refreshing, activeTab, apiTrigger, searchText} =
-      this.state;
+    const {
+      TAB_OPTIONS,
+      refreshing,
+      activeTab,
+      apiTrigger,
+      searchText,
+      isSearch,
+    } = this.state;
     const {
       activePartners,
       pendingPartners,
@@ -172,6 +204,7 @@ class PartnersScreen extends Component {
       pendingPage,
       pendingTotalPages,
       loading,
+      searchPartners,
     } = this.props;
 
     const displayList =
@@ -186,7 +219,13 @@ class PartnersScreen extends Component {
           onTabPress={this.onTabPress}
           TAB_OPTIONS={TAB_OPTIONS}
           onRightIconPress={this.onRightIconPress}
-          partnersData={Array.isArray(displayList) ? displayList : []}
+          partnersData={
+            isSearch
+              ? searchPartners
+              : Array.isArray(displayList)
+              ? displayList
+              : []
+          }
           onItemPress={this.onItemPress}
           callToAction={this.callToAction}
           onAddButtonPress={this.onAddButtonPress}
@@ -196,7 +235,6 @@ class PartnersScreen extends Component {
           currentPage={currentPage}
           totalPages={totalPages}
           loading={loading}
-          onSubmitEditing={this.onSubmitEditing}
           onSearchText={this.onSearchText}
           searchText={searchText}
           clearSearch={this.clearSearch}
@@ -214,6 +252,7 @@ const mapDispatchToProps = {
   fetchPendingPartners,
   resetPartnerDetail,
   searchPartnersThunk,
+  clearSearchResults,
 };
 
 const mapStateToProps = ({partners}) => ({
@@ -224,6 +263,7 @@ const mapStateToProps = ({partners}) => ({
   activeTotalPages: partners.activeTotalPages,
   pendingPage: partners.pendingPage,
   pendingTotalPages: partners.pendingTotalPages,
+  searchPartners: partners.searchPartners,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PartnersScreen);

@@ -13,7 +13,7 @@ import {
 
 const Partner_Detail_Component = ({
   onBackPress,
-  selectedPartner,
+  partnerDetail,
   contactDetails,
   locationDetail,
   accountDetail,
@@ -23,6 +23,7 @@ const Partner_Detail_Component = ({
   infoRowDetails,
   footerInfo,
   onEditPartnerDetail,
+  businessName,
 }) => {
   return (
     <SafeAreaWrapper backgroundColor={theme.colors.background}>
@@ -32,7 +33,7 @@ const Partner_Detail_Component = ({
           <CustomerCard
             hideLogo
             brandName={businessType}
-            customerName={selectedPartner?.businessName}
+            customerName={businessName}
             infoRowDetails={infoRowDetails}
             footerInfo={footerInfo}
             noMargin

@@ -60,13 +60,6 @@ export default function partnerFormReducer(state = initialState, action) {
         selectedPartner: {},
         loading: false,
       };
-    case types.RESET_PARTNERS:
-      return {
-        ...state,
-        partnersList: [],
-        searchPartners: [],
-        loading: false,
-      };
     case types.CREATE_PARTNER_SUCCESS:
       return {
         ...state,
@@ -96,8 +89,7 @@ export default function partnerFormReducer(state = initialState, action) {
         currentPage: action.payload.page,
         totalPages: action.payload.totalPages,
       };
-    case types.RESET_APP_STATE:
-      return initialState;
+
     case types.FETCH_ACTIVE_PARTNERS_REQUEST:
       return {...state, loading: true};
 
@@ -131,6 +123,16 @@ export default function partnerFormReducer(state = initialState, action) {
     case types.FETCH_ACTIVE_PARTNERS_FAILURE:
     case types.FETCH_PENDING_PARTNERS_FAILURE:
       return {...state, loading: false};
+    case types.CLEAR_SEARCH_PARTNERS:
+      return {
+        ...state,
+        searchPartners: [],
+        searchPage: 1,
+        searchTotalPages: 1,
+        loading: false,
+      };
+    case types.RESET_APP_STATE:
+      return initialState;
     default:
       return state;
   }

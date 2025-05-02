@@ -27,10 +27,9 @@ import {
   getLocationText,
   getPartnerAddress,
   handleViewFilePreview,
-  removeCountryCode,
 } from '../../utils/helper';
-import Partner_Detail_Component from './Partner_Detail_Component';
 import {formatPartnerDetails} from '../../utils/partnerHelpers';
+import Partner_Detail_Component from './Partner_Detail_Component';
 class PartnerDetailScreen extends Component {
   constructor(props) {
     super(props);
@@ -132,6 +131,7 @@ class PartnerDetailScreen extends Component {
       <>
         <Partner_Detail_Component
           onBackPress={this.onBackPress}
+          businessName={safeGet(selectedPartner, 'businessName')}
           partnerDetail={selectedPartner}
           contactDetails={[
             {label: 'Owner', value: safeGet(owner, 'name')},

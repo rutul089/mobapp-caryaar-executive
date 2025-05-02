@@ -12,9 +12,9 @@ import {
   resetSalesExecutive,
   setLoginStatus,
 } from '../../redux/actions';
+import {removeCountryCode} from '../../utils/helper';
 import {clearLoginStatus} from '../../utils/storage';
 import Profile_Component from './Profile_Component';
-import {formatMobileNumber, removeCountryCode} from '../../utils/helper';
 
 class ProfileScreen extends Component {
   constructor(props) {

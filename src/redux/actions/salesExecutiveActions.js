@@ -1,4 +1,3 @@
-// Action Types
 import types from './types';
 import {
   deleteSalesExecutiveById,
@@ -10,26 +9,39 @@ import {
   showApiErrorToast,
   showToast,
 } from '../../utils/helper';
-// Action Creators
-export const addSalesExecutive = executive => ({
-  type: types.ADD_SALES_EXECUTIVE,
-  payload: executive,
-});
 
-export const updateSalesExecutive = (id, updatedExecutive) => ({
-  type: types.UPDATE_SALES_EXECUTIVE,
-  payload: {id, updatedExecutive},
-});
-
+/**
+ * Action creator to remove a sales executive by ID.
+ *
+ * @param {string} id - The ID of the sales executive to remove.
+ * @returns {Object} The action object to be dispatched.
+ * @property {string} type - The action type, which will be `REMOVE_SALES_EXECUTIVE`.
+ * @property {string} payload - The ID of the sales executive to remove.
+ */
 export const removeSalesExecutive = id => ({
   type: types.REMOVE_SALES_EXECUTIVE,
   payload: id,
 });
 
+/**
+ * Action creator to reset the state of sales executives.
+ *
+ * @returns {Object} The action object to be dispatched.
+ * @property {string} type - The action type, which will be `RESET_SALES_EXECUTIVE`.
+ */
 export const resetSalesExecutive = () => ({
   type: types.RESET_SALES_EXECUTIVE,
 });
 
+/**
+ * Thunk action to fetch sales executives with pagination.
+ *
+ * @param {number} page - The page number to fetch.
+ * @param {number} limit - The number of items per page.
+ * @param {Function} onSuccess - Callback function to execute on successful fetch.
+ * @param {Function} onFailure - Callback function to execute on failed fetch.
+ * @returns {Function} A thunk that dispatches actions based on API response.
+ */
 export const fetchSalesExecutivesThunk = (
   page,
   limit,
@@ -53,9 +65,8 @@ export const fetchSalesExecutivesThunk = (
           totalPages: response.pagination.totalPages,
         },
       });
-      if (onSuccess) {
-        onSuccess(response);
-      }
+
+      onSuccess?.(response);
     } catch (error) {
       showApiErrorToast(error);
       dispatch({
@@ -65,13 +76,20 @@ export const fetchSalesExecutivesThunk = (
           success: false,
         },
       });
-      if (onFailure) {
-        onFailure(error.message);
-      }
+
+      onFailure?.(error.message);
     }
   };
 };
 
+/**
+ * Thunk action to delete a sales executive by ID.
+ *
+ * @param {string} partnerId - The ID of the sales executive to delete.
+ * @param {Function} onSuccess - Callback function to execute on successful deletion.
+ * @param {Function} onFailure - Callback function to execute on failed deletion.
+ * @returns {Function} A thunk that dispatches actions based on API response.
+ */
 export const deleteSalesExecutiveByIdThunk = (
   partnerId,
   onSuccess,
@@ -90,22 +108,27 @@ export const deleteSalesExecutiveByIdThunk = (
         payload: partnerId,
       });
       removeSalesExecutive(partnerId);
-      if (onSuccess) {
-        onSuccess(response);
-      }
+
+      onSuccess?.(response);
     } catch (error) {
       showApiErrorToast(error);
       dispatch({
         type: types.REMOVE_SALES_EXECUTIVE_FAILURE,
         payload: error.message,
       });
-      if (onFailure) {
-        onFailure(error.message);
-      }
+      onFailure?.(error.message);
     }
   };
 };
 
+/**
+ * Thunk action to create a new sales executive.
+ *
+ * @param {Object} param - The parameters for creating a new sales executive.
+ * @param {Function} onSuccess - Callback function to execute on successful creation.
+ * @param {Function} onFailure - Callback function to execute on failed creation.
+ * @returns {Function} A thunk that dispatches actions based on API response.
+ */
 export const createSalesExecutiveThunk = (param, onSuccess, onFailure) => {
   return async dispatch => {
     dispatch({type: types.FETCH_SALES_EXECUTIVE_REQUEST});
@@ -134,9 +157,7 @@ export const createSalesExecutiveThunk = (param, onSuccess, onFailure) => {
 
       showToast('success', response?.message || 'Member created successfully!');
 
-      if (onSuccess) {
-        onSuccess(response);
-      }
+      onSuccess?.(response);
     } catch (error) {
       showApiErrorToast(error);
       dispatch({
@@ -146,9 +167,8 @@ export const createSalesExecutiveThunk = (param, onSuccess, onFailure) => {
           success: false,
         },
       });
-      if (onFailure) {
-        onFailure(error);
-      }
+
+      onFailure?.(error);
     }
   };
 };

@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
   container: {
     padding: theme.sizes.padding,
     paddingBottom: 0,
+    marginBottom: 5,
   },
   tabContainer: {
     flexDirection: 'row',
