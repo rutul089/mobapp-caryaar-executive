@@ -6,6 +6,8 @@ const initialState = {
   success: false,
   selectedPartner: {},
   searchPartners: [],
+  currentPage: 1,
+  totalPages: 1,
 };
 
 export default function partnerFormReducer(state = initialState, action) {
@@ -31,7 +33,12 @@ export default function partnerFormReducer(state = initialState, action) {
     case types.FETCH_PARTNERS_SUCCESS:
       return {
         ...state,
-        partnersList: action.payload,
+        partnersList:
+          action.payload.page === 1
+            ? action.payload.data
+            : [...state.partnersList, ...action.payload.data],
+        currentPage: action.payload.page,
+        totalPages: action.payload.totalPages,
         loading: false,
       };
 
@@ -73,10 +80,15 @@ export default function partnerFormReducer(state = initialState, action) {
     case types.SEARCH_PARTNER_SUCCESS:
       return {
         ...state,
-        searchPartners: action.payload?.data || [],
+        searchPartners:
+          action.payload.page === 1
+            ? action.payload.data
+            : [...state.searchPartners, ...action.payload.data],
         loading: false,
         message: action.payload.message,
         success: action.payload.success,
+        currentPage: action.payload.page,
+        totalPages: action.payload.totalPages,
       };
     case types.RESET_APP_STATE:
       return initialState;

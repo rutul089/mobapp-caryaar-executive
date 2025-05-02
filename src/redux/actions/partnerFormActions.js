@@ -71,17 +71,21 @@ export const resetPartnersDetail = () => ({
  * @param {Function} [onSuccess] - Callback executed when the fetch is successful.
  * @param {Function} [onFailure] - Callback executed when the fetch fails.
  */
-export const fetchPartners = (onSuccess, onFailure) => {
+export const fetchPartners = (page = 1, limit = 10, onSuccess, onFailure) => {
   return async dispatch => {
     dispatch({type: types.FETCH_PARTNERS_REQUEST});
 
     try {
-      const user = await fetchPartnersList();
+      const response = await fetchPartnersList(page, limit);
       dispatch({
         type: types.FETCH_PARTNERS_SUCCESS,
-        payload: user,
+        payload: {
+          data: response.data,
+          page: response.pagination.page,
+          totalPages: response.pagination.totalPages,
+        },
       });
-      onSuccess?.(user);
+      onSuccess?.(response);
     } catch (error) {
       dispatch({
         type: types.FETCH_PARTNERS_FAILURE,
@@ -202,12 +206,18 @@ export const updatePartnerThunk = (partnerID, param, onSuccess, onFailure) => {
  * @param {function} [onSuccess] - Callback fired on successful API response.
  * @param {function} [onFailure] - Callback fired on API error.
  */
-export const searchPartnersThunk = (search, onSuccess, onFailure) => {
+export const searchPartnersThunk = (
+  search,
+  page = 1,
+  limit = 10,
+  onSuccess,
+  onFailure,
+) => {
   return async dispatch => {
     dispatch({type: types.SEARCH_PARTNER_REQUEST});
 
     try {
-      const response = await searchPartnersByKeyword(search);
+      const response = await searchPartnersByKeyword(search, page, limit);
 
       dispatch({
         type: types.SEARCH_PARTNER_SUCCESS,
@@ -215,6 +225,8 @@ export const searchPartnersThunk = (search, onSuccess, onFailure) => {
           data: response.data,
           message: response.message,
           success: response.success,
+          page: response.pagination.page,
+          totalPages: response.pagination.totalPages,
         },
       });
 

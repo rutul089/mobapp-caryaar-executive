@@ -6,17 +6,17 @@ import axiosInstance from '../api/axiosInstance';
  * @returns {Promise<Array>} A promise that resolves to the array of partners.
  * @throws Will throw an error if the API call fails.
  */
-export const fetchPartnersList = async () => {
+
+export const fetchPartnersList = async (page = 1, limit = 10) => {
   try {
     const response = await axiosInstance.get('/partners', {
-      params: {limit: '20'},
+      params: {page, limit},
     });
     return response.data;
   } catch (error) {
     throw error;
   }
 };
-
 /**
  * Fetches the partner details for a specific partner ID from the backend.
  *
@@ -76,9 +76,22 @@ export const updatePartnerById = async (partnerData, partnerId) => {
  * @returns {Promise<Object>} A promise that resolves to the list of matched partners.
  * @throws Will throw an error if the API call fails.
  */
-export const searchPartnersByKeyword = async search => {
+export const searchPartnersByKeyword = async (search, page = 1, limit = 10) => {
   try {
-    const response = await axiosInstance.get(`/partners?search=${search}`);
+    const response = await axiosInstance.get('/partners', {
+      params: {search, page, limit},
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchPartnersByStatus = async (status, page = 1, limit = 10) => {
+  try {
+    const response = await axiosInstance.get('/partners', {
+      params: {onboardingStatus: status, page, limit},
+    });
     return response.data;
   } catch (error) {
     throw error;

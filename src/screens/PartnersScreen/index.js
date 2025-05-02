@@ -16,22 +16,70 @@ class PartnersScreen extends Component {
     super(props);
     this.state = {
       TAB_OPTIONS: ['active', 'pending'],
-      partnersData: [],
       refreshing: false,
       searchText: '',
       isSearch: false,
+      apiTrigger: 'default', // 'default' | 'loadMore' | 'pullToRefresh'
     };
-    this.onTabPress = this.onTabPress.bind(this);
-    this.onRightIconPress = this.onRightIconPress.bind(this);
-    this.onItemPress = this.onItemPress.bind(this);
-    this.pullToRefresh = this.pullToRefresh.bind(this);
+
+    this.page = 1;
+    this.limit = 10;
   }
 
   componentDidMount() {
-    this.props.fetchPartners();
+    this.loadPartners();
   }
 
-  onTabPress = value => {};
+  loadPartners = () => {
+    this.props.fetchPartners(this.page, this.limit, () => {
+      this.page++;
+    });
+  };
+
+  loadMorePartners = () => {
+    if (!this.props.loading && this.page <= this.props.totalPages) {
+      this.setState({isLoadMore: true, apiTrigger: 'loadMore'}); // UPDATED
+      if (this.state.isSearch) {
+        this.props.searchPartnersThunk(
+          this.state.searchText,
+          this.page,
+          this.limit,
+          () => {
+            this.page++;
+            this.setState({isLoadMore: false, apiTrigger: 'default'}); // UPDATED
+          },
+        );
+      } else {
+        this.props.fetchPartners(this.page, this.limit, () => {
+          this.page++;
+          this.setState({isLoadMore: false, apiTrigger: 'default'}); // UPDATED
+        });
+      }
+    }
+  };
+
+  // loadMorePartners = () => {
+  //   if (!this.props.loading && this.page <= this.props.totalPages) {
+  //     this.setState({isLoadMore: true});
+  //     if (this.state.isSearch) {
+  //       this.props.searchPartnersThunk(
+  //         this.state.searchText,
+  //         this.page,
+  //         this.limit,
+  //         () => {
+  //           this.page++;
+  //           this.setState({isLoadMore: false});
+  //         },
+  //       );
+  //     } else {
+  //       this.loadPartners();
+  //     }
+  //   }
+  // };
+
+  onTabPress = value => {
+    // optional: clear state on tab change
+  };
 
   onRightIconPress = () => {
     navigate(ScreenNames.Notification);
@@ -44,10 +92,6 @@ class PartnersScreen extends Component {
 
   callToAction = () => {
     navigate(ScreenNames.DocumentScreen);
-    return;
-    navigate(ScreenNames.AddPartnerBasicDetail, {
-      params: {fromScreen: true, errorSteps: [3], showImages: [1, 2, 3, 4]},
-    });
   };
 
   onAddButtonPress = () => {
@@ -57,24 +101,31 @@ class PartnersScreen extends Component {
 
   pullToRefresh = async () => {
     try {
-      this.setState({refreshing: true});
-      await this.props.fetchPartners(); // your API call function
+      this.setState({refreshing: true, apiTrigger: 'pullToRefresh'}); // UPDATED
+      this.page = 1;
+      if (this.state.isSearch) {
+        await this.props.searchPartnersThunk(
+          this.state.searchText,
+          this.page,
+          this.limit,
+          () => {
+            this.page++;
+          },
+        );
+      } else {
+        await this.props.fetchPartners(this.page, this.limit, () => {
+          this.page++;
+        });
+      }
     } catch (error) {
       console.error(error);
     } finally {
-      this.setState({refreshing: false});
+      this.setState({refreshing: false, apiTrigger: 'default'}); // UPDATED
     }
   };
 
   onSearchText = value => {
-    this.setState(
-      {
-        searchText: value,
-      },
-      () => {
-        // this.searchFromAPI(value);
-      },
-    );
+    this.setState({searchText: value});
   };
 
   clearSearch = () => {
@@ -82,41 +133,50 @@ class PartnersScreen extends Component {
       searchText: '',
       isSearch: false,
     });
+    this.page = 1;
+    this.props.fetchPartners(this.page, this.limit, () => {
+      this.page++;
+    });
   };
 
   searchFromAPI = _searchText => {
-    let text = this.state.searchText;
     if (_searchText.length > 2) {
+      this.page = 1;
       this.setState(
         {
           isSearch: true,
         },
         () => {
           this.props.searchPartnersThunk(
-            text,
-            response => {},
-            error => {},
+            _searchText,
+            this.page,
+            this.limit,
+            () => {
+              this.page++;
+            },
           );
         },
       );
     } else {
       this.setState({
         isSearch: false,
-        searchText: text,
       });
     }
   };
 
   render() {
-    const {TAB_OPTIONS, isSearch, refreshing, searchText} = this.state;
+    const {TAB_OPTIONS, isSearch, refreshing, searchText, apiTrigger} =
+      this.state;
     const {partnersList, searchPartners, loading} = this.props;
+    const displayList = isSearch ? searchPartners : partnersList;
+
     return (
       <>
         <Partner_Component
           onTabPress={this.onTabPress}
           TAB_OPTIONS={TAB_OPTIONS}
           onRightIconPress={this.onRightIconPress}
-          partnersData={isSearch ? searchPartners : partnersList}
+          partnersData={Array.isArray(displayList) ? displayList : []}
           onItemPress={this.onItemPress}
           callToAction={this.callToAction}
           onAddButtonPress={this.onAddButtonPress}
@@ -126,8 +186,12 @@ class PartnersScreen extends Component {
           searchText={searchText}
           clearSearch={this.clearSearch}
           setSearch={this.searchFromAPI}
+          onLoadMore={this.loadMorePartners}
+          currentPage={this.props.currentPage}
+          totalPages={this.props.totalPages}
+          loading={loading}
         />
-        {loading && !refreshing && <Loader visible={loading && !refreshing} />}
+        {loading && apiTrigger === 'default' && <Loader visible />}
       </>
     );
   }
@@ -139,12 +203,14 @@ const mapDispatchToProps = {
   resetPartnerDetail,
   searchPartnersThunk,
 };
-const mapStateToProps = ({appState, partners}) => {
-  return {
-    isInternetConnected: appState.isInternetConnected,
-    partnersList: partners?.partnersList?.data,
-    searchPartners: partners?.searchPartners,
-    loading: partners?.loading,
-  };
-};
+
+const mapStateToProps = ({appState, partners}) => ({
+  isInternetConnected: appState.isInternetConnected,
+  partnersList: partners?.partnersList,
+  searchPartners: partners?.searchPartners,
+  loading: partners?.loading,
+  currentPage: partners?.currentPage,
+  totalPages: partners?.totalPages,
+});
+
 export default connect(mapStateToProps, mapDispatchToProps)(PartnersScreen);
