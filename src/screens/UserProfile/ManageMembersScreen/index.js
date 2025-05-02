@@ -12,6 +12,8 @@ import {
 import {salesExecOptions} from '../../../constants/enums';
 import {Loader} from '../../../components';
 import {
+  formatIndianNumber,
+  formatMobileNumber,
   getErrorMessage,
   handleFieldChange,
   validateField,
@@ -104,7 +106,7 @@ class ManageMemberScreen extends Component {
     if (isFormValid && !this.props.loading) {
       let param = {
         name: fullName,
-        mobileNumber: mobileNumber,
+        mobileNumber: formatMobileNumber(mobileNumber),
         email: email,
         position: selectedSalesExecValue,
       };
@@ -119,7 +121,6 @@ class ManageMemberScreen extends Component {
           Alert.alert(getErrorMessage(error));
         },
       );
-      console.log({mobileNumber, fullName, selectedSalesExecValue});
     }
   };
 

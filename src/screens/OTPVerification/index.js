@@ -79,7 +79,7 @@ class OTPVerification extends Component {
   handleVerify = async () => {
     const {otp} = this.state;
     const {phone} = this.props;
-    const type = 'PARTNER';
+    const type = 'SALES_EXECUTIVE';
 
     if (otp.length !== 4) {
       showToast('error', 'Enter all 4 digits of the OTP to continue.');
@@ -88,7 +88,7 @@ class OTPVerification extends Component {
     }
 
     const param = {
-      mobileNumber: '+919876543210',
+      mobileNumber: phone,
       otp: otp,
     };
 

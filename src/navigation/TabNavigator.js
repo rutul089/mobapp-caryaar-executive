@@ -1,7 +1,9 @@
+/* eslint-disable react-native/no-inline-styles */
 // navigation/TabNavigator.js
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import {Image} from 'react-native';
+import {connect} from 'react-redux';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Text, images, theme} from '@caryaar/components';
 import ScreenNames from '../constants/ScreenNames';
 import {
@@ -13,10 +15,10 @@ import {
 
 const Tab = createBottomTabNavigator();
 
-const renderTabIcon = image => (
+const renderTabIcon = (image, source) => (
   <Image
-    source={image}
-    style={{height: 24, width: 24, marginBottom: 5}}
+    source={source || image}
+    style={{height: 24, width: 24, marginBottom: 5, borderRadius: 12}}
     resizeMode="contain"
   />
 );
@@ -30,7 +32,12 @@ const renderTabLabel = (focused, label) => (
   </Text>
 );
 
-const TabNavigator = () => {
+const createTabOptions = (label, activeIcon, inactiveIcon) => ({
+  tabBarLabel: ({focused}) => renderTabLabel(focused, label),
+  tabBarIcon: ({focused}) => renderTabIcon(focused ? activeIcon : inactiveIcon),
+});
+
+const TabNavigator = ({avatar}) => {
   return (
     <Tab.Navigator
       initialRouteName={ScreenNames.Home}
@@ -45,48 +52,31 @@ const TabNavigator = () => {
           backgroundColor: 'white',
           minHeight: 60,
           maxHeight: 90,
-          top: 0,
-          bottom: 0,
-          margin: 0,
-          // alignContent: 'center',
-          // alignItems: 'center',
-          // justifyContent: 'center',
         },
-        tabBarItemStyle: {
-          // padding: 0,
-          // margin: 0,
-        },
+        tabBarItemStyle: {},
       }}>
       <Tab.Screen
         name={ScreenNames.Home}
         component={HomeScreen}
-        options={{
-          tabBarLabel: ({focused}) => renderTabLabel(focused, 'Home'),
-          tabBarIcon: ({focused}) =>
-            renderTabIcon(focused ? images.homeSolid : images.homeOutline),
-        }}
+        options={createTabOptions('Home', images.homeSolid, images.homeOutline)}
       />
       <Tab.Screen
         name={ScreenNames.Partners}
         component={PartnersScreen}
-        options={{
-          tabBarLabel: ({focused}) => renderTabLabel(focused, 'Partners'),
-          tabBarIcon: ({focused}) =>
-            renderTabIcon(
-              focused ? images.customersSolid : images.customersOutline,
-            ),
-        }}
+        options={createTabOptions(
+          'Partners',
+          images.customersSolid,
+          images.customersOutline,
+        )}
       />
       <Tab.Screen
         name={ScreenNames.Applications}
         component={ApplicationsScreen}
-        options={{
-          tabBarLabel: ({focused}) => renderTabLabel(focused, 'Applications'),
-          tabBarIcon: ({focused}) =>
-            renderTabIcon(
-              focused ? images.applicationSolid : images.applicationOutline,
-            ),
-        }}
+        options={createTabOptions(
+          'Applications',
+          images.applicationSolid,
+          images.applicationOutline,
+        )}
       />
       <Tab.Screen
         name={ScreenNames.Profile}
@@ -94,13 +84,19 @@ const TabNavigator = () => {
         options={{
           tabBarLabel: ({focused}) => renderTabLabel(focused, 'Profile'),
           tabBarIcon: ({focused}) =>
-            renderTabIcon(
-              focused ? images.customersSolid : images.customersOutline,
-            ),
+            avatar
+              ? renderTabIcon(focused ? {uri: avatar} : {uri: avatar}, null)
+              : renderTabIcon(
+                  focused ? images.customersSolid : images.customersOutline,
+                ),
         }}
       />
     </Tab.Navigator>
   );
 };
 
-export default TabNavigator;
+const mapStateToProps = ({user}) => ({
+  avatar: user?.userProfile?.avatar,
+});
+
+export default connect(mapStateToProps)(TabNavigator);

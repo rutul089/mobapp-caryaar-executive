@@ -10,7 +10,11 @@ import {
 } from '@caryaar/components';
 import React, {useEffect} from 'react';
 import {FlatList, Image, Pressable, StyleSheet, View} from 'react-native';
-import {formatDate, getLocationText} from '../../utils/helper';
+import {
+  formatDate,
+  getLocationText,
+  removeCountryCode,
+} from '../../utils/helper';
 import {partnerDocumentLabelMap} from '../../constants/enums';
 
 const limit = 10;
@@ -26,13 +30,17 @@ const Partner_Component = ({
   callToAction,
   onRefresh,
   refreshing,
+  onSearchText,
+  searchText,
+  clearSearch,
+  setSearch,
 }) => {
   const [activeTab, setActiveTab] = React.useState('active');
   const [filteredPartners, setFilteredPartners] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
 
-  const selectedStatus = activeTab === 'active' ? 'ACTIVE' : 'PENDING';
+  const selectedStatus = activeTab === 'active' ? 'APPROVED' : 'PENDING';
 
   useEffect(() => {
     filterAndPaginate();
@@ -64,7 +72,7 @@ const Partner_Component = ({
         <PartnerCard
           name={item.companyName}
           location={getLocationText(item.city, item.state)}
-          phone={item.phone ?? '-'}
+          phone={removeCountryCode(item.owner?.mobileNumber) ?? '-'}
           textColor={theme.colors.textPrimary}
           onPress={() => onItemPress && onItemPress(item)}
         />
@@ -118,6 +126,10 @@ const Partner_Component = ({
         onFilterPress={onFilterPress}
         showAddBtn
         onAddButtonPress={onAddButtonPress}
+        onChangeText={onSearchText}
+        value={searchText}
+        onCancelIconPress={clearSearch}
+        onSubmitEditing={setSearch}
       />
       <View style={styles.container}>
         <Card padding={6} cardContainerStyle={styles.tabContainer}>

@@ -8,7 +8,9 @@ import axiosInstance from '../api/axiosInstance';
  */
 export const fetchPartnersList = async () => {
   try {
-    const response = await axiosInstance.get('/partners');
+    const response = await axiosInstance.get('/partners', {
+      params: {limit: '20'},
+    });
     return response.data;
   } catch (error) {
     throw error;
@@ -61,6 +63,22 @@ export const updatePartnerById = async (partnerData, partnerId) => {
       `/partners/${partnerId}`,
       partnerData,
     );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * Searches for partners matching the provided keyword using the backend API.
+ *
+ * @param {string} search - The keyword or query used to search for partners.
+ * @returns {Promise<Object>} A promise that resolves to the list of matched partners.
+ * @throws Will throw an error if the API call fails.
+ */
+export const searchPartnersByKeyword = async search => {
+  try {
+    const response = await axiosInstance.get(`/partners?search=${search}`);
     return response.data;
   } catch (error) {
     throw error;

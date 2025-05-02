@@ -5,6 +5,7 @@ const initialState = {
   partnersList: [],
   success: false,
   selectedPartner: {},
+  searchPartners: [],
 };
 
 export default function partnerFormReducer(state = initialState, action) {
@@ -13,6 +14,7 @@ export default function partnerFormReducer(state = initialState, action) {
     case types.FETCH_PARTNERS_REQUEST:
     case types.CREATE_PARTNER_REQUEST:
     case types.UPDATE_PARTNER_REQUEST:
+    case types.SEARCH_PARTNER_REQUEST:
       return {
         ...state,
         loading: true,
@@ -21,6 +23,7 @@ export default function partnerFormReducer(state = initialState, action) {
     case types.FETCH_PARTNER_FAILURE:
     case types.CREATE_PARTNER_FAILURE:
     case types.UPDATE_PARTNER_FAILURE:
+    case types.SEARCH_PARTNER_FAILURE:
       return {
         ...state,
         loading: false,
@@ -48,6 +51,7 @@ export default function partnerFormReducer(state = initialState, action) {
       return {
         ...state,
         partnersList: [],
+        searchPartners: [],
         loading: false,
       };
     case types.CREATE_PARTNER_SUCCESS:
@@ -65,6 +69,14 @@ export default function partnerFormReducer(state = initialState, action) {
         message: action.payload.message,
         success: action.payload.success,
         loading: false,
+      };
+    case types.SEARCH_PARTNER_SUCCESS:
+      return {
+        ...state,
+        searchPartners: action.payload?.data || [],
+        loading: false,
+        message: action.payload.message,
+        success: action.payload.success,
       };
     case types.RESET_APP_STATE:
       return initialState;

@@ -7,7 +7,9 @@ import {
   fetchPartners,
   resetPartnerDetail,
   resetRegistration,
+  searchPartnersThunk,
 } from '../../redux/actions';
+import {Loader} from '../../components';
 
 class PartnersScreen extends Component {
   constructor(props) {
@@ -16,6 +18,8 @@ class PartnersScreen extends Component {
       TAB_OPTIONS: ['active', 'pending'],
       partnersData: [],
       refreshing: false,
+      searchText: '',
+      isSearch: false,
     };
     this.onTabPress = this.onTabPress.bind(this);
     this.onRightIconPress = this.onRightIconPress.bind(this);
@@ -27,9 +31,7 @@ class PartnersScreen extends Component {
     this.props.fetchPartners();
   }
 
-  onTabPress = value => {
-    console.log({value});
-  };
+  onTabPress = value => {};
 
   onRightIconPress = () => {
     navigate(ScreenNames.Notification);
@@ -64,23 +66,68 @@ class PartnersScreen extends Component {
     }
   };
 
-  render() {
-    const {TAB_OPTIONS, partnersData, refreshing} = this.state;
-    const {partnersList} = this.props;
+  onSearchText = value => {
+    this.setState(
+      {
+        searchText: value,
+      },
+      () => {
+        // this.searchFromAPI(value);
+      },
+    );
+  };
 
+  clearSearch = () => {
+    this.setState({
+      searchText: '',
+      isSearch: false,
+    });
+  };
+
+  searchFromAPI = _searchText => {
+    let text = this.state.searchText;
+    if (_searchText.length > 2) {
+      this.setState(
+        {
+          isSearch: true,
+        },
+        () => {
+          this.props.searchPartnersThunk(
+            text,
+            response => {},
+            error => {},
+          );
+        },
+      );
+    } else {
+      this.setState({
+        isSearch: false,
+        searchText: text,
+      });
+    }
+  };
+
+  render() {
+    const {TAB_OPTIONS, isSearch, refreshing, searchText} = this.state;
+    const {partnersList, searchPartners, loading} = this.props;
     return (
       <>
         <Partner_Component
           onTabPress={this.onTabPress}
           TAB_OPTIONS={TAB_OPTIONS}
           onRightIconPress={this.onRightIconPress}
-          partnersData={partnersList}
+          partnersData={isSearch ? searchPartners : partnersList}
           onItemPress={this.onItemPress}
           callToAction={this.callToAction}
           onAddButtonPress={this.onAddButtonPress}
           onRefresh={this.pullToRefresh}
           refreshing={refreshing}
+          onSearchText={this.onSearchText}
+          searchText={searchText}
+          clearSearch={this.clearSearch}
+          setSearch={this.searchFromAPI}
         />
+        {loading && !refreshing && <Loader visible={loading && !refreshing} />}
       </>
     );
   }
@@ -90,11 +137,14 @@ const mapDispatchToProps = {
   resetRegistration,
   fetchPartners,
   resetPartnerDetail,
+  searchPartnersThunk,
 };
-const mapStateToProps = state => {
+const mapStateToProps = ({appState, partners}) => {
   return {
-    isInternetConnected: state.appState.isInternetConnected,
-    partnersList: state.partners?.partnersList?.data,
+    isInternetConnected: appState.isInternetConnected,
+    partnersList: partners?.partnersList?.data,
+    searchPartners: partners?.searchPartners,
+    loading: partners?.loading,
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(PartnersScreen);

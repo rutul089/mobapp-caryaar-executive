@@ -22,6 +22,7 @@ import {
 import {NoDataFound} from '../../../components';
 import {getLabelFromEnum, salesExecutiveValue} from '../../../constants/enums';
 import {goBack} from '../../../navigation/NavigationUtils';
+import {formatMobileNumber} from '../../../utils/helper';
 
 const Manage_Members_Component = ({
   handleAddNewMemberPress,
@@ -68,7 +69,7 @@ const Manage_Members_Component = ({
             lineHeight={'small'}
             hankenGroteskMedium
             color={theme.colors.textSecondary}>
-            {item?.user?.mobileNumber}
+            {formatMobileNumber(item?.user?.mobileNumber)}
           </Text>
         </View>
         <Pressable

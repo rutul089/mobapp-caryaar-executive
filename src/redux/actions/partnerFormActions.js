@@ -3,6 +3,7 @@ import {
   createPartner,
   fetchPartnerById,
   fetchPartnersList,
+  searchPartnersByKeyword,
   updatePartnerById,
 } from '../../api/partnerServices';
 import {showApiErrorToast} from '../../utils/helper';
@@ -56,6 +57,20 @@ export const resetRegistration = () => ({
   type: types.RESET_REGISTRATION,
 });
 
+export const resetPartnerDetail = () => ({
+  type: types.RESET_PARTNER,
+});
+
+export const resetPartnersDetail = () => ({
+  type: types.RESET_PARTNERS,
+});
+
+/**
+ * Thunk to fetch the complete list of partners.
+ *
+ * @param {Function} [onSuccess] - Callback executed when the fetch is successful.
+ * @param {Function} [onFailure] - Callback executed when the fetch fails.
+ */
 export const fetchPartners = (onSuccess, onFailure) => {
   return async dispatch => {
     dispatch({type: types.FETCH_PARTNERS_REQUEST});
@@ -66,21 +81,25 @@ export const fetchPartners = (onSuccess, onFailure) => {
         type: types.FETCH_PARTNERS_SUCCESS,
         payload: user,
       });
-      if (onSuccess) {
-        onSuccess(user);
-      }
+      onSuccess?.(user);
     } catch (error) {
       dispatch({
         type: types.FETCH_PARTNERS_FAILURE,
         payload: error.message,
       });
-      if (onFailure) {
-        onFailure(error.message);
-      }
+      onFailure?.(error.message);
+      showApiErrorToast(error);
     }
   };
 };
 
+/**
+ * Thunk to fetch a specific partner's details by ID.
+ *
+ * @param {string} partnerId - The ID of the partner to fetch.
+ * @param {Function} [onSuccess] - Callback executed when the fetch is successful.
+ * @param {Function} [onFailure] - Callback executed when the fetch fails.
+ */
 export const fetchPartnerFromId = (partnerId, onSuccess, onFailure) => {
   return async dispatch => {
     dispatch({type: types.FETCH_PARTNER_REQUEST});
@@ -91,38 +110,31 @@ export const fetchPartnerFromId = (partnerId, onSuccess, onFailure) => {
         type: types.FETCH_PARTNER_SUCCESS,
         payload: user.data,
       });
-
-      if (onSuccess) {
-        onSuccess(user);
-      }
+      onSuccess?.(user);
     } catch (error) {
       dispatch({
         type: types.FETCH_PARTNER_FAILURE,
         payload: error.message,
       });
       showApiErrorToast(error);
-      if (onFailure) {
-        onFailure(error.message);
-      }
+      onFailure?.(error.message);
     }
   };
 };
 
-export const resetPartnerDetail = () => ({
-  type: types.RESET_PARTNER,
-});
-
-export const resetPartnersDetail = () => ({
-  type: types.RESET_PARTNERS,
-});
-
+/**
+ * Thunk to create a new partner.
+ *
+ * @param {Object} param - Data used to create the partner.
+ * @param {Function} [onSuccess] - Callback executed after successful creation.
+ * @param {Function} [onFailure] - Callback executed if creation fails.
+ */
 export const createPartnerThunk = (param, onSuccess, onFailure) => {
   return async dispatch => {
     dispatch({type: types.CREATE_PARTNER_REQUEST});
 
     try {
       const response = await createPartner(param);
-
       dispatch({
         type: types.CREATE_PARTNER_SUCCESS,
         payload: {
@@ -136,29 +148,32 @@ export const createPartnerThunk = (param, onSuccess, onFailure) => {
         },
       });
 
-      if (onSuccess) {
-        onSuccess(response);
-      }
+      onSuccess?.(response);
     } catch (error) {
       dispatch({
         type: types.CREATE_PARTNER_FAILURE,
         payload: error.message,
       });
       showApiErrorToast(error);
-      if (onFailure) {
-        onFailure(error.message);
-      }
+      onFailure?.(error.message);
     }
   };
 };
 
+/**
+ * Thunk to update an existing partner by ID.
+ *
+ * @param {string} partnerID - The ID of the partner to update.
+ * @param {Object} param - Updated partner data.
+ * @param {Function} [onSuccess] - Callback executed after successful update.
+ * @param {Function} [onFailure] - Callback executed if update fails.
+ */
 export const updatePartnerThunk = (partnerID, param, onSuccess, onFailure) => {
   return async dispatch => {
     dispatch({type: types.UPDATE_PARTNER_REQUEST});
 
     try {
       const response = await updatePartnerById(param, partnerID);
-
       dispatch({
         type: types.UPDATE_PARTNER_SUCCESS,
         payload: {
@@ -168,18 +183,50 @@ export const updatePartnerThunk = (partnerID, param, onSuccess, onFailure) => {
         },
       });
 
-      if (onSuccess) {
-        onSuccess(response);
-      }
+      onSuccess?.(response);
     } catch (error) {
       dispatch({
         type: types.UPDATE_PARTNER_FAILURE,
         payload: error.message,
       });
       showApiErrorToast(error);
-      if (onFailure) {
-        onFailure(error.message);
-      }
+      onFailure?.(error.message);
+    }
+  };
+};
+
+/**
+ * Redux Thunk action to search partners by keyword.
+ *
+ * @param {string} search - The search term to query partners.
+ * @param {function} [onSuccess] - Callback fired on successful API response.
+ * @param {function} [onFailure] - Callback fired on API error.
+ */
+export const searchPartnersThunk = (search, onSuccess, onFailure) => {
+  return async dispatch => {
+    dispatch({type: types.SEARCH_PARTNER_REQUEST});
+
+    try {
+      const response = await searchPartnersByKeyword(search);
+
+      dispatch({
+        type: types.SEARCH_PARTNER_SUCCESS,
+        payload: {
+          data: response.data,
+          message: response.message,
+          success: response.success,
+        },
+      });
+
+      onSuccess?.(response);
+    } catch (error) {
+      dispatch({
+        type: types.SEARCH_PARTNER_FAILURE,
+        payload: error.message,
+      });
+      showApiErrorToast(error);
+
+      onFailure?.(error.message);
     }
   };
 };
