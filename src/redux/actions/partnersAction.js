@@ -155,7 +155,6 @@ export const searchPartnersThunk = (
         payload: error.message,
       });
       showApiErrorToast(error);
-
       onFailure?.(error.message);
     }
   };
@@ -194,6 +193,7 @@ export const fetchActivePartners = (
     } catch (error) {
       dispatch({type: types.FETCH_ACTIVE_PARTNERS_FAILURE});
       onFailure?.(error);
+      showApiErrorToast(error);
     }
   };
 };
@@ -231,6 +231,7 @@ export const fetchPendingPartners = (
     } catch (error) {
       dispatch({type: types.FETCH_PENDING_PARTNERS_FAILURE});
       onFailure?.(error);
+      showApiErrorToast(error);
     }
   };
 };

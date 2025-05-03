@@ -28,7 +28,7 @@ const Partner_Documents_Component = ({documentGroups, handleNextPress}) => {
                 label={doc.label}
                 image={fileUri}
                 onDeletePress={doc.onDeletePress}
-                viewImage={doc.viewImage}
+                viewImage={doc?.onPress(doc.type, doc)}
                 btnLabel={'Click to Upload\nImage or PDF'}
                 uploadMedia={doc.uploadMedia}
                 fileType={fileType}

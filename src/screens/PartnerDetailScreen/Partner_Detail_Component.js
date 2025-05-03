@@ -1,6 +1,5 @@
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-
 import {
   CustomerCard,
   DetailInfoCard,
@@ -17,7 +16,7 @@ const Partner_Detail_Component = ({
   contactDetails,
   locationDetail,
   accountDetail,
-  documents,
+  documents = [],
   isFetchingDocument,
   businessType,
   infoRowDetails,
@@ -28,7 +27,9 @@ const Partner_Detail_Component = ({
   return (
     <SafeAreaWrapper backgroundColor={theme.colors.background}>
       <Header title="Partner Details" onBackPress={onBackPress} />
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {/* Partner summary card */}
         <View style={styles.customerWrapper}>
           <CustomerCard
             hideLogo
@@ -36,65 +37,62 @@ const Partner_Detail_Component = ({
             customerName={businessName}
             infoRowDetails={infoRowDetails}
             footerInfo={footerInfo}
-            noMargin
-            noShadow
             wrapperColor={theme.colors.gray900}
             customerNameColor={theme.colors.white}
             infoWrapperColor={theme.colors.primaryBlack}
             infoValueColor={theme.colors.white}
+            noMargin
+            noShadow
             showButton
             buttonLabel="Edit Details"
             onButtonPress={onEditPartnerDetail}
-            customerNameProp={{
-              hankenGroteskBold: true,
-            }}
+            customerNameProp={{hankenGroteskBold: true}}
           />
         </View>
+
+        {/* All detailed sections */}
         <View style={styles.sectionWrapper}>
-          <DetailInfoCard
-            label={'Contact Details'}
-            data={contactDetails}
-            isSemiBold={false}
-          />
+          {/* Contact Info */}
+          <DetailInfoCard label="Contact Details" data={contactDetails} />
+
           <Spacing size="lg" />
-          <DetailInfoCard
-            label={'Location Detail'}
-            data={locationDetail}
-            bottom
-            isSemiBold={false}>
+
+          {/* Location Info with map placeholder */}
+          <DetailInfoCard label="Location Detail" data={locationDetail} bottom>
             <View style={styles.mapPlaceholder} />
           </DetailInfoCard>
+
           <Spacing size="lg" />
-          <DetailInfoCard label={'Business Document'} isSemiBold={false}>
+
+          {/* Documents */}
+          <DetailInfoCard label="Business Document">
             {documents.map((doc, index) => (
-              <React.Fragment key={`doc-fragment-${doc.label || index}`}>
+              <React.Fragment key={`doc-${doc.label || index}`}>
                 <DocumentRow
                   label={doc.label}
                   actionLabel={
                     doc.isMissing || !doc.uploaded ? 'Required' : 'View'
                   }
                   showError={doc.isMissing || !doc.uploaded}
-                  onPress={doc?.onPress}
                   disabled={doc.isMissing || !doc.uploaded}
+                  onPress={doc?.onPress}
                   isLoading={
-                    isFetchingDocument.loading &&
-                    isFetchingDocument.documentType === doc.documentType
+                    isFetchingDocument?.loading &&
+                    isFetchingDocument?.documentType === doc.documentType
                   }
                 />
-                <Spacing
-                  size={
-                    index !== documents.length - 1 ? theme.sizes.spacing.smd : 0
-                  }
-                />
+                {/* Spacing between rows */}
+                {index !== documents.length - 1 && (
+                  <Spacing size={theme.sizes.spacing.smd} />
+                )}
               </React.Fragment>
             ))}
           </DetailInfoCard>
+
           <Spacing size="lg" />
-          <DetailInfoCard
-            label={'Account Detail'}
-            data={accountDetail}
-            isSemiBold={false}
-          />
+
+          {/* Account Info */}
+          <DetailInfoCard label="Account Detail" data={accountDetail} />
         </View>
       </ScrollView>
     </SafeAreaWrapper>
@@ -115,7 +113,7 @@ const styles = StyleSheet.create({
     padding: theme.sizes.padding,
   },
   mapPlaceholder: {
-    backgroundColor: '#FF5B5E70',
+    backgroundColor: '#FF5B5E70', // Semi-transparent red placeholder
     height: 92,
     marginTop: 12,
     borderRadius: theme.sizes.borderRadius.card,

@@ -448,3 +448,39 @@ export const removeCountryCode = (phoneNumber, defaultCountryCode = '91') => {
   // Fallback: return last 10 digits (typical for mobile numbers)
   return digitsOnly.length > 10 ? digitsOnly.slice(-10) : digitsOnly;
 };
+
+export const viewDocumentHelper = async (uri, onImage, onError) => {
+  if (!uri) {
+    return;
+  }
+
+  try {
+    const response = await fetch(uri, {method: 'HEAD'});
+    const contentType = response.headers.get('Content-Type') || '';
+    const isImage = contentType.startsWith('image/');
+
+    if (isImage) {
+      onImage(uri);
+    } else {
+      const extension = contentType.split('/')[1] || 'pdf';
+      const localFileName = `temp_file_${Date.now()}.${extension}`;
+      const localPath = `${RNFS.DocumentDirectoryPath}/${localFileName}`;
+
+      const downloadResult = await RNFS.downloadFile({
+        fromUrl: uri,
+        toFile: localPath,
+      }).promise;
+
+      if (downloadResult.statusCode === 200) {
+        await FileViewer.open(localPath, {
+          showOpenWithDialog: true,
+        });
+      } else {
+        throw new Error('Failed to download file');
+      }
+    }
+  } catch (error) {
+    console.warn('Error opening file:', error);
+    onError?.(error);
+  }
+};

@@ -1,37 +1,38 @@
-import React from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
 import {
+  Button,
   Header,
   SafeAreaWrapper,
   Spacing,
   StepTracker,
-  VehicleImageCard,
   Text,
-  Button,
   theme,
+  VehicleImageCard,
 } from '@caryaar/components';
-import {getFileType} from '../../../utils/helper';
+import React from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {goBack} from '../../../navigation/NavigationUtils';
+import {getFileType} from '../../../utils/helper';
 
 const Partner_Document_Form_Component = ({
-  onBackPress,
-  documentGroups,
-  handleNextPress,
   showImages,
   errorSteps,
+  handleNextPress,
+  businessDocuments,
+  otherDocuments,
+  bankDocuments,
 }) => {
   const renderDocumentGroup = (title, documents) => (
     <View key={title}>
       <Text>{title}</Text>
       <View style={styles.rowSpaceBetween}>
-        {documents.map((doc, index) => {
-          const fileUri = doc?.image?.uri;
+        {documents.map(doc => {
+          const fileUri = doc?.docObject?.uri;
           const fileType = getFileType(fileUri);
           return (
             <View key={`${title}-${doc.label}`} style={styles.halfWidth}>
               <VehicleImageCard
                 label={doc.label}
-                image={doc?.image?.uri}
+                image={fileUri}
                 onDeletePress={doc.onDeletePress}
                 viewImage={doc.viewImage}
                 btnLabel={'Click to Upload\nImage or PDF'}
@@ -49,16 +50,16 @@ const Partner_Document_Form_Component = ({
 
   return (
     <SafeAreaWrapper>
-      <Header title="Add New Partner" onBackPress={() => goBack()} />
+      <Header title="Add New Partner" onBackPress={goBack} />
       <StepTracker
         showImages={showImages}
         selectedId={3}
         errorSteps={errorSteps}
       />
       <ScrollView contentContainerStyle={styles.wrapper}>
-        {documentGroups.map(group =>
-          renderDocumentGroup(group.title, group.documents),
-        )}
+        {renderDocumentGroup('Business Documents', businessDocuments)}
+        {renderDocumentGroup('Other Documents', otherDocuments)}
+        {renderDocumentGroup('Bank Documents', bankDocuments)}
         <Button label={'Next'} onPress={handleNextPress} />
       </ScrollView>
     </SafeAreaWrapper>

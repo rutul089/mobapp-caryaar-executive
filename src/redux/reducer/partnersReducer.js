@@ -18,7 +18,6 @@ const initialState = {
 
 export default function partnerFormReducer(state = initialState, action) {
   switch (action.type) {
-    case types.FETCH_PARTNER_REQUEST:
     case types.FETCH_PARTNERS_REQUEST:
     case types.CREATE_PARTNER_REQUEST:
     case types.UPDATE_PARTNER_REQUEST:
@@ -27,6 +26,11 @@ export default function partnerFormReducer(state = initialState, action) {
         ...state,
         loading: true,
       };
+    case types.FETCH_PARTNER_REQUEST:
+      return {
+        ...state,
+      };
+
     case types.FETCH_PARTNERS_FAILURE:
     case types.FETCH_PARTNER_FAILURE:
     case types.CREATE_PARTNER_FAILURE:

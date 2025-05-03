@@ -1,8 +1,9 @@
-import {images} from '@caryaar/components';
-import {get} from 'lodash';
 import React, {Component} from 'react';
+import {get} from 'lodash';
 import {connect} from 'react-redux';
 import {Loader} from '../../components';
+import {images} from '@caryaar/components';
+import ImageViewing from 'react-native-image-viewing';
 import {businessTypeValue, getLabelFromEnum} from '../../constants/enums';
 import ScreenNames from '../../constants/ScreenNames';
 import {
@@ -17,6 +18,7 @@ import {
   setBankingDetails,
   setBasicDetails,
   setDealershipType,
+  setDocumentDetails,
   setLocationDetails,
   setPartnerRole,
   setSellerType,
@@ -26,69 +28,95 @@ import {
   buildDocumentsArray,
   getLocationText,
   getPartnerAddress,
-  handleViewFilePreview,
+  showApiErrorToast,
+  viewDocumentHelper,
 } from '../../utils/helper';
 import {formatPartnerDetails} from '../../utils/partnerHelpers';
 import Partner_Detail_Component from './Partner_Detail_Component';
+
 class PartnerDetailScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedPartner: {},
+      isLoading: false,
       partnerId: null,
       isFetchingDocument: {
         loading: false,
         documentType: '',
       },
+      isImageViewerVisible: false,
+      previewImage: '',
     };
-    this.onBackPress = this.onBackPress.bind(this);
   }
 
   componentDidMount() {
-    let route = this.props.route;
-    let partnerId = getScreenParam(route, 'params')?.id;
-    this.setState(
-      {
-        partnerId,
-      },
-      () => {
-        this.fetchPartnerFromId(partnerId);
-      },
-    );
+    const route = this.props.route;
+    const partnerId = getScreenParam(route, 'params')?.id;
+
+    this.setState({partnerId}, () => {
+      this.fetchPartnerFromId(partnerId);
+    });
+
+    // Ensure the modal is closed when leaving the screen
+    this.unsubscribe = this.props.navigation.addListener('beforeRemove', () => {
+      this.setState({isImageViewerVisible: false, previewImage: null});
+    });
   }
 
+  componentWillUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+
+  // Fetch partner data based on ID
   fetchPartnerFromId = partnerID => {
-    this.props.fetchPartnerFromId(partnerID);
+    this.setState({isLoading: true});
+    this.props.fetchPartnerFromId(
+      partnerID,
+      () => this.setState({isLoading: false}),
+      () => this.setState({isLoading: false}),
+    );
   };
 
+  // Handle back navigation
   onBackPress = () => {
     goBack();
   };
 
-  viewDocument = (type, link) => {
-    handleViewFilePreview(
+  // Handle document viewing logic
+  viewDocument = async (type, link) => {
+    this.setState({
+      isFetchingDocument: {
+        loading: true,
+        documentType: type,
+      },
+    });
+
+    await viewDocumentHelper(
       link,
       imageUri => {
-        console.log({imageUri});
-        // Callback when image preview is available
-        this.setState({previewImage: imageUri});
-      },
-      type,
-      isProcessing => {
-        // Callback for loading state
         this.setState({
-          isFetchingDocument: {
-            loading: isProcessing,
-            documentType: type,
-          },
+          previewImage: imageUri,
+          isImageViewerVisible: true,
         });
       },
+      () => {
+        showApiErrorToast({message: 'Could not open the document.'});
+      },
     );
+
+    this.setState({
+      isFetchingDocument: {
+        loading: false,
+        documentType: type,
+      },
+    });
   };
 
+  // Populate Redux state with selected partner details and navigate to edit
   onEditPartnerDetail = () => {
     const {selectedPartner} = this.props;
-
     const {
       basicDetails,
       locationDetails,
@@ -106,6 +134,7 @@ class PartnerDetailScreen extends Component {
     this.props.setBasicDetails(basicDetails);
     this.props.setLocationDetails(locationDetails);
     this.props.setBankingDetails(bankingDetails);
+    this.props.setDocumentDetails(selectedPartner?.documents);
 
     navigate(ScreenNames.AddPartnerBasicDetail, {
       params: {
@@ -117,15 +146,12 @@ class PartnerDetailScreen extends Component {
   };
 
   render() {
-    const {selectedPartner, isLoading} = this.props;
+    const {selectedPartner} = this.props;
+    const {isLoading, isImageViewerVisible, previewImage} = this.state;
     const {owner = {}, bankDetail = {}} = selectedPartner || {};
-    // const safeGet = (obj, path) => get(obj, path, '-');
-    const safeGet = (obj, path) => {
-      if (isLoading) {
-        return '-';
-      }
-      return get(obj, path, '-');
-    };
+
+    // Fallback safely for nested props
+    const safeGet = (obj, path) => (isLoading ? '-' : get(obj, path, '-'));
 
     return (
       <>
@@ -200,6 +226,20 @@ class PartnerDetailScreen extends Component {
           ]}
           onEditPartnerDetail={this.onEditPartnerDetail}
         />
+
+        {/* Modal image preview viewer */}
+        {isImageViewerVisible && previewImage ? (
+          <ImageViewing
+            images={[{uri: previewImage}]}
+            imageIndex={0}
+            visible={true}
+            onRequestClose={() =>
+              this.setState({isImageViewerVisible: false, previewImage: null})
+            }
+          />
+        ) : null}
+
+        {/* Loading indicator */}
         {isLoading && <Loader visible={isLoading} />}
       </>
     );
@@ -217,14 +257,15 @@ const mapDispatchToProps = {
   setDealershipType,
   setUserType,
   setPartnerRole,
+  setDocumentDetails,
 };
-const mapStateToProps = ({appState, partners}) => {
-  return {
-    isInternetConnected: appState.isInternetConnected,
-    isLoading: partners.loading,
-    selectedPartner: partners?.selectedPartner,
-  };
-};
+
+const mapStateToProps = ({appState, partners}) => ({
+  isInternetConnected: appState.isInternetConnected,
+  isLoading: partners.loading,
+  selectedPartner: partners?.selectedPartner,
+});
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,

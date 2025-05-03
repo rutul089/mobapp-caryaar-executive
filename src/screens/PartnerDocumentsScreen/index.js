@@ -194,13 +194,13 @@ export default class PartnerDocumentsScreen extends Component {
           handleNextPress={this.handleNextPress}
           documentGroups={documentGroupsWithHandlers}
         />
-        <ImagePreviewModal
+        {/* <ImagePreviewModal
           visible={this.state.isImageViewerVisible}
           imageUri={this.state.previewImage}
           onClose={() =>
             this.setState({isImageViewerVisible: false, previewImage: null})
           }
-        />
+        /> */}
         <FilePickerModal
           isVisible={this.state.isModalVisible}
           onSelect={this.handleFile}
