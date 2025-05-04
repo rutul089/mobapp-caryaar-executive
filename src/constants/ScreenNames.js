@@ -34,6 +34,7 @@ const ScreenNames = {
   NotificationPreference: 'NotificationPreferenceScreen',
   TrackApplication: 'TrackApplicationScreen',
   PrivacyPolicy: 'PrivacyPolicyScreen',
+  ImagePreviewScreen: 'ImagePreviewScreen',
 };
 
 export default ScreenNames;

@@ -133,6 +133,10 @@ const StackRoutes = () => {
         name={ScreenNames.PrivacyPolicy}
         component={Screens.PrivacyPolicyScreen}
       />
+      <Stack.Screen
+        name={ScreenNames.ImagePreviewScreen}
+        component={Screens.ImagePreviewScreen}
+      />
     </Stack.Navigator>
   );
 };

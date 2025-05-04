@@ -3,7 +3,6 @@ import {get} from 'lodash';
 import {connect} from 'react-redux';
 import {Loader} from '../../components';
 import {images} from '@caryaar/components';
-import ImageViewing from 'react-native-image-viewing';
 import {businessTypeValue, getLabelFromEnum} from '../../constants/enums';
 import ScreenNames from '../../constants/ScreenNames';
 import {
@@ -44,8 +43,6 @@ class PartnerDetailScreen extends Component {
         loading: false,
         documentType: '',
       },
-      isImageViewerVisible: false,
-      previewImage: '',
     };
   }
 
@@ -57,9 +54,8 @@ class PartnerDetailScreen extends Component {
       this.fetchPartnerFromId(partnerId);
     });
 
-    // Ensure the modal is closed when leaving the screen
     this.unsubscribe = this.props.navigation.addListener('beforeRemove', () => {
-      this.setState({isImageViewerVisible: false, previewImage: null});
+      // Ensure cleanup
     });
   }
 
@@ -69,7 +65,6 @@ class PartnerDetailScreen extends Component {
     }
   }
 
-  // Fetch partner data based on ID
   fetchPartnerFromId = partnerID => {
     this.setState({isLoading: true});
     this.props.fetchPartnerFromId(
@@ -79,12 +74,10 @@ class PartnerDetailScreen extends Component {
     );
   };
 
-  // Handle back navigation
   onBackPress = () => {
     goBack();
   };
 
-  // Handle document viewing logic
   viewDocument = async (type, link) => {
     this.setState({
       isFetchingDocument: {
@@ -97,24 +90,26 @@ class PartnerDetailScreen extends Component {
       link,
       imageUri => {
         this.setState({
-          previewImage: imageUri,
-          isImageViewerVisible: true,
+          isFetchingDocument: {
+            loading: false,
+            documentType: '',
+          },
         });
+
+        navigate(ScreenNames.ImagePreviewScreen, {uri: imageUri});
       },
       () => {
+        this.setState({
+          isFetchingDocument: {
+            loading: false,
+            documentType: '',
+          },
+        });
         showApiErrorToast({message: 'Could not open the document.'});
       },
     );
-
-    this.setState({
-      isFetchingDocument: {
-        loading: false,
-        documentType: type,
-      },
-    });
   };
 
-  // Populate Redux state with selected partner details and navigate to edit
   onEditPartnerDetail = () => {
     const {selectedPartner} = this.props;
     const {
@@ -147,10 +142,9 @@ class PartnerDetailScreen extends Component {
 
   render() {
     const {selectedPartner} = this.props;
-    const {isLoading, isImageViewerVisible, previewImage} = this.state;
+    const {isLoading} = this.state;
     const {owner = {}, bankDetail = {}} = selectedPartner || {};
 
-    // Fallback safely for nested props
     const safeGet = (obj, path) => (isLoading ? '-' : get(obj, path, '-'));
 
     return (
@@ -227,19 +221,6 @@ class PartnerDetailScreen extends Component {
           onEditPartnerDetail={this.onEditPartnerDetail}
         />
 
-        {/* Modal image preview viewer */}
-        {isImageViewerVisible && previewImage ? (
-          <ImageViewing
-            images={[{uri: previewImage}]}
-            imageIndex={0}
-            visible={true}
-            onRequestClose={() =>
-              this.setState({isImageViewerVisible: false, previewImage: null})
-            }
-          />
-        ) : null}
-
-        {/* Loading indicator */}
         {isLoading && <Loader visible={isLoading} />}
       </>
     );

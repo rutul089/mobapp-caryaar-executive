@@ -1,14 +1,14 @@
-import React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
 import {
   CustomerCard,
   DetailInfoCard,
+  DocumentRow,
   Header,
   SafeAreaWrapper,
   Spacing,
   theme,
-  DocumentRow,
 } from '@caryaar/components';
+import React from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
 
 const Partner_Detail_Component = ({
   onBackPress,
@@ -23,6 +23,9 @@ const Partner_Detail_Component = ({
   footerInfo,
   onEditPartnerDetail,
   businessName,
+  previewImage,
+  isImageViewerVisible,
+  onRequestClose,
 }) => {
   return (
     <SafeAreaWrapper backgroundColor={theme.colors.background}>
@@ -95,6 +98,12 @@ const Partner_Detail_Component = ({
           <DetailInfoCard label="Account Detail" data={accountDetail} />
         </View>
       </ScrollView>
+      {/* <ImageViewing
+        images={[{uri: previewImage}]}
+        imageIndex={0}
+        visible={isImageViewerVisible}
+        onRequestClose={onRequestClose}
+      /> */}
     </SafeAreaWrapper>
   );
 };

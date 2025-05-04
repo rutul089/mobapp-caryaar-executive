@@ -17,6 +17,7 @@ import {
   removeCountryCode,
 } from '../../utils/helper';
 import {partnerDocumentLabelMap} from '../../constants/enums';
+import {NoDataFound} from '../../components';
 
 const limit = 10;
 
@@ -37,7 +38,7 @@ const Partner_Component = ({
   setSearch,
   onLoadMore,
   currentPage,
-  totalPages,
+  loading,
 }) => {
   const [activeTab, setActiveTab] = useState('active');
   const [filteredPartners, setFilteredPartners] = useState([]);
@@ -153,17 +154,7 @@ const Partner_Component = ({
         onEndReachedThreshold={0.5}
         onEndReached={onLoadMore}
         ListEmptyComponent={
-          <View
-            style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-            <Image
-              source={images.noData}
-              style={{height: 100, width: 90, marginBottom: 15}}
-              resizeMode="contain"
-            />
-            <Text type={'caption'} hankenGroteskMedium size={'h4'}>
-              No Result Found
-            </Text>
-          </View>
+          !loading && <NoDataFound text={'No Partners found'} />
         }
       />
     </SafeAreaWrapper>

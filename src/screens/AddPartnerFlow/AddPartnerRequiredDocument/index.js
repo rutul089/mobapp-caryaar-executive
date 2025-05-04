@@ -1,44 +1,44 @@
 /* eslint-disable react-native/no-inline-styles */
 import {get} from 'lodash';
 import React, {Component} from 'react';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {ActivityIndicator, View} from 'react-native';
 import {connect} from 'react-redux';
-// import {uploadDocumentMultipart} from '../../../api/uploadApi'; // replace with your actual API function
-import {ActivityIndicator} from 'react-native';
+
+import {getScreenParam, navigate} from '../../../navigation/NavigationUtils';
+import {setDocumentDetails} from '../../../redux/actions';
+import {handleFileSelection} from '../../../utils/filePicker';
+import {showToast, viewDocumentHelper} from '../../../utils/helper';
+
 import {
   partnerDocumentLabelMap,
   partnerDocumentType,
 } from '../../../constants/enums';
-import {getScreenParam, navigate} from '../../../navigation/NavigationUtils';
-import {setDocumentDetails} from '../../../redux/actions';
-import {showApiErrorToast, viewDocumentHelper} from '../../../utils/helper';
-import Partner_Document_Form_Component from './Partner_Document_Form_Component';
-
-import {View} from 'react-native';
 import ScreenNames from '../../../constants/ScreenNames';
+
+import Partner_Document_Form_Component from './Partner_Document_Form_Component';
 
 class AddPartnerRequiredDocument extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      documents: {},
-      previewImage: null,
-      isImageViewerVisible: false,
+      documents: {}, // Holds selected/uploaded documents by type
       showImages: [],
       errorSteps: [],
       isLoadingDocument: false,
+      showFilePicker: false,
+      selectedDocType: null,
     };
   }
 
   componentDidMount() {
-    const {route, documentDetails, navigation} = this.props;
+    const {route, documentDetails} = this.props;
     const navState = getScreenParam(route, 'params', null);
     const fromScreen = get(navState, 'fromScreen', false);
-    const apiDocs = get(navState, 'documents', []);
 
     const formattedDocs = {};
 
     if (fromScreen) {
+      // Format documents from API into internal structure
       documentDetails?.forEach(doc => {
         formattedDocs[doc.documentType] = {
           uri: doc.documentUrl,
@@ -56,28 +56,6 @@ class AddPartnerRequiredDocument extends Component {
       errorSteps: get(navState, 'errorSteps', []),
       documents: formattedDocs,
     });
-
-    this.blurListener = navigation.addListener('blur', () => {
-      console.log('blurListener');
-      this.setState({
-        isImageViewerVisible: false,
-        previewImage: null,
-      });
-    });
-  }
-
-  componentWillUnmount() {
-    this.setState(
-      {
-        isImageViewerVisible: false,
-        previewImage: null,
-      },
-      () => {
-        const {isImageViewerVisible, previewImage} = this.state;
-        console.log({isImageViewerVisible, previewImage});
-      },
-    );
-    this.blurListener && this.blurListener(); // clean up the listener
   }
 
   handleViewImage = async uri => {
@@ -85,83 +63,24 @@ class AddPartnerRequiredDocument extends Component {
       return;
     }
 
-    // Step 1: Hide image preview first to avoid flicker overlap
-    this.setState(
-      {
-        isImageViewerVisible: false,
-        previewImage: null,
-      },
-      async () => {
-        // Step 2: Slight delay before showing loader (optional but improves UI flow)
-        setTimeout(async () => {
-          this.setState({isLoadingDocument: true});
-
-          try {
-            await viewDocumentHelper(
-              uri,
-              imageUri => {
-                // Show preview after loading completes
-                this.setState({
-                  previewImage: imageUri,
-                  isImageViewerVisible: true,
-                });
-              },
-              error => {
-                console.warn('Error opening file:', error);
-                showApiErrorToast({message: 'Could not open the document.'});
-              },
-            );
-          } finally {
-            this.setState({isLoadingDocument: false});
-          }
-        }, 50); // 50ms delay
-      },
-    );
+    setTimeout(async () => {
+      this.setState({isLoadingDocument: true});
+      try {
+        await viewDocumentHelper(
+          uri,
+          imageUri => {
+            navigate(ScreenNames.ImagePreviewScreen, {uri: imageUri});
+          },
+          error => {
+            console.warn('Error opening file:', error);
+            showToast('error', 'Could not open the document.', 'bottom', 3000);
+          },
+        );
+      } finally {
+        this.setState({isLoadingDocument: false});
+      }
+    }, 50);
   };
-
-  // handleViewImage = async uri => {
-  //   if (!uri) {
-  //     return;
-  //   }
-
-  //   this.setState({isLoadingDocument: true}); // Start loading
-
-  //   try {
-  //     const response = await fetch(uri, {method: 'HEAD'});
-  //     const contentType = response.headers.get('Content-Type') || '';
-  //     const isImage = contentType.startsWith('image/');
-
-  //     if (isImage) {
-  //       this.setState({
-  //         previewImage: uri,
-  //         isImageViewerVisible: true,
-  //         isLoadingDocument: false, // Stop loading
-  //       });
-  //     } else {
-  //       const extension = contentType.split('/')[1] || 'pdf';
-  //       const localFileName = `temp_file_${Date.now()}.${extension}`;
-  //       const localPath = `${RNFS.DocumentDirectoryPath}/${localFileName}`;
-
-  //       const downloadResult = await RNFS.downloadFile({
-  //         fromUrl: uri,
-  //         toFile: localPath,
-  //       }).promise;
-
-  //       if (downloadResult.statusCode === 200) {
-  //         await FileViewer.open(localPath, {
-  //           showOpenWithDialog: true,
-  //         });
-  //       } else {
-  //         throw new Error('Failed to download file');
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.warn('Error opening file:', error);
-  //     showApiErrorToast({message: 'Could not open the document.'});
-  //   } finally {
-  //     this.setState({isLoadingDocument: false}); // Always stop loading
-  //   }
-  // };
 
   handleDeleteMedia = type => {
     this.setState(prev => {
@@ -172,10 +91,33 @@ class AddPartnerRequiredDocument extends Component {
   };
 
   handleUploadMedia = async type => {
-    try {
-      const result = await launchImageLibrary({mediaType: 'mixed'});
-      const asset = result.assets?.[0];
+    // Trigger file picker modal
+    this.setState({showFilePicker: true, selectedDocType: type});
+  };
 
+  handleNextPress = () => {
+    const payload = Object.keys(this.state.documents).map(key => ({
+      documentType: key,
+      documentUrl: this.state.documents[key].uploadedUrl,
+    }));
+
+    this.props.setDocumentDetails(payload);
+    navigate(ScreenNames.AddPartnersBankDetail, {
+      params: {
+        fromScreen: this.state.fromScreen,
+        showImages: this.state.showImages,
+        errorSteps: this.state.errorSteps,
+      },
+    });
+  };
+
+  closeFilePicker = () => {
+    this.setState({showFilePicker: false});
+  };
+
+  handleFile = type => {
+    // Handles file selected from FilePickerModal
+    handleFileSelection(type, async asset => {
       if (!asset?.uri) {
         return;
       }
@@ -186,68 +128,51 @@ class AddPartnerRequiredDocument extends Component {
         type: asset.type,
         isLocal: true,
         fileSize: asset.fileSize,
+        uploadedUrl:
+          'https://www.aeee.in/wp-content/uploads/2020/08/Sample-pdf.pdf', // mock URL for now
       };
 
-      this.setState(
-        prev => ({
-          documents: {
-            ...prev.documents,
-            [type]: docObj,
-          },
-        }),
-        async () => {
-          return;
-          try {
-            const formData = new FormData();
-            formData.append('file', {
-              uri: docObj.uri,
-              type: docObj.type,
-              name: docObj.name,
-            });
-
-            const response = await uploadDocumentMultipart(formData);
-            const url = response?.data?.url;
-
-            if (url) {
-              this.setState(prev => ({
-                documents: {
-                  ...prev.documents,
-                  [type]: {
-                    ...prev.documents[type],
-                    uploadedUrl: url,
-                  },
-                },
-              }));
-            }
-          } catch (error) {
-            showApiErrorToast(error);
-          }
+      this.setState(prev => ({
+        documents: {
+          ...prev.documents,
+          [this.state.selectedDocType]: docObj,
         },
-      );
-    } catch (error) {
-      showApiErrorToast(error);
-    }
-  };
+        selectedDocType: '',
+        showFilePicker: false,
+      }));
 
-  handleNextPress = () => {
-    const payload = Object.keys(this.state.documents).map(key => ({
-      documentType: key,
-      documentUrl: this.state.documents[key].uploadedUrl,
-    }));
-    console.log('Final Payload:', payload);
-    this.props.setDocumentDetails(payload);
-    navigate(ScreenNames.AddPartnersBankDetail, {
-      params: {
-        fromScreen: this.state.fromScreen,
-        showImages: this.state.showImages,
-        errorSteps: this.state.errorSteps,
-      },
+      // TODO: Upload logic placeholder, uncomment when implementing real upload
+      // try {
+      //   const formData = new FormData();
+      //   formData.append('file', {
+      //     uri: docObj.uri,
+      //     type: docObj.type,
+      //     name: docObj.name,
+      //   });
+
+      //   const response = await uploadDocumentMultipart(formData);
+      //   const url = response?.data?.url;
+
+      //   if (url) {
+      //     this.setState(prev => ({
+      //       documents: {
+      //         ...prev.documents,
+      //         [type]: {
+      //           ...prev.documents[type],
+      //           uploadedUrl: url,
+      //         },
+      //       },
+      //     }));
+      //   }
+      // } catch (error) {
+      //   showApiErrorToast(error);
+      // }
     });
-    // Navigate or dispatch with this payload
   };
 
   render() {
-    const {documents, isLoadingDocument} = this.state;
+    const {documents, isLoadingDocument, showFilePicker} = this.state;
+
     return (
       <>
         <Partner_Document_Form_Component
@@ -255,116 +180,46 @@ class AddPartnerRequiredDocument extends Component {
           errorSteps={this.state.errorSteps}
           handleNextPress={this.handleNextPress}
           businessDocuments={[
-            {
-              type: partnerDocumentType.GST_REGISTRATION,
-              label: partnerDocumentLabelMap.GST_REGISTRATION,
-              docObject: documents[partnerDocumentType.GST_REGISTRATION],
-              onDeletePress: () =>
-                this.handleDeleteMedia(partnerDocumentType.GST_REGISTRATION),
-              uploadMedia: () =>
-                this.handleUploadMedia(partnerDocumentType.GST_REGISTRATION),
-              viewImage: () =>
-                this.handleViewImage(
-                  documents[partnerDocumentType.GST_REGISTRATION]?.uri,
-                ),
-            },
-            {
-              type: partnerDocumentType.SHOP_LICENSE,
-              label: partnerDocumentLabelMap.SHOP_LICENSE,
-              docObject: documents[partnerDocumentType.SHOP_LICENSE],
-              onDeletePress: () =>
-                this.handleDeleteMedia(partnerDocumentType.SHOP_LICENSE),
-              uploadMedia: () =>
-                this.handleUploadMedia(partnerDocumentType.SHOP_LICENSE),
-              viewImage: () =>
-                this.handleViewImage(
-                  documents[partnerDocumentType.SHOP_LICENSE]?.uri,
-                ),
-            },
-            {
-              type: partnerDocumentType.PAN_CARD,
-              label: partnerDocumentLabelMap.PAN_CARD,
-              docObject: documents[partnerDocumentType.PAN_CARD],
-              onDeletePress: () =>
-                this.handleDeleteMedia(partnerDocumentType.PAN_CARD),
-              uploadMedia: () =>
-                this.handleUploadMedia(partnerDocumentType.PAN_CARD),
-              viewImage: () =>
-                this.handleViewImage(
-                  documents[partnerDocumentType.PAN_CARD]?.uri,
-                ),
-            },
-          ]}
+            partnerDocumentType.GST_REGISTRATION,
+            partnerDocumentType.SHOP_LICENSE,
+            partnerDocumentType.PAN_CARD,
+          ].map(type => ({
+            type,
+            label: partnerDocumentLabelMap[type],
+            docObject: documents[type],
+            onDeletePress: () => this.handleDeleteMedia(type),
+            uploadMedia: () => this.handleUploadMedia(type),
+            viewImage: () => this.handleViewImage(documents[type]?.uri),
+          }))}
           otherDocuments={[
-            {
-              type: partnerDocumentType.AADHAR_CARD_FRONT,
-              label: partnerDocumentLabelMap.AADHAR_CARD_FRONT,
-              docObject: documents[partnerDocumentType.AADHAR_CARD_FRONT],
-              onDeletePress: () =>
-                this.handleDeleteMedia(partnerDocumentType.AADHAR_CARD_FRONT),
-              uploadMedia: () =>
-                this.handleUploadMedia(partnerDocumentType.AADHAR_CARD_FRONT),
-              viewImage: () =>
-                this.handleViewImage(
-                  documents[partnerDocumentType.AADHAR_CARD_FRONT]?.uri,
-                ),
-            },
-            {
-              type: partnerDocumentType.AADHAR_CARD_BACK,
-              label: partnerDocumentLabelMap.AADHAR_CARD_BACK,
-              docObject: documents[partnerDocumentType.AADHAR_CARD_BACK],
-              onDeletePress: () =>
-                this.handleDeleteMedia(partnerDocumentType.AADHAR_CARD_BACK),
-              uploadMedia: () =>
-                this.handleUploadMedia(partnerDocumentType.AADHAR_CARD_BACK),
-              viewImage: () =>
-                this.handleViewImage(
-                  documents[partnerDocumentType.AADHAR_CARD_BACK]?.uri,
-                ),
-            },
-            {
-              type: partnerDocumentType.PHOTOGRAPH,
-              label: partnerDocumentLabelMap.PHOTOGRAPH,
-              docObject: documents[partnerDocumentType.PHOTOGRAPH],
-              onDeletePress: () =>
-                this.handleDeleteMedia(partnerDocumentType.PHOTOGRAPH),
-              uploadMedia: () =>
-                this.handleUploadMedia(partnerDocumentType.PHOTOGRAPH),
-              viewImage: () =>
-                this.handleViewImage(
-                  documents[partnerDocumentType.PHOTOGRAPH]?.uri,
-                ),
-            },
-          ]}
+            partnerDocumentType.AADHAR_CARD_FRONT,
+            partnerDocumentType.AADHAR_CARD_BACK,
+            partnerDocumentType.PHOTOGRAPH,
+          ].map(type => ({
+            type,
+            label: partnerDocumentLabelMap[type],
+            docObject: documents[type],
+            onDeletePress: () => this.handleDeleteMedia(type),
+            uploadMedia: () => this.handleUploadMedia(type),
+            viewImage: () => this.handleViewImage(documents[type]?.uri),
+          }))}
           bankDocuments={[
-            {
-              type: partnerDocumentType.BANK_STATEMENT,
-              label: partnerDocumentLabelMap.BANK_STATEMENT,
-              docObject: documents[partnerDocumentType.BANK_STATEMENT],
-              onDeletePress: () =>
-                this.handleDeleteMedia(partnerDocumentType.BANK_STATEMENT),
-              uploadMedia: () =>
-                this.handleUploadMedia(partnerDocumentType.BANK_STATEMENT),
-              viewImage: () =>
-                this.handleViewImage(
-                  documents[partnerDocumentType.BANK_STATEMENT]?.uri,
-                ),
-            },
-            {
-              type: partnerDocumentType.CANCELLED_CHEQUE,
-              label: partnerDocumentLabelMap.CANCELLED_CHEQUE,
-              docObject: documents[partnerDocumentType.CANCELLED_CHEQUE],
-              onDeletePress: () =>
-                this.handleDeleteMedia(partnerDocumentType.CANCELLED_CHEQUE),
-              uploadMedia: () =>
-                this.handleUploadMedia(partnerDocumentType.CANCELLED_CHEQUE),
-              viewImage: () =>
-                this.handleViewImage(
-                  documents[partnerDocumentType.CANCELLED_CHEQUE]?.uri,
-                ),
-            },
-          ]}
+            partnerDocumentType.BANK_STATEMENT,
+            partnerDocumentType.CANCELLED_CHEQUE,
+          ].map(type => ({
+            type,
+            label: partnerDocumentLabelMap[type],
+            docObject: documents[type],
+            onDeletePress: () => this.handleDeleteMedia(type),
+            uploadMedia: () => this.handleUploadMedia(type),
+            viewImage: () => this.handleViewImage(documents[type]?.uri),
+          }))}
+          showFilePicker={showFilePicker}
+          handleFile={this.handleFile}
+          closeFilePicker={this.closeFilePicker}
+          showDocumentLoading={isLoadingDocument}
         />
+
         {isLoadingDocument && (
           <View
             style={{
@@ -374,22 +229,12 @@ class AddPartnerRequiredDocument extends Component {
               height: '100%',
               width: '100%',
               zIndex: 999,
-              // backgroundColor: 'rgba(0,0,0,0.5)',
               justifyContent: 'center',
               alignItems: 'center',
             }}>
             <ActivityIndicator size={'large'} />
           </View>
         )}
-        {/* {this.state.isImageViewerVisible && this.state.previewImage && (
-          <ImagePreviewModal
-            visible={this.state.isImageViewerVisible}
-            imageUri={this.state.previewImage}
-            onClose={() =>
-              this.setState({isImageViewerVisible: false, previewImage: null})
-            }
-          />
-        )} */}
       </>
     );
   }

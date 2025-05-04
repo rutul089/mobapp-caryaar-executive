@@ -1,5 +1,6 @@
 import {
   Button,
+  FilePickerModal,
   Header,
   SafeAreaWrapper,
   Spacing,
@@ -20,6 +21,9 @@ const Partner_Document_Form_Component = ({
   businessDocuments,
   otherDocuments,
   bankDocuments,
+  handleFile,
+  showFilePicker,
+  closeFilePicker,
 }) => {
   const renderDocumentGroup = (title, documents) => (
     <View key={title}>
@@ -62,6 +66,12 @@ const Partner_Document_Form_Component = ({
         {renderDocumentGroup('Bank Documents', bankDocuments)}
         <Button label={'Next'} onPress={handleNextPress} />
       </ScrollView>
+      <FilePickerModal
+        isVisible={showFilePicker}
+        onSelect={handleFile}
+        onClose={closeFilePicker}
+        autoCloseOnSelect={false}
+      />
     </SafeAreaWrapper>
   );
 };
