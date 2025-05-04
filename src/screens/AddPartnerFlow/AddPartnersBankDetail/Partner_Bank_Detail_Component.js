@@ -25,10 +25,14 @@ const Partner_Bank_Detail_Component = ({
   showImages,
   errorSteps,
   searchBankNameFromAPI = () => {},
+  isNewPartner,
 }) => {
   return (
     <SafeAreaWrapper>
-      <Header title="Add New Partner" onBackPress={() => goBack()} />
+      <Header
+        title={`${isNewPartner ? 'Add New Partner' : 'Partner Details'}`}
+        onBackPress={() => goBack()}
+      />
       <StepTracker
         selectedId={4}
         showImages={showImages}

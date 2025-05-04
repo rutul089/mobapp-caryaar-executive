@@ -35,13 +35,17 @@ const Partner_Location_Form_Component = ({
   stateName,
   showImages = [],
   errorSteps = [],
+  isNewPartner,
 }) => {
   const formRef = React.useRef();
   // formRef.current?.focusNext('buildingName');
 
   return (
     <SafeAreaWrapper>
-      <Header title="Add New Partner" onBackPress={onBackPress} />
+      <Header
+        title={`${isNewPartner ? 'Add New Partner' : 'Partner Details'}`}
+        onBackPress={onBackPress}
+      />
       <StepTracker
         selectedId={2}
         showImages={showImages}

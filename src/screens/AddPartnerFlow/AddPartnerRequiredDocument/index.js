@@ -172,6 +172,7 @@ class AddPartnerRequiredDocument extends Component {
 
   render() {
     const {documents, isLoadingDocument, showFilePicker} = this.state;
+    const {selectedPartner} = this.props;
 
     return (
       <>
@@ -218,6 +219,9 @@ class AddPartnerRequiredDocument extends Component {
           handleFile={this.handleFile}
           closeFilePicker={this.closeFilePicker}
           showDocumentLoading={isLoadingDocument}
+          isNewPartner={
+            !selectedPartner || Object.keys(selectedPartner).length === 0
+          }
         />
 
         {isLoadingDocument && (
@@ -241,10 +245,11 @@ class AddPartnerRequiredDocument extends Component {
 }
 
 const mapDispatchToProps = {setDocumentDetails};
-const mapStateToProps = ({appState, partnerForm}) => ({
+const mapStateToProps = ({appState, partnerForm, partners}) => ({
   isInternetConnected: appState.isInternetConnected,
   isLoading: appState.loading,
   documentDetails: partnerForm?.documentDetails,
+  selectedPartner: partners.selectedPartner,
 });
 
 export default connect(

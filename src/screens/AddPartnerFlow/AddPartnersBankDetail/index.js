@@ -248,7 +248,7 @@ class AddPartnersBankDetail extends Component {
       errors,
       loading,
     } = this.state;
-    const {isLoading} = this.props;
+    const {isLoading, selectedPartner} = this.props;
 
     return (
       <>
@@ -307,6 +307,9 @@ class AddPartnersBankDetail extends Component {
           showImages={this.state.showImages}
           errorSteps={this.state.errorSteps}
           searchBankNameFromAPI={this.searchBankNameFromAPI}
+          isNewPartner={
+            !selectedPartner || Object.keys(selectedPartner).length === 0
+          }
         />
         {isLoading || (loading && <Loader visible={isLoading || loading} />)}
       </>

@@ -199,6 +199,7 @@ class PartnersScreen extends Component {
   // FAB button to add new partner
   onAddButtonPress = () => {
     this.props.resetRegistration();
+    this.props.resetPartnerDetail();
     navigate(ScreenNames.DealershipTypeSelection);
   };
 

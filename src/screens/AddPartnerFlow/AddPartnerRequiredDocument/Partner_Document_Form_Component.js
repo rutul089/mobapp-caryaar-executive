@@ -24,6 +24,7 @@ const Partner_Document_Form_Component = ({
   handleFile,
   showFilePicker,
   closeFilePicker,
+  isNewPartner,
 }) => {
   const renderDocumentGroup = (title, documents) => (
     <View key={title}>
@@ -54,7 +55,10 @@ const Partner_Document_Form_Component = ({
 
   return (
     <SafeAreaWrapper>
-      <Header title="Add New Partner" onBackPress={goBack} />
+      <Header
+        title={`${isNewPartner ? 'Add New Partner' : 'Partner Details'}`}
+        onBackPress={goBack}
+      />
       <StepTracker
         showImages={showImages}
         selectedId={3}

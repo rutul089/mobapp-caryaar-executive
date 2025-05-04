@@ -3,7 +3,7 @@ import Home_Component from './Home_Component';
 import {navigate} from '../../navigation/NavigationUtils';
 import ScreenNames from '../../constants/ScreenNames';
 import {connect} from 'react-redux';
-import {resetRegistration} from '../../redux/actions';
+import {resetRegistration, resetPartnerDetail} from '../../redux/actions';
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -18,6 +18,8 @@ class HomeScreen extends Component {
 
   onAddPartner = () => {
     this.props.resetRegistration();
+    this.props.resetPartnerDetail();
+
     navigate(ScreenNames.DealershipTypeSelection);
   };
 
@@ -33,7 +35,7 @@ class HomeScreen extends Component {
   }
 }
 
-const mapDispatchToProps = {resetRegistration};
+const mapDispatchToProps = {resetRegistration, resetPartnerDetail};
 const mapStateToProps = state => {
   return {};
 };

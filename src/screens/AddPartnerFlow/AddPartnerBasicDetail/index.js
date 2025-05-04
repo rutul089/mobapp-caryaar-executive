@@ -158,6 +158,8 @@ class AddPartnerBasicDetail extends Component {
       errorSteps,
     } = this.state;
 
+    const {selectedPartner} = this.props;
+
     return (
       <>
         <Partner_Basic_Form_Component
@@ -220,6 +222,9 @@ class AddPartnerBasicDetail extends Component {
           }}
           showImages={showImages}
           errorSteps={errorSteps}
+          isNewPartner={
+            !selectedPartner || Object.keys(selectedPartner).length === 0
+          }
         />
       </>
     );
@@ -227,11 +232,12 @@ class AddPartnerBasicDetail extends Component {
 }
 
 const mapDispatchToProps = {setBasicDetails};
-const mapStateToProps = ({appState, partnerForm}) => {
+const mapStateToProps = ({appState, partnerForm, partners}) => {
   return {
     isInternetConnected: appState.isInternetConnected,
     isLoading: appState.loading,
     basicDetail: partnerForm.basicDetails,
+    selectedPartner: partners.selectedPartner,
   };
 };
 export default connect(

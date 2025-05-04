@@ -172,6 +172,8 @@ class AddPartnerBusinessLocation extends Component {
       cityName,
     } = this.state;
 
+    const {selectedPartner} = this.props;
+
     return (
       <>
         <Partner_Location_Form_Component
@@ -235,6 +237,9 @@ class AddPartnerBusinessLocation extends Component {
           stateName={stateName}
           showImages={showImages}
           errorSteps={errorSteps}
+          isNewPartner={
+            !selectedPartner || Object.keys(selectedPartner).length === 0
+          }
         />
       </>
     );
@@ -244,11 +249,12 @@ class AddPartnerBusinessLocation extends Component {
 const mapDispatchToProps = {
   setLocationDetails,
 };
-const mapStateToProps = ({appState, partnerForm}) => {
+const mapStateToProps = ({appState, partnerForm, partners}) => {
   return {
     isInternetConnected: appState.isInternetConnected,
     isLoading: appState.loading,
     locationDetails: partnerForm.locationDetails,
+    selectedPartner: partners.selectedPartner,
   };
 };
 export default connect(

@@ -25,10 +25,14 @@ const Partner_Basic_Form_Component = ({
   restInputProps,
   showImages = [],
   errorSteps = [],
+  isNewPartner,
 }) => {
   return (
     <SafeAreaWrapper>
-      <Header title="Add New Partner" onBackPress={() => goBack()} />
+      <Header
+        title={`${isNewPartner ? 'Add New Partner' : 'Partner Details'}`}
+        onBackPress={() => goBack()}
+      />
       <StepTracker
         selectedId={1}
         showImages={showImages}
