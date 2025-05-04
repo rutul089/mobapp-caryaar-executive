@@ -30,7 +30,7 @@ const Partner_Component = ({
   onTabPress = () => {},
   partnersData,
   onItemPress,
-  callToAction,
+  callToAction = () => {},
   onRefresh,
   refreshing,
   onSearchText,
@@ -105,7 +105,7 @@ const Partner_Component = ({
           }
           isCTAShow={isPendingTab ? isMissingDocs : undefined}
           buttonLabel={isPendingTab ? 'Upload Docs' : undefined}
-          callToAction={isPendingTab ? callToAction : undefined}
+          callToAction={isPendingTab ? () => callToAction?.(item) : undefined}
           onPress={() => onItemPress?.(item)}
           textColor={theme.colors.textPrimary}
         />

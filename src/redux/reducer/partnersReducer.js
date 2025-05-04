@@ -31,6 +31,7 @@ export default function partnerFormReducer(state = initialState, action) {
     case types.FETCH_PARTNER_REQUEST:
       return {
         ...state,
+        loading: true,
       };
 
     case types.FETCH_PARTNERS_FAILURE:

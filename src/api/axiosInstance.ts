@@ -1,24 +1,44 @@
 import axios from 'axios';
-import {getAccessToken} from '../utils/storage';
-import {logApiEvent} from './apiLogger';
 import {getCachedToken} from './tokenCache';
+import {logApiEvent} from './apiLogger';
 
 const axiosInstance = axios.create({
   baseURL: 'https://caryaar.onrender.com/api/v1',
   timeout: 10000,
-  headers: {'Content-Type': 'application/json'},
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
+
+// Unified logger for all events
+const logEvent = ({
+  type,
+  config = {},
+  response = {},
+  error = null,
+  duration,
+}) => {
+  logApiEvent({
+    type,
+    method: config.method,
+    url: config.url,
+    headers: config.headers,
+    data: config.data,
+    params: config.params,
+    status: response?.status,
+    error: error?.message || null,
+    duration,
+  });
+};
 
 // Request Interceptor
 axiosInstance.interceptors.request.use(
   async config => {
+    config.metadata = {startTime: Date.now()};
+
     try {
-      config.metadata = {startTime: new Date().getTime()}; // 👈 Track request start time
-
       if (!config?.skipAuth) {
-        // const token = await getAccessToken();
         const token = await getCachedToken();
-
         if (token) {
           config.headers = {
             ...config.headers,
@@ -27,32 +47,15 @@ axiosInstance.interceptors.request.use(
         }
       }
 
-      logApiEvent({
-        type: 'request',
-        method: config.method,
-        url: config.url,
-        headers: config.headers,
-        data: config.data,
-      });
-
+      logEvent({type: 'request', config});
       return config;
     } catch (error) {
-      logApiEvent({
-        type: 'request_error',
-        method: config?.method,
-        url: config?.url,
-        error: error?.message,
-      });
+      logEvent({type: 'request_error', config, error});
       return Promise.reject(error);
     }
   },
   error => {
-    logApiEvent({
-      type: 'request_error',
-      method: error?.config?.method,
-      url: error?.config?.url,
-      error: error.message,
-    });
+    logEvent({type: 'request_error', config: error?.config || {}, error});
     return Promise.reject(error);
   },
 );
@@ -60,30 +63,31 @@ axiosInstance.interceptors.request.use(
 // Response Interceptor
 axiosInstance.interceptors.response.use(
   response => {
-    const duration =
-      new Date().getTime() - (response.config?.metadata?.startTime || 0);
-    logApiEvent({
+    const startTime = response?.config?.metadata?.startTime || Date.now();
+    const duration = Date.now() - startTime;
+
+    logEvent({
       type: 'response',
-      method: response?.config?.method,
-      url: response?.config?.url,
-      status: response?.status,
-      duration, // ⏱️ log time in ms
-      data: response?.data,
+      config: response.config,
+      response,
+      duration,
     });
+
     return response;
   },
   error => {
     const config = error?.response?.config || error?.config || {};
-    const duration = new Date().getTime() - (config?.metadata?.startTime || 0);
+    const startTime = config?.metadata?.startTime || Date.now();
+    const duration = Date.now() - startTime;
 
-    logApiEvent({
+    logEvent({
       type: 'response_error',
-      method: config.method,
-      url: config.url,
-      status: error?.response?.status,
-      error: error.message,
-      duration, // ⏱️ log time in ms
+      config,
+      response: error.response,
+      error,
+      duration,
     });
+
     return Promise.reject(error);
   },
 );

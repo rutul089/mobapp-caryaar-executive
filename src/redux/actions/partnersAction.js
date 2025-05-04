@@ -8,6 +8,17 @@ import {
   updatePartnerById,
 } from '../../api/partnerServices';
 import moment from 'moment';
+import {formatPartnerDetails} from '../../utils/partnerHelpers';
+import {
+  setBankingDetails,
+  setBasicDetails,
+  setDealershipType,
+  setDocumentDetails,
+  setLocationDetails,
+  setPartnerRole,
+  setSellerType,
+  setUserType,
+} from './partnerFormActions';
 
 /**
  * Thunk to fetch a specific partner's details by ID.
@@ -22,10 +33,28 @@ export const fetchPartnerFromId = (partnerId, onSuccess, onFailure) => {
 
     try {
       const response = await fetchPartnerById(partnerId);
-      dispatch({
-        type: types.FETCH_PARTNER_SUCCESS,
-        payload: response.data,
-      });
+      const partnerData = response.data;
+
+      const {
+        basicDetails,
+        locationDetails,
+        bankingDetails,
+        sellerType,
+        partnerType,
+        isMultiUser,
+        partnerRole,
+      } = formatPartnerDetails(partnerData);
+
+      dispatch(setSelectedPartner(partnerData));
+      dispatch(setUserType(isMultiUser));
+      dispatch(setPartnerRole(partnerRole));
+      dispatch(setDealershipType(partnerType));
+      dispatch(setSellerType(sellerType));
+      dispatch(setBasicDetails(basicDetails));
+      dispatch(setLocationDetails(locationDetails));
+      dispatch(setBankingDetails(bankingDetails));
+      dispatch(setDocumentDetails(partnerData?.documents));
+
       onSuccess?.(response);
     } catch (error) {
       dispatch({
@@ -128,7 +157,6 @@ export const searchPartnersThunk = (
 ) => {
   return async dispatch => {
     dispatch({type: types.SEARCH_PARTNER_REQUEST});
-    console.log('!searchPartnersThunk====>', {search, page, limit, status});
     try {
       const response = await searchPartnersByKeyword(
         search,
@@ -136,8 +164,6 @@ export const searchPartnersThunk = (
         limit,
         status,
       );
-
-      console.log('response====>', JSON.stringify(response.pagination.page));
 
       dispatch({
         type: types.SEARCH_PARTNER_SUCCESS,
@@ -250,4 +276,27 @@ export const fetchPendingPartners = (
  */
 export const clearSearchResults = () => ({
   type: types.CLEAR_SEARCH_PARTNERS,
+});
+
+/**
+ * Action creator to set the selected partner data in the Redux store.
+ *
+ * @function
+ * @param {Object} partnerData - The partner object to store.
+ * @returns {Object} Redux action with type `FETCH_PARTNER_SUCCESS` and the provided partner data as payload.
+ */
+export const setSelectedPartner = partnerData => ({
+  type: types.FETCH_PARTNER_SUCCESS,
+  payload: partnerData,
+});
+
+/**
+ * Action creator to reset all partner details in the Redux store.
+ *
+ * Typically dispatched when leaving or resetting the partner form view.
+ *
+ * @returns {Object} Redux action with type `RESET_PARTNER`.
+ */
+export const resetPartnerDetail = () => ({
+  type: types.RESET_PARTNER,
 });

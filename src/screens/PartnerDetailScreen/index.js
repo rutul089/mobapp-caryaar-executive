@@ -53,24 +53,14 @@ class PartnerDetailScreen extends Component {
     this.setState({partnerId}, () => {
       this.fetchPartnerFromId(partnerId);
     });
-
-    this.unsubscribe = this.props.navigation.addListener('beforeRemove', () => {
-      // Ensure cleanup
-    });
-  }
-
-  componentWillUnmount() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
   }
 
   fetchPartnerFromId = partnerID => {
     this.setState({isLoading: true});
     this.props.fetchPartnerFromId(
       partnerID,
-      () => this.setState({isLoading: false}),
-      () => this.setState({isLoading: false}),
+      success => this.setState({isLoading: false}),
+      error => this.setState({isLoading: false}),
     );
   };
 
@@ -111,26 +101,6 @@ class PartnerDetailScreen extends Component {
   };
 
   onEditPartnerDetail = () => {
-    const {selectedPartner} = this.props;
-    const {
-      basicDetails,
-      locationDetails,
-      bankingDetails,
-      sellerType,
-      partnerType,
-      isMultiUser,
-      partnerRole,
-    } = formatPartnerDetails(selectedPartner);
-
-    this.props.setUserType(isMultiUser);
-    this.props.setPartnerRole(partnerRole);
-    this.props.setDealershipType(partnerType);
-    this.props.setSellerType(sellerType);
-    this.props.setBasicDetails(basicDetails);
-    this.props.setLocationDetails(locationDetails);
-    this.props.setBankingDetails(bankingDetails);
-    this.props.setDocumentDetails(selectedPartner?.documents);
-
     navigate(ScreenNames.AddPartnerBasicDetail, {
       params: {
         fromScreen: true,

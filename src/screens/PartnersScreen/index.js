@@ -10,12 +10,23 @@ import {
   resetRegistration,
   clearSearchResults,
   searchPartnersThunk,
+  setSelectedPartner,
+  setUserType,
+  setPartnerRole,
+  setBankingDetails,
+  setBasicDetails,
+  setDealershipType,
+  setDocumentDetails,
+  setLocationDetails,
+  setSellerType,
+  fetchPartnerFromId,
 } from '../../redux/actions';
 import {Loader} from '../../components';
 import {
   PARTNER_TAB_OPTIONS,
   partnerOnboardingStatus,
 } from '../../constants/enums';
+import {formatPartnerDetails} from '../../utils/partnerHelpers';
 
 class PartnersScreen extends Component {
   constructor(props) {
@@ -192,7 +203,64 @@ class PartnersScreen extends Component {
   };
 
   // Pending Partner Button click (Upload Documents)
-  callToAction = () => navigate(ScreenNames.DocumentScreen);
+  callToAction = selectedPartner => {
+    this.props.resetPartnerDetail();
+
+    this.fetchPartnerFromId(selectedPartner?.id);
+    return;
+    //TODO remove bellow comment if api start accepting banking detail
+    // this.props.setSelectedPartner(selectedPartner);
+
+    // const {
+    //   basicDetails,
+    //   locationDetails,
+    //   bankingDetails,
+    //   sellerType,
+    //   partnerType,
+    //   isMultiUser,
+    //   partnerRole,
+    // } = formatPartnerDetails(selectedPartner);
+
+    // console.log('bankingDetails=====>', bankingDetails);
+
+    // this.props.setUserType(isMultiUser);
+    // this.props.setPartnerRole(partnerRole);
+    // this.props.setDealershipType(partnerType);
+    // this.props.setSellerType(sellerType);
+    // this.props.setBasicDetails(basicDetails);
+    // this.props.setLocationDetails(locationDetails);
+    // this.props.setBankingDetails(bankingDetails);
+    // this.props.setDocumentDetails(selectedPartner?.documents);
+    // return;
+
+    setTimeout(() => {
+      navigate(ScreenNames.AddPartnerRequiredDocument, {
+        params: {
+          fromScreen: true,
+          showImages: [1, 2, 3, 4],
+          errorSteps: [3],
+        },
+      });
+    }, 100);
+  };
+
+  // To fetch specific partner detail from API
+  fetchPartnerFromId = partnerID => {
+    this.setState({apiTrigger: 'default'});
+    this.props.fetchPartnerFromId(
+      partnerID,
+      success => {
+        navigate(ScreenNames.AddPartnerRequiredDocument, {
+          params: {
+            fromScreen: true,
+            showImages: [1, 2, 3, 4],
+            errorSteps: [3],
+          },
+        });
+      },
+      error => this.setState({isLoading: false}),
+    );
+  };
 
   // Partner card click handler
   onItemPress = item => {
@@ -203,7 +271,6 @@ class PartnersScreen extends Component {
   render() {
     const {refreshing, apiTrigger, searchText} = this.state;
     const {loading} = this.props;
-
     const displayList = this.getDisplayList();
     const [currentPage, totalPages] = this.getPageInfo();
 
@@ -243,6 +310,16 @@ const mapDispatchToProps = {
   resetPartnerDetail,
   searchPartnersThunk,
   clearSearchResults,
+  setSelectedPartner,
+  setUserType,
+  setPartnerRole,
+  setBankingDetails,
+  setBasicDetails,
+  setDealershipType,
+  setDocumentDetails,
+  setLocationDetails,
+  setSellerType,
+  fetchPartnerFromId,
 };
 
 const mapStateToProps = ({partners}) => ({
@@ -256,6 +333,7 @@ const mapStateToProps = ({partners}) => ({
   searchPartners: partners.searchPartners,
   searchPage: partners.searchPage,
   searchTotalPages: partners.searchTotalPages,
+  selectedPartner: partners.selectedPartner,
 });
 
 // Exporting connected component
