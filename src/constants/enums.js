@@ -345,4 +345,6 @@ export const generateOptionsAndValueMap = enumObject => {
   return {options, valueMap};
 };
 
+export const PARTNER_TAB_OPTIONS = ['active', 'pending'];
+
 // const { options: salesExecOptions, valueMap: salesExecutiveValue } = generateOptionsAndValueMap(SalesExecutivePosition);

@@ -128,7 +128,7 @@ export const searchPartnersThunk = (
 ) => {
   return async dispatch => {
     dispatch({type: types.SEARCH_PARTNER_REQUEST});
-
+    console.log('!searchPartnersThunk====>', {search, page, limit, status});
     try {
       const response = await searchPartnersByKeyword(
         search,
@@ -136,6 +136,8 @@ export const searchPartnersThunk = (
         limit,
         status,
       );
+
+      console.log('response====>', JSON.stringify(response.pagination.page));
 
       dispatch({
         type: types.SEARCH_PARTNER_SUCCESS,

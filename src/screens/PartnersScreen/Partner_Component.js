@@ -1,4 +1,6 @@
-// Partner_Component.js
+/* eslint-disable react-native/no-inline-styles */
+import React, {useEffect, useState} from 'react';
+import {FlatList, Pressable, StyleSheet, View} from 'react-native';
 import {
   Card,
   ImageHeader,
@@ -9,23 +11,25 @@ import {
   images,
   theme,
 } from '@caryaar/components';
-import React, {useEffect, useState} from 'react';
-import {FlatList, Image, Pressable, StyleSheet, View} from 'react-native';
+import {NoDataFound} from '../../components';
+import {
+  PARTNER_TAB_OPTIONS,
+  partnerDocumentLabelMap,
+} from '../../constants/enums';
 import {
   formatDate,
   getLocationText,
   removeCountryCode,
 } from '../../utils/helper';
-import {partnerDocumentLabelMap} from '../../constants/enums';
-import {NoDataFound} from '../../components';
 
 const limit = 10;
+
+const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
 
 const Partner_Component = ({
   onRightIconPress,
   onFilterPress,
   onAddButtonPress,
-  TAB_OPTIONS = ['active', 'pending'],
   onTabPress = () => {},
   partnersData,
   onItemPress,
@@ -39,6 +43,8 @@ const Partner_Component = ({
   onLoadMore,
   currentPage,
   loading,
+  TAB_OPTIONS,
+  totalPages,
 }) => {
   const [activeTab, setActiveTab] = useState('active');
   const [filteredPartners, setFilteredPartners] = useState([]);
@@ -56,15 +62,10 @@ const Partner_Component = ({
 
   const filterPartners = () => {
     const dataArray = Array.isArray(partnersData) ? partnersData : [];
-    console.log('dataArray', dataArray.length);
     const filtered = dataArray.filter(
       p => p?.onboardingStatus === selectedStatus,
     );
-
-    console.log('filtered', filtered?.length);
-
-    const paginated = filtered.slice(0, currentPage * limit);
-    setFilteredPartners(paginated);
+    setFilteredPartners(filtered.slice(0, currentPage * limit));
   };
 
   const renderPartner = ({item}) => {
@@ -74,33 +75,40 @@ const Partner_Component = ({
       icon: isMissingDocs ? images.infoStatus : images.successCheck,
       color: isMissingDocs ? theme.colors.error : '#4CAF50',
     };
-    return activeTab === 'active' ? (
+
+    return (
       <>
         <PartnerCard
           name={item.companyName}
-          location={getLocationText(item.city, item.state)}
-          phone={removeCountryCode(item.owner?.mobileNumber) ?? '-'}
-          textColor={theme.colors.textPrimary}
-          onPress={() => onItemPress && onItemPress(item)}
-        />
-        <Spacing size="md" />
-      </>
-    ) : (
-      <>
-        <PartnerCard
-          name={item?.companyName}
-          showPersonalInfo={false}
-          subtitle={`Submitted on: ${formatDate(item.createdAt)}`}
-          statusObject={statusObject}
-          documentError={
-            item?.missingDocuments?.map(doc => ({
-              value: partnerDocumentLabelMap[doc],
-            })) || []
+          location={
+            activeTab === 'active'
+              ? getLocationText(item.city, item.state)
+              : undefined
           }
-          isCTAShow={isMissingDocs}
-          buttonLabel={'Upload Docs'}
-          callToAction={callToAction}
-          onPress={() => onItemPress && onItemPress(item)}
+          phone={
+            activeTab === 'active'
+              ? removeCountryCode(item.owner?.mobileNumber) ?? '-'
+              : undefined
+          }
+          showPersonalInfo={activeTab !== 'active' ? false : undefined}
+          subtitle={
+            activeTab !== 'active'
+              ? `Submitted on: ${formatDate(item.createdAt)}`
+              : undefined
+          }
+          statusObject={activeTab !== 'active' ? statusObject : undefined}
+          documentError={
+            activeTab !== 'active'
+              ? item?.missingDocuments?.map(doc => ({
+                  value: partnerDocumentLabelMap[doc],
+                })) || []
+              : undefined
+          }
+          isCTAShow={activeTab !== 'active' ? isMissingDocs : undefined}
+          buttonLabel={activeTab !== 'active' ? 'Upload Docs' : undefined}
+          callToAction={activeTab !== 'active' ? callToAction : undefined}
+          onPress={() => onItemPress?.(item)}
+          textColor={theme.colors.textPrimary}
         />
         <Spacing size="md" />
       </>
@@ -154,20 +162,28 @@ const Partner_Component = ({
         onEndReachedThreshold={0.5}
         onEndReached={onLoadMore}
         ListEmptyComponent={
-          !loading && <NoDataFound text={'No Partners found'} />
+          !loading && <NoDataFound text="No Partners found" />
+        }
+        ListFooterComponent={
+          !loading && currentPage >= totalPages && totalPages > 1 ? (
+            <Text
+              type={'helper-text'}
+              style={{
+                alignSelf: 'center',
+              }}>
+              You have reached the end. All partners are loaded.
+            </Text>
+          ) : null
         }
       />
     </SafeAreaWrapper>
   );
 };
 
-const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
-
 const styles = StyleSheet.create({
   container: {
     padding: theme.sizes.padding,
     paddingBottom: 0,
-    marginBottom: 5,
   },
   tabContainer: {
     flexDirection: 'row',

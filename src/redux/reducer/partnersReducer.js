@@ -14,6 +14,8 @@ const initialState = {
   activeTotalPages: 1,
   pendingPage: 1,
   pendingTotalPages: 1,
+  searchPage: 1,
+  searchTotalPages: 1,
 };
 
 export default function partnerFormReducer(state = initialState, action) {
@@ -90,8 +92,8 @@ export default function partnerFormReducer(state = initialState, action) {
         loading: false,
         message: action.payload.message,
         success: action.payload.success,
-        currentPage: action.payload.page,
-        totalPages: action.payload.totalPages,
+        searchPage: action.payload.page,
+        searchTotalPages: action.payload.totalPages,
       };
 
     case types.FETCH_ACTIVE_PARTNERS_REQUEST:
