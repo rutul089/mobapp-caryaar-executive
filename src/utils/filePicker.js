@@ -88,7 +88,7 @@ export const handleFileSelection = async (type, callback) => {
       const res = await pick({
         allowMultiSelection: false,
         // type: ['*/*'], // for all files
-        type: [types.pdf, types.docx, types.images],
+        type: [types.pdf, types.images],
       });
 
       callback(res[0]);

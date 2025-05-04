@@ -12,7 +12,6 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 
 const Partner_Detail_Component = ({
   onBackPress,
-  partnerDetail,
   contactDetails,
   locationDetail,
   accountDetail,
@@ -23,9 +22,6 @@ const Partner_Detail_Component = ({
   footerInfo,
   onEditPartnerDetail,
   businessName,
-  previewImage,
-  isImageViewerVisible,
-  onRequestClose,
 }) => {
   return (
     <SafeAreaWrapper backgroundColor={theme.colors.background}>
@@ -69,27 +65,29 @@ const Partner_Detail_Component = ({
 
           {/* Documents */}
           <DetailInfoCard label="Business Document">
-            {documents.map((doc, index) => (
-              <React.Fragment key={`doc-${doc.label || index}`}>
-                <DocumentRow
-                  label={doc.label}
-                  actionLabel={
-                    doc.isMissing || !doc.uploaded ? 'Required' : 'View'
-                  }
-                  showError={doc.isMissing || !doc.uploaded}
-                  disabled={doc.isMissing || !doc.uploaded}
-                  onPress={doc?.onPress}
-                  isLoading={
-                    isFetchingDocument?.loading &&
-                    isFetchingDocument?.documentType === doc.documentType
-                  }
-                />
-                {/* Spacing between rows */}
-                {index !== documents.length - 1 && (
-                  <Spacing size={theme.sizes.spacing.smd} />
-                )}
-              </React.Fragment>
-            ))}
+            {documents.map((doc, index) => {
+              return (
+                <React.Fragment key={`doc-${doc.label || index}`}>
+                  <DocumentRow
+                    label={doc.label}
+                    actionLabel={
+                      doc.isMissing || !doc.uploaded ? 'Required' : 'View'
+                    }
+                    showError={doc.isMissing || !doc.uploaded}
+                    disabled={doc.isMissing || !doc.uploaded}
+                    onPress={doc?.onPress}
+                    isLoading={
+                      isFetchingDocument?.loading &&
+                      isFetchingDocument?.documentType === doc.documentType
+                    }
+                  />
+                  {/* Spacing between rows */}
+                  {index !== documents.length - 1 && (
+                    <Spacing size={theme.sizes.spacing.smd} />
+                  )}
+                </React.Fragment>
+              );
+            })}
           </DetailInfoCard>
 
           <Spacing size="lg" />
@@ -98,12 +96,6 @@ const Partner_Detail_Component = ({
           <DetailInfoCard label="Account Detail" data={accountDetail} />
         </View>
       </ScrollView>
-      {/* <ImageViewing
-        images={[{uri: previewImage}]}
-        imageIndex={0}
-        visible={isImageViewerVisible}
-        onRequestClose={onRequestClose}
-      /> */}
     </SafeAreaWrapper>
   );
 };

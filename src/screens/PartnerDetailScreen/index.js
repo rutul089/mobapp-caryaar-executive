@@ -79,14 +79,10 @@ class PartnerDetailScreen extends Component {
     await viewDocumentHelper(
       link,
       imageUri => {
-        this.setState({
-          isFetchingDocument: {
-            loading: false,
-            documentType: '',
-          },
-        });
-
         navigate(ScreenNames.ImagePreviewScreen, {uri: imageUri});
+      },
+      () => {
+        showApiErrorToast({message: 'Could not open the document.'});
       },
       () => {
         this.setState({
@@ -95,7 +91,6 @@ class PartnerDetailScreen extends Component {
             documentType: '',
           },
         });
-        showApiErrorToast({message: 'Could not open the document.'});
       },
     );
   };

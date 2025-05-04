@@ -33,6 +33,7 @@ const Partner_Document_Form_Component = ({
         {documents.map(doc => {
           const fileUri = doc?.docObject?.uri;
           const fileType = getFileType(fileUri);
+          console.log({fileType});
           return (
             <View key={`${title}-${doc.label}`} style={styles.halfWidth}>
               <VehicleImageCard
@@ -43,7 +44,7 @@ const Partner_Document_Form_Component = ({
                 btnLabel={'Click to Upload\nImage or PDF'}
                 uploadMedia={doc.uploadMedia}
                 fileType={fileType}
-                isDocument={fileType !== 'image'}
+                // isDocument={fileType !== 'image'}
               />
             </View>
           );

@@ -449,7 +449,7 @@ export const removeCountryCode = (phoneNumber, defaultCountryCode = '91') => {
   return digitsOnly.length > 10 ? digitsOnly.slice(-10) : digitsOnly;
 };
 
-export const viewDocumentHelper = async (uri, onImage, onError) => {
+export const viewDocumentHelper = async (uri, onImage, onError, onLoading) => {
   if (!uri) {
     return;
   }
@@ -482,5 +482,7 @@ export const viewDocumentHelper = async (uri, onImage, onError) => {
   } catch (error) {
     console.warn('Error opening file:', error);
     onError?.(error);
+  } finally {
+    onLoading?.();
   }
 };
