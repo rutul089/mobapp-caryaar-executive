@@ -12,10 +12,7 @@ import {
   theme,
 } from '@caryaar/components';
 import {NoDataFound} from '../../components';
-import {
-  PARTNER_TAB_OPTIONS,
-  partnerDocumentLabelMap,
-} from '../../constants/enums';
+import {partnerDocumentLabelMap} from '../../constants/enums';
 import {
   formatDate,
   getLocationText,
@@ -50,6 +47,7 @@ const Partner_Component = ({
   const [filteredPartners, setFilteredPartners] = useState([]);
 
   const selectedStatus = activeTab === 'active' ? 'APPROVED' : 'PENDING';
+  const isPendingTab = activeTab !== 'active';
 
   useEffect(() => {
     filterPartners();
@@ -62,14 +60,21 @@ const Partner_Component = ({
 
   const filterPartners = () => {
     const dataArray = Array.isArray(partnersData) ? partnersData : [];
-    const filtered = dataArray.filter(
-      p => p?.onboardingStatus === selectedStatus,
-    );
-    setFilteredPartners(filtered.slice(0, currentPage * limit));
+    // TODO : Remove comment for the local filter
+    // const filtered = dataArray.filter(
+    //   p => p?.onboardingStatus === selectedStatus,
+    // );
+    setFilteredPartners(dataArray);
   };
+
+  const getDocumentErrors = missingDocs =>
+    missingDocs?.map(doc => ({
+      value: partnerDocumentLabelMap[doc],
+    })) || [];
 
   const renderPartner = ({item}) => {
     const isMissingDocs = item?.missingDocuments?.length > 0;
+
     const statusObject = {
       text: isMissingDocs ? 'Missing Documents' : 'All Documents Submitted',
       icon: isMissingDocs ? images.infoStatus : images.successCheck,
@@ -81,32 +86,26 @@ const Partner_Component = ({
         <PartnerCard
           name={item.companyName}
           location={
-            activeTab === 'active'
-              ? getLocationText(item.city, item.state)
-              : undefined
+            !isPendingTab ? getLocationText(item.city, item.state) : undefined
           }
           phone={
-            activeTab === 'active'
+            !isPendingTab
               ? removeCountryCode(item.owner?.mobileNumber) ?? '-'
               : undefined
           }
-          showPersonalInfo={activeTab !== 'active' ? false : undefined}
+          showPersonalInfo={!isPendingTab ? undefined : false}
           subtitle={
-            activeTab !== 'active'
+            isPendingTab
               ? `Submitted on: ${formatDate(item.createdAt)}`
               : undefined
           }
-          statusObject={activeTab !== 'active' ? statusObject : undefined}
+          statusObject={isPendingTab ? statusObject : undefined}
           documentError={
-            activeTab !== 'active'
-              ? item?.missingDocuments?.map(doc => ({
-                  value: partnerDocumentLabelMap[doc],
-                })) || []
-              : undefined
+            isPendingTab ? getDocumentErrors(item?.missingDocuments) : undefined
           }
-          isCTAShow={activeTab !== 'active' ? isMissingDocs : undefined}
-          buttonLabel={activeTab !== 'active' ? 'Upload Docs' : undefined}
-          callToAction={activeTab !== 'active' ? callToAction : undefined}
+          isCTAShow={isPendingTab ? isMissingDocs : undefined}
+          buttonLabel={isPendingTab ? 'Upload Docs' : undefined}
+          callToAction={isPendingTab ? callToAction : undefined}
           onPress={() => onItemPress?.(item)}
           textColor={theme.colors.textPrimary}
         />
@@ -151,6 +150,7 @@ const Partner_Component = ({
           {TAB_OPTIONS.map(renderTabButton)}
         </Card>
       </View>
+      <Spacing />
       <FlatList
         data={filteredPartners}
         keyExtractor={(item, index) => index.toString()}
