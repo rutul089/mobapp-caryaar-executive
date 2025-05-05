@@ -1,9 +1,10 @@
 import {
   changeUserPassword,
+  getUserProfile,
   loginWithType,
   updateUserProfile,
 } from '../../api/userApi';
-import {showApiErrorToast} from '../../utils/helper';
+import {showApiErrorToast, showApiSuccessToast} from '../../utils/helper';
 import types from './types';
 
 /**
@@ -57,44 +58,36 @@ export const updateUserDetailField = (key, value) => ({
 });
 
 /**
- * Thunk action to fetch a user's details by their ID.
+ * Thunk action to fetch the current user's profile.
  *
- * Dispatches actions based on the success or failure of fetching the user.
- * On success, it returns the user data.
- * On failure, it dispatches failure action.
+ * Dispatches request, success, or failure actions based on the API response.
+ * Optionally executes provided callbacks on success or failure.
  *
- * @param {string} userId - The ID of the user to fetch.
- * @param {Function} onSuccess - Callback function to be executed on successful fetch.
- * @param {Function} onFailure - Callback function to be executed on failed fetch.
- * @returns {Function} A thunk that dispatches actions based on the API response.
+ * @param {Function} [onSuccess] - Callback to be executed after successful fetch.
+ * @param {Function} [onFailure] - Callback to be executed on fetch failure.
+ * @returns {Function} Thunk function to be dispatched by Redux.
  */
-export const fetchUser = (userId, onSuccess, onFailure) => {
+export const fetchUser = (onSuccess, onFailure) => {
   return async dispatch => {
     dispatch({type: types.FETCH_USER_REQUEST});
 
     try {
-      // const user = await getUser(userId);
+      const response = await getUserProfile();
       dispatch({
         type: types.FETCH_USER_SUCCESS,
         payload: {
-          id: 'u123456',
-          name: 'Jane Doe',
-          email: 'jane.doe@example.com',
-          phone: '+1-555-123-4567',
-          avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
-          address: 'Ahmedabad,Gujarat',
-          designation: 'Senior Product Manager',
+          data: response?.data,
         },
       });
 
-      onSuccess?.();
+      onSuccess?.(response?.data);
     } catch (error) {
       dispatch({
         type: types.FETCH_USER_FAILURE,
         payload: error.message,
       });
-
-      onFailure?.(error.message);
+      showApiErrorToast(error);
+      onFailure?.(error);
     }
   };
 };
@@ -117,7 +110,6 @@ export const userLoginThunk = (type, param, onSuccess, onFailure) => {
     dispatch({type: types.USER_LOADING});
     try {
       const response = await loginWithType(type, param);
-      console.log('response', JSON.stringify(response));
       dispatch({
         type: types.USER_SUCCESS,
         payload: {
@@ -154,13 +146,18 @@ export const updateProfileThunk = (param, onSuccess, onFailure) => {
     dispatch({type: types.USER_LOADING});
     try {
       const response = await updateUserProfile(param);
+      console.log('123123213123123123', JSON.stringify(response?.data));
       dispatch({
         type: types.UPDATE_USER_SUCCESS,
         payload: {
           message: response.message,
           success: response.success,
+          data: response?.data,
         },
       });
+      if (response?.success) {
+        showApiSuccessToast(response);
+      }
       onSuccess?.(response);
     } catch (error) {
       dispatch({

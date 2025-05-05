@@ -63,3 +63,20 @@ export const changeUserPassword = async payload => {
     throw error;
   }
 };
+
+/**
+ * Fetches the current user's profile data from the server.
+ *
+ * @param {Object} payload - Optional Axios config (e.g., headers, params).
+ * @returns {Promise<Object>} - A promise that resolves to the user's profile data.
+ * @throws Will throw an error if the request fails.
+ */
+export const getUserProfile = async payload => {
+  try {
+    const response = await axiosInstance.get('/user/profile', payload);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch user profile:', error);
+    throw error;
+  }
+};

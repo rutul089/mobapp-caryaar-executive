@@ -96,7 +96,7 @@ const TabNavigator = ({avatar}) => {
 };
 
 const mapStateToProps = ({user}) => ({
-  avatar: user?.userProfile?.avatar,
+  avatar: user?.userProfile?.profileImage,
 });
 
 export default connect(mapStateToProps)(TabNavigator);

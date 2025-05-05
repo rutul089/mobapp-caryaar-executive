@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Loader} from '../../components';
+import {getLabelFromEnum, salesExecutiveValue} from '../../constants/enums';
 import ScreenNames from '../../constants/ScreenNames';
 import {
   navigate,
@@ -35,13 +36,8 @@ class ProfileScreen extends Component {
 
   fetchUser = () => {
     this.props.fetchUser(
-      5,
-      user => {
-        console.log('User Data', JSON.stringify(user));
-      },
-      error => {
-        console.log('error', JSON.stringify(error));
-      },
+      user => {},
+      error => {},
     );
   };
 
@@ -86,7 +82,7 @@ class ProfileScreen extends Component {
 
   render() {
     const {showLogoutModal} = this.state;
-    const {user} = this.props;
+    const {profileDetail} = this.props;
 
     return (
       <>
@@ -97,13 +93,16 @@ class ProfileScreen extends Component {
           showLogoutModal={showLogoutModal}
           onPressPrimaryButton={this.onPressPrimaryButton}
           onModalHide={this.onModalHide}
-          address={user?.address}
-          name={user?.name}
-          email={user?.email}
-          phone={removeCountryCode(user?.phone)}
-          userID={user?.id}
-          avatar={user?.avatar}
-          designation={user?.designation}
+          // address={getLocationText()}
+          name={profileDetail?.name}
+          email={profileDetail?.email}
+          phone={removeCountryCode(profileDetail?.mobileNumber)}
+          designation={getLabelFromEnum(
+            salesExecutiveValue,
+            profileDetail?.role,
+          )}
+          avatar={profileDetail?.profileImage}
+          userID={getLabelFromEnum(salesExecutiveValue, profileDetail?.role)}
         />
         {this.props.loading && <Loader visible={this.props.loading} />}
       </>
@@ -117,12 +116,12 @@ const mapDispatchToProps = {
   fetchUser,
   resetSalesExecutive,
 };
-const mapStateToProps = state => {
+const mapStateToProps = ({user}) => {
   return {
-    userDetail: state.user?.userDetails,
-    loading: state.user.loading,
-    user: state.user.userProfile,
-    error: state.user.error,
+    userDetail: user?.userDetails,
+    loading: user.loading,
+    profileDetail: user.userProfile,
+    error: user.error,
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

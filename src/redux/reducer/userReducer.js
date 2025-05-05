@@ -31,7 +31,9 @@ const userReducer = (state = initialState, action) => {
       return {...state, loading: true, error: null};
 
     case types.FETCH_USER_SUCCESS:
-      return {...state, loading: false, userProfile: action.payload};
+      return {...state, loading: false, userProfile: action.payload?.data};
+    case types.UPDATE_USER_SUCCESS:
+      return {...state, loading: false, userProfile: action.payload?.data};
 
     case types.FETCH_USER_FAILURE:
       return {...state, loading: false, error: action.payload};
@@ -39,6 +41,7 @@ const userReducer = (state = initialState, action) => {
       return {...state, loading: true};
     case types.USER_SUCCESS:
     case types.USER_FAILURE:
+    case types.UPDATE_USER_FAILURE:
       return {...state, loading: false};
 
     case types.CLEAR_USER_DETAILS:

@@ -35,7 +35,10 @@ const Profile_Component = ({
   const profileCard = () => {
     return (
       <View style={styles.profileCard}>
-        <ImageComponent source={avatar} style={styles.profilePic} />
+        <ImageComponent
+          source={avatar == null ? images.placeholder_image : avatar}
+          style={styles.profilePic}
+        />
         {/* <Image source={images.placeholder_image} style={styles.profilePic} /> */}
         <View style={styles.infoSection}>
           <Text
@@ -47,12 +50,14 @@ const Profile_Component = ({
           <Text hankenGroteskBold={true} color={theme.colors.white}>
             {name}
           </Text>
-          <View style={{flexDirection: 'row', marginTop: 5}}>
-            <Image source={images.locationPin} style={styles.locationStyle} />
-            <Text hankenGroteskMedium color={theme.colors.textSecondary}>
-              {address}
-            </Text>
-          </View>
+          {address && (
+            <View style={{flexDirection: 'row', marginTop: 5}}>
+              <Image source={images.locationPin} style={styles.locationStyle} />
+              <Text hankenGroteskMedium color={theme.colors.textSecondary}>
+                {address}
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     );
@@ -116,16 +121,17 @@ const Profile_Component = ({
                 icon: images.icon_users,
                 screenName: ScreenNames.ManageMember,
               },
-              {
-                label: 'Change Password',
-                icon: images.icon_access,
-                screenName: ScreenNames.ChangePassword,
-              },
-              {
-                label: 'Notification Preferences',
-                icon: images.notification,
-                screenName: ScreenNames.NotificationPreference,
-              },
+              // TODO uncomment bellow object if Change Password and Notification Preferences are required
+              // {
+              //   label: 'Change Password',
+              //   icon: images.icon_access,
+              //   screenName: ScreenNames.ChangePassword,
+              // },
+              // {
+              //   label: 'Notification Preferences',
+              //   icon: images.notification,
+              //   screenName: ScreenNames.NotificationPreference,
+              // },
               {
                 label: 'FAQs',
                 icon: images.icon_help,

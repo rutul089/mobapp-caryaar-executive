@@ -423,6 +423,16 @@ export const showApiErrorToast = error => {
   });
 };
 
+export const showApiSuccessToast = response => {
+  Toast.show({
+    type: 'success',
+    text1: response?.message,
+    position: 'bottom',
+    bottomOffset: 100,
+    visibilityTime: 3000,
+  });
+};
+
 export const formatMobileNumber = num => {
   return num.startsWith('+91') ? num : `+91${num}`;
 };

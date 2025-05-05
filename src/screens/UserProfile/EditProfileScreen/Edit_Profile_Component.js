@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
@@ -11,9 +11,13 @@ import {
   SafeAreaWrapper,
   Spacing,
   Text,
+  FilePickerModal,
   theme,
 } from '@caryaar/components';
 import {goBack} from '../../../navigation/NavigationUtils';
+import SalesExecutiveDropdownModal from '@caryaar/components/src/components/DropdownModal';
+import {salesExecOptions} from '../../../constants/enums';
+import {Loader} from '../../../components';
 
 const Edit_Profile_Component = ({
   handleSavePress,
@@ -22,20 +26,19 @@ const Edit_Profile_Component = ({
   onEmailChange,
   onMobileChange,
   onSalesPositionSelection,
+  salesExecutivePosition,
+  handleFile,
+  closeFilePicker,
+  showFilePicker,
+  onEditProfilePicPress,
+  profileImage,
+  onDeleteProfileImage,
+  viewProfileImage,
+  restInputProps,
+  isLoading,
 }) => {
-  const profileCard = () => {
-    return (
-      <View style={styles.profileCard}>
-        <Pressable>
-          <Image source={images.edit_profile} style={styles.iconImage} />
-        </Pressable>
-        <Image source={images.placeholder_image} style={styles.profilePic} />
-        <Pressable>
-          <Image source={images.ic_delete} style={styles.iconImage} />
-        </Pressable>
-      </View>
-    );
-  };
+  const [showSalesExecutiveDropdown, setShowSalesExecutiveDropdown] =
+    useState(false);
 
   const refs = {
     fullName: useRef(null),
@@ -48,14 +51,40 @@ const Edit_Profile_Component = ({
     refs[key]?.current?.focus();
   };
 
+  const handleDropdownSelect = useCallback(
+    (item, index) => {
+      onSalesPositionSelection?.(item, index);
+      setShowSalesExecutiveDropdown(false);
+    },
+    [onSalesPositionSelection],
+  );
+
+  const renderProfileCard = () => (
+    <View style={styles.profileCard}>
+      <Pressable onPress={onEditProfilePicPress}>
+        <Image source={images.edit_profile} style={styles.iconImage} />
+      </Pressable>
+      <Pressable onPress={viewProfileImage}>
+        <Image
+          source={profileImage ? {uri: profileImage} : images.placeholder_image}
+          style={styles.profilePic}
+          defaultSource={images.placeholder_image}
+        />
+      </Pressable>
+      <Pressable onPress={onDeleteProfileImage}>
+        <Image source={images.ic_delete} style={styles.iconImage} />
+      </Pressable>
+    </View>
+  );
+
   return (
     <SafeAreaWrapper>
-      <Header title={'Edit Profile'} onBackPress={() => goBack()} />
+      <Header title="Edit Profile" onBackPress={goBack} />
       <KeyboardAwareScrollView
         bounces={false}
         contentContainerStyle={styles.wrapper}>
-        <View style={styles.profileWrapper}>{profileCard()}</View>
-        <View style={{padding: theme.sizes.padding}}>
+        <View style={styles.profileWrapper}>{renderProfileCard()}</View>
+        <View style={styles.formContainer}>
           <Text>Personal Details</Text>
           <Spacing size="smd" />
           <Card>
@@ -64,10 +93,11 @@ const Edit_Profile_Component = ({
               label="Full Name"
               leftIconName={images.user}
               isLeftIconVisible
-              value={state.name}
+              value={state.fullName}
               onChangeText={onFullNameChange}
               returnKeyType="next"
               onSubmitEditing={() => focusNext('email')}
+              {...(restInputProps.fullName || {})}
             />
             <Spacing size="smd" />
             <Input
@@ -80,9 +110,11 @@ const Edit_Profile_Component = ({
               keyboardType="email-address"
               returnKeyType="next"
               onSubmitEditing={() => focusNext('mobileNumber')}
+              {...(restInputProps.enail || {})}
             />
             <Spacing size="smd" />
             <Input
+              isDisabled
               ref={refs.mobileNumber}
               label="Mobile Number"
               leftIconName={images.callOutline}
@@ -93,6 +125,7 @@ const Edit_Profile_Component = ({
               maxLength={10}
               returnKeyType="next"
               onSubmitEditing={() => focusNext('salesExecutivePosition')}
+              {...(restInputProps.mobileNumber || {})}
             />
             <Spacing size="smd" />
             <Input
@@ -102,14 +135,39 @@ const Edit_Profile_Component = ({
               isLeftIconVisible
               isAsDropdown
               isRightIconVisible
-              value="Name"
+              value={salesExecutivePosition}
+              onPress={() => setShowSalesExecutiveDropdown(true)}
+              {...(restInputProps.salesExecutivePosition || {})}
+              isDisabled
+              rightIcnDisable={true}
             />
           </Card>
           <Spacing size="xl" />
-
-          <Button label={'Save'} onPress={handleSavePress} />
+          <Button label="Save" onPress={handleSavePress} />
         </View>
       </KeyboardAwareScrollView>
+
+      <SalesExecutiveDropdownModal
+        visible={showSalesExecutiveDropdown}
+        data={salesExecOptions}
+        selectedItem={salesExecutivePosition}
+        onSelect={handleDropdownSelect}
+        onClose={() => setShowSalesExecutiveDropdown(false)}
+        title="Select Sales Executive Position"
+      />
+
+      <FilePickerModal
+        isVisible={showFilePicker}
+        onSelect={handleFile}
+        onClose={closeFilePicker}
+        autoCloseOnSelect={false}
+        options={[
+          {label: 'Camera', value: 'camera', icon: images.file_camera},
+          {label: 'Photo Gallery', value: 'gallery', icon: images.file_gallery},
+        ]}
+      />
+
+      {isLoading && <Loader visible={isLoading} />}
     </SafeAreaWrapper>
   );
 };
@@ -123,6 +181,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primaryBlack,
     padding: theme.sizes.padding,
     paddingTop: theme.sizes.spacing.md,
+  },
+  formContainer: {
+    padding: theme.sizes.padding,
   },
   profileCard: {
     backgroundColor: theme.colors.gray900,

@@ -67,4 +67,22 @@ local.properties
 **/fastlane/test_output/
 
 # Bundle Artifacts
+# Android / IntelliJ
 *.jsbundle
+build/
+.idea/
+.gradle/
+local.properties
+*.iml
+*.hprof
+.cxx/
+*.keystore
+!debug.keystore
+.kotlin/
+.android/
+*.apk
+*.aab
+**/app-release.dm
+.android/app/build/outputs/apk/
+.android/app/build/outputs/bundle/
+.android/app/build/outputs/release/
