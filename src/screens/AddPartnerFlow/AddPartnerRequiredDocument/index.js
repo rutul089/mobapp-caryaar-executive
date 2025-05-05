@@ -6,9 +6,8 @@ import {connect} from 'react-redux';
 
 import {getScreenParam, navigate} from '../../../navigation/NavigationUtils';
 import {setDocumentDetails} from '../../../redux/actions';
-import {handleFileSelection} from '../../../utils/filePicker';
-import {showToast, viewDocumentHelper} from '../../../utils/helper';
-
+import {handleFileSelection} from '../../../utils/documentUtils';
+import {showToast} from '../../../utils/helper';
 import {
   partnerDocumentLabelMap,
   partnerDocumentType,
@@ -16,6 +15,7 @@ import {
 import ScreenNames from '../../../constants/ScreenNames';
 
 import Partner_Document_Form_Component from './Partner_Document_Form_Component';
+import {viewDocumentHelper} from '../../../utils/documentUtils';
 
 class AddPartnerRequiredDocument extends Component {
   constructor(props) {

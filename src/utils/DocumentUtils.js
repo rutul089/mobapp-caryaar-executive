@@ -1,172 +1,198 @@
-import {launchImageLibrary} from 'react-native-image-picker';
+import {pick, types} from '@react-native-documents/picker';
+import {Alert} from 'react-native';
 import FileViewer from 'react-native-file-viewer';
 import RNFS from 'react-native-fs';
-import {Alert} from 'react-native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {partnerDocumentLabelMap} from '../constants/enums';
 
-export default {
-  handleUploadMedia: (state, setState, groupTitle, label) => {
-    launchImageLibrary({mediaType: 'photo'}, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.errorMessage) {
-        console.error('ImagePicker Error: ', response.errorMessage);
-      } else if (response.assets && response.assets.length > 0) {
-        const asset = response.assets[0];
-        const newImageData = {
-          uri: asset.uri,
-          type: asset.type,
-          fileSize: asset.fileSize,
-          isLocal: true,
-        };
+/**
+ * Launches a file picker based on type: camera, gallery, or document.
+ *
+ * @param {'camera' | 'gallery' | 'document'} type - Picker type.
+ * @param {(file: object | null) => void} callback - Callback with selected file or null.
+ */
+export const handleFileSelection = async (type, callback) => {
+  try {
+    if (type === 'camera') {
+      const result = await launchCamera({mediaType: 'photo', quality: 0.8});
 
-        const updatedGroups = state.documentGroups.map(group => {
-          if (group.title === groupTitle) {
-            return {
-              ...group,
-              documents: group.documents.map(doc =>
-                doc.label === label ? {...doc, image: newImageData} : doc,
-              ),
-            };
-          }
-          return group;
-        });
-
-        setState({documentGroups: updatedGroups});
-      }
-    });
-  },
-
-  handleDeleteMedia: (state, setState, groupTitle, label) => {
-    const updatedGroups = state.documentGroups.map(group => {
-      if (group.title === groupTitle) {
-        return {
-          ...group,
-          documents: group.documents.map(doc =>
-            doc.label === label ? {...doc, image: null} : doc,
-          ),
-        };
-      }
-      return group;
-    });
-
-    setState({documentGroups: updatedGroups});
-  },
-
-  handleViewImage: (state, setState, label, onImageFound) => {
-    const imageUri = state.initialDocuments[label];
-    if (!imageUri) {
-      Alert.alert('No file to preview');
-      return;
-    }
-
-    const fileExtension = imageUri.split('.').pop().toLowerCase();
-
-    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
-      setState(prev => ({...prev, previewImage: imageUri}));
-      onImageFound?.();
-    } else {
-      // For pdf/doc files — download & open
-      const localFile = `${RNFS.DocumentDirectoryPath}/${label}.${fileExtension}`;
-
-      RNFS.downloadFile({fromUrl: imageUri, toFile: localFile})
-        .promise.then(() => {
-          FileViewer.open(localFile)
-            .then(() => {})
-            .catch(error => {
-              Alert.alert('Error opening file', error.message);
-            });
-        })
-        .catch(error => {
-          Alert.alert('Download failed', error.message);
-        });
-    }
-  },
-
-  // handleViewImage: (state, setState, label) => {
-  //   const foundImage = state.documentGroups
-  //     .flatMap(group => group.documents)
-  //     .find(doc => doc.label === label)?.image;
-
-  //   if (foundImage) {
-  //     setState({previewImage: foundImage});
-  //   } else {
-  //     console.log('No image found for:', label);
-  //   }
-  // },
-
-  // handleNextPress: (state, navigateToNextScreen) => {
-  //   const changedDocuments = {};
-
-  //   state.documentGroups.forEach(group => {
-  //     group.documents.forEach(doc => {
-  //       const initialUri = state.initialDocuments[doc.label] || null;
-  //       const currentUri = doc.image ? doc.image.uri : null;
-
-  //       if (currentUri !== initialUri) {
-  //         changedDocuments[doc.label] = doc.image;
-  //       }
-  //     });
-  //   });
-
-  //   console.log('Changed Documents with details:', changedDocuments);
-  //   navigateToNextScreen();
-  //   return changedDocuments;
-  // },
-
-  handleNextPress: async (state, uploadApiFn, navigateToNextScreen) => {
-    const changedDocuments = {};
-
-    state.documentGroups.forEach(group => {
-      group.documents.forEach(doc => {
-        const initialUri = state.initialDocuments[doc.label] || null;
-        const currentUri = doc.image ? doc.image.uri : null;
-
-        if (currentUri !== initialUri) {
-          changedDocuments[doc.label] = doc.image;
-        }
-      });
-    });
-
-    console.log('Changed Documents to upload:', changedDocuments);
-
-    // If nothing changed, skip API call
-    if (Object.keys(changedDocuments).length === 0) {
-      console.log('No changes detected, navigating ahead.');
-      navigateToNextScreen();
-      return;
-    }
-
-    try {
-      // Call the API function (passed in from the screen)
-      const response = await uploadApiFn(changedDocuments);
-
-      if (response.success) {
-        console.log('Documents uploaded successfully');
-        navigateToNextScreen();
+      if (!result.didCancel && result.assets?.length > 0) {
+        callback(result.assets[0]);
       } else {
-        console.error('Upload failed:', response.message);
-        // You can handle a failure case here — alert, toast, etc.
+        callback(null);
       }
-    } catch (error) {
-      console.error('API error:', error);
-    }
-  },
+    } else if (type === 'gallery') {
+      const result = await launchImageLibrary({
+        mediaType: 'photo',
+        quality: 0.8,
+      });
 
-  getDocumentGroupsWithHandlers: (
-    state,
-    setState,
-    uploadFn,
-    deleteFn,
-    viewFn,
-  ) => {
-    return state.documentGroups.map(group => ({
-      ...group,
-      documents: group.documents.map(doc => ({
-        ...doc,
-        onDeletePress: () => deleteFn(group.title, doc.label),
-        viewImage: () => viewFn(doc.label),
-        uploadMedia: () => uploadFn(group.title, doc.label),
-      })),
-    }));
-  },
+      if (!result.didCancel && result.assets?.length > 0) {
+        callback(result.assets[0]);
+      } else {
+        callback(null);
+      }
+    } else if (type === 'document') {
+      const res = await pick({
+        allowMultiSelection: false,
+        type: [types.pdf, types.images],
+      });
+      callback(res[0]);
+    }
+  } catch (err) {
+    if (err?.code === 'DOCUMENT_PICKER_CANCELED') {
+      callback(null);
+    } else {
+      callback(null);
+    }
+  }
+};
+
+/**
+ * Extracts file type from a file URI.
+ *
+ * @param {string} fileUri - URI of the file.
+ * @returns {'image' | 'pdf' | 'doc' | null} - File type.
+ */
+export const getFileType = fileUri => {
+  if (!fileUri) {
+    return null;
+  }
+
+  const ext = fileUri.split('.').pop().toLowerCase();
+
+  if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
+    return 'image';
+  }
+  if (ext === 'pdf') {
+    return 'pdf';
+  }
+  if (['doc', 'docx'].includes(ext)) {
+    return 'doc';
+  }
+
+  return null;
+};
+
+/**
+ * Opens a file (image/pdf/doc) for preview.
+ *
+ * @param {string} fileUri - File URI.
+ * @param {(imageUri: string) => void} onImagePreview - Callback for image previews.
+ * @param {string} [label='file'] - Label to use for file name.
+ * @param {(isProcessing: boolean) => void} [onProgressChange] - Optional loading callback.
+ */
+export const handleViewFilePreview = (
+  fileUri,
+  onImagePreview,
+  label = 'file',
+  onProgressChange,
+) => {
+  if (!fileUri) {
+    Alert.alert('No file to preview');
+    return;
+  }
+
+  const extension = fileUri.split('.').pop().toLowerCase();
+
+  if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) {
+    onImagePreview(fileUri);
+    return;
+  }
+
+  const localPath = `${RNFS.DocumentDirectoryPath}/${label}.${extension}`;
+  onProgressChange?.(true);
+
+  RNFS.downloadFile({fromUrl: fileUri, toFile: localPath})
+    .promise.then(() =>
+      FileViewer.open(localPath)
+        .then(() => onProgressChange?.(false))
+        .catch(err => {
+          onProgressChange?.(false);
+          Alert.alert('Error opening file', err.message);
+        }),
+    )
+    .catch(err => {
+      onProgressChange?.(false);
+      Alert.alert('Download failed', err.message);
+    });
+};
+
+/**
+ * Finds an uploaded document from a list by type.
+ *
+ * @param {string} type - Document type.
+ * @param {Array} uploadedDocs - Array of uploaded documents.
+ * @returns {Object | undefined} - The matched document or undefined.
+ */
+const findUploadedDoc = (type, uploadedDocs = []) =>
+  uploadedDocs.find(doc => doc.documentType === type);
+
+/**
+ * Builds the full document list for a partner.
+ *
+ * @param {Object} partnerDetail - Partner details with uploaded/missing documents.
+ * @param {(type: string, url?: string) => void} onPressHandler - Callback when item is pressed.
+ * @returns {Array} - List of document objects.
+ */
+export const buildDocumentsArray = (partnerDetail, onPressHandler) => {
+  const allDocTypes = Object.keys(partnerDocumentLabelMap);
+  const uploadedDocs = partnerDetail?.documents || [];
+  const missingDocs = partnerDetail?.missingDocuments || [];
+
+  return allDocTypes.map(type => {
+    const uploadedDoc = findUploadedDoc(type, uploadedDocs);
+    return {
+      label: partnerDocumentLabelMap[type],
+      documentType: type,
+      uploaded: !!uploadedDoc,
+      isMissing: missingDocs.includes(type),
+      ...uploadedDoc,
+      onPress: () => onPressHandler(type, uploadedDoc?.documentUrl),
+    };
+  });
+};
+
+/**
+ * Attempts to preview a document from a remote URI. Downloads if necessary.
+ *
+ * @param {string} uri - Remote file URL.
+ * @param {(uri: string) => void} onImage - Image preview callback.
+ * @param {(error: Error) => void} [onError] - Error callback.
+ * @param {() => void} [onLoading] - Loading indicator callback.
+ */
+export const viewDocumentHelper = async (uri, onImage, onError, onLoading) => {
+  if (!uri) {
+    return;
+  }
+
+  try {
+    const response = await fetch(uri, {method: 'HEAD'});
+    const contentType = response.headers.get('Content-Type') || '';
+    const isImage = contentType.startsWith('image/');
+
+    if (isImage) {
+      onImage(uri);
+    } else {
+      const extension = contentType.split('/')[1] || 'pdf';
+      const localFileName = `temp_file_${Date.now()}.${extension}`;
+      const localPath = `${RNFS.DocumentDirectoryPath}/${localFileName}`;
+
+      const result = await RNFS.downloadFile({
+        fromUrl: uri,
+        toFile: localPath,
+      }).promise;
+
+      if (result.statusCode === 200) {
+        await FileViewer.open(localPath, {showOpenWithDialog: true});
+      } else {
+        throw new Error('Failed to download file');
+      }
+    }
+  } catch (err) {
+    console.warn('Error opening file:', err);
+    onError?.(err);
+  } finally {
+    onLoading?.();
+  }
 };

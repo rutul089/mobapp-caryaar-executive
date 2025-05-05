@@ -12,7 +12,7 @@ import {
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {goBack} from '../../../navigation/NavigationUtils';
-import {getFileType} from '../../../utils/helper';
+import {getFileType} from '../../../utils/documentUtils';
 
 const Partner_Document_Form_Component = ({
   showImages,

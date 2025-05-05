@@ -4,16 +4,16 @@ import {get} from 'lodash';
 
 import Edit_Profile_Component from './Edit_Profile_Component';
 import {getLabelFromEnum, salesExecutiveValue} from '../../../constants/enums';
-import {handleFileSelection} from '../../../utils/filePicker';
+import {handleFileSelection} from '../../../utils/documentUtils';
 import {
   handleFieldChange,
   showToast,
   validateField,
-  viewDocumentHelper,
 } from '../../../utils/helper';
 import {navigate} from '../../../navigation/NavigationUtils';
 import ScreenNames from '../../../constants/ScreenNames';
 import {updateProfileThunk} from '../../../redux/actions';
+import {viewDocumentHelper} from '../../../utils/documentUtils';
 
 class EditProfileScreen extends Component {
   state = {

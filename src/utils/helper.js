@@ -7,6 +7,12 @@ import colors from '../theme/colors';
 import {partnerDocumentLabelMap} from '../constants/enums';
 import Toast from 'react-native-toast-message';
 
+/**
+ * Format a numeric value into Indian currency style (e.g., ₹12,34,567.89)
+ * @param {string | number} value - The number to format
+ * @param {boolean} [showSign=true] - Whether to prefix with ₹
+ * @returns {string}
+ */
 export const formatIndianNumber = (value, showSign = true) => {
   const [intPart, decimalPart] = value?.toString().split('.');
   let cleaned = intPart.replace(/[^0-9]/g, '');
@@ -20,31 +26,45 @@ export const formatIndianNumber = (value, showSign = true) => {
   if (otherNumbers !== '') {
     lastThree = ',' + lastThree;
   }
+
   const formatted =
     otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
 
-  let formatAmount = decimalPart ? `${formatted}.${decimalPart}` : formatted;
+  const formatAmount = decimalPart ? `${formatted}.${decimalPart}` : formatted;
   return showSign ? `₹${formatAmount}` : formatAmount;
 };
 
-export const formatAmount = text => {
-  // Allow only numbers and one dot
-  return text.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-};
+/**
+ * Remove unwanted characters from a currency input string
+ * @param {string} text
+ * @returns {string}
+ */
+export const formatAmount = text =>
+  text.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
 
+/**
+ * Get gradient color array based on application status
+ * @param {number} status
+ * @returns {string[]}
+ */
 export const getGradientColors = status => {
   switch (status) {
-    case 1: ///Pending
+    case 1:
       return colors.appliedGradient;
-    case 2: //Approved
+    case 2:
       return colors.lenderApprovedGradient;
-    case 3: //Rejected
+    case 3:
       return colors.onHoldGradient;
     default:
       return colors.defaultGradient;
   }
 };
 
+/**
+ * Return background color for given application status
+ * @param {string} status
+ * @returns {string}
+ */
 export const getStatusColor = status => {
   switch (status) {
     case 'SAVED':
@@ -58,114 +78,35 @@ export const getStatusColor = status => {
   }
 };
 
-export const isLastRow = (index, data, item) => {
-  const visibleItems = data.filter(d => !d.full); // half-width items
-  const totalHalf = visibleItems.length;
-
-  const lastIndex = data.length - 1;
-
-  // Case 1: Last item
-  if (index === lastIndex) {
-    return true;
-  }
-
-  // Case 2: Last two half-width items in even row
-  if (!item?.full && data[index + 1] && !data[index + 1].full) {
-    return index === lastIndex - 1;
-  }
-
-  // Case 3: Only one half-width item at the end
-  if (!item?.full && !data[index + 1]) {
-    return true;
-  }
-
-  return false;
-};
-
+/**
+ * Get loan gradient color based on loan status
+ * @param {number} status
+ * @returns {string[]}
+ */
 export const getGradientColorsLoan = status => {
   switch (status) {
-    case 1: //Draft
+    case 1:
       return ['#E8E8E8', '#E8E8E8'];
-    case 2: //Applied
+    case 2:
       return ['#F8A902', '#F3696E'];
-    case 3: //lender approved
+    case 3:
       return ['#6EEE87', '#5FC52E'];
-    case 4: //on hold
+    case 4:
       return ['#FF5B5E', '#B60003'];
     default:
       return ['#E8E8E8', '#E8E8E8'];
   }
 };
 
-export const getFileType = fileUri => {
-  if (!fileUri) {
-    return null;
-  }
-  const ext = fileUri.split('.').pop().toLowerCase();
-
-  if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
-    return 'image';
-  }
-  if (ext === 'pdf') {
-    return 'pdf';
-  }
-  if (['doc', 'docx'].includes(ext)) {
-    return 'doc';
-  }
-
-  return null;
-};
-
 /**
- * Preview an image or document from a given URL or local link.
- *
- * @param {string} fileUri - The URL or local URI of the file.
- * @param {(imageUri: string) => void} onImagePreview - Callback to show image preview.
- * @param {string} [label='file'] - The name to save the file as when downloading.
- * @param {(isProcessing: boolean) => void} [onProgressChange] - Callback for loading state.
+ * Validate a form field by key
+ * @param {string} key
+ * @param {string} value
+ * @returns {string} - Error message if invalid, otherwise empty string
  */
-export const handleViewFilePreview = (
-  fileUri,
-  onImagePreview,
-  label = 'file',
-  onProgressChange,
-) => {
-  if (!fileUri) {
-    Alert.alert('No file to preview');
-    return;
-  }
-
-  const fileExtension = fileUri.split('.').pop().toLowerCase();
-
-  if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
-    onImagePreview(fileUri);
-  } else {
-    const localFile = `${RNFS.DocumentDirectoryPath}/${label}.${fileExtension}`;
-
-    onProgressChange?.(true); // start loading
-
-    RNFS.downloadFile({fromUrl: fileUri, toFile: localFile})
-      .promise.then(() => {
-        FileViewer.open(localFile)
-          .then(() => {
-            onProgressChange?.(false); // done
-          })
-          .catch(error => {
-            onProgressChange?.(false);
-            Alert.alert('Error opening file', error.message);
-          });
-      })
-      .catch(error => {
-        onProgressChange?.(false);
-        Alert.alert('Download failed', error.message);
-      });
-  }
-};
-
 export const validateField = (key, value) => {
   const trimmedValue = value?.trim();
 
-  // Regular Expressions
   const nameRegex = /^[A-Za-z\s]+$/;
   const numericRegex = /^[0-9]+(\.[0-9]+)?$/;
   const integerRegex = /^[0-9]+$/;
@@ -176,17 +117,11 @@ export const validateField = (key, value) => {
   const accountNumberRegex = /^[0-9]{9,18}$/;
 
   switch (key) {
-    // Company & Business Names
     case 'companyName':
-    case 'businessName':
       return trimmedValue === '' ? 'Please enter a valid company name' : '';
-    // return trimmedValue === ''
-    //   ? 'Please enter a valid company name'
-    //   : !nameRegex.test(trimmedValue)
-    //   ? 'Name should contain only alphabets'
-    //   : '';
+    case 'businessName':
+      return trimmedValue === '' ? 'Please enter a valid business name' : '';
 
-    // Numeric only fields with optional decimal — no leading decimal
     case 'yearsInBusiness':
     case 'monthlyCarSales':
       return trimmedValue === ''
@@ -203,7 +138,6 @@ export const validateField = (key, value) => {
           } must be a valid number (not starting with a decimal)`
         : '';
 
-    // Names
     case 'fullName':
     case 'ownerName':
     case 'accountHolderName':
@@ -219,7 +153,6 @@ export const validateField = (key, value) => {
         ? 'Name should contain only alphabets'
         : '';
 
-    // Address Fields
     case 'shopNo':
       return trimmedValue === ''
         ? 'Please enter a valid shop/office number'
@@ -238,13 +171,11 @@ export const validateField = (key, value) => {
     case 'selectedSalesExecValue':
       return trimmedValue === '' ? 'Please select a valid Position' : '';
 
-    // Pincode
     case 'pincode':
       return pincodeRegex.test(trimmedValue)
         ? ''
         : 'Pincode must be a 6-digit number';
 
-    // Mobile Number
     case 'mobileNumber':
       return trimmedValue === ''
         ? 'Please enter a mobile number'
@@ -252,7 +183,6 @@ export const validateField = (key, value) => {
         ? 'Mobile number must be a 10-digit number'
         : '';
 
-    // Email
     case 'emailAddress':
     case 'email':
       return trimmedValue === ''
@@ -261,21 +191,17 @@ export const validateField = (key, value) => {
         ? 'Please enter a valid email address'
         : '';
 
-    // Account Number
     case 'accountNumber':
       return accountNumberRegex.test(trimmedValue)
         ? ''
         : 'Account number must be 9 to 18 digit number';
 
-    // Bank Name
     case 'bankName':
       return trimmedValue === '' ? 'Please select a valid bank name' : '';
     case 'branchName':
       return trimmedValue === ''
         ? 'Branch name is required (Verify IFSC code)'
         : '';
-
-    // IFSC Code
     case 'ifscCode':
       return ifscRegex.test(trimmedValue)
         ? ''
@@ -286,6 +212,12 @@ export const validateField = (key, value) => {
   }
 };
 
+/**
+ * Handle change for form fields, validate and update state
+ * @param {React.Component} component
+ * @param {string} key
+ * @param {string} value
+ */
 export const handleFieldChange = (component, key, value) => {
   const errorMsg = validateField(key, value);
 
@@ -308,33 +240,33 @@ export const handleFieldChange = (component, key, value) => {
 };
 
 /**
- * Returns a formatted location string based on city and state.
- * If both are present, returns "City, State".
- * If only one is present, returns that one.
- * If neither is present, returns an empty string.
- *
- * @param {string} city - The name of the city.
- * @param {string} state - The name of the state.
- * @returns {string} The formatted location string.
+ * Format location string from city and state
+ * @param {string} city
+ * @param {string} state
+ * @returns {string}
  */
 export const getLocationText = (city, state) => {
   return [city, state].filter(Boolean).join(', ');
 };
 
 /**
- * Format ISO date string into a readable format
- * @param {string} isoDate - ISO formatted date string (e.g. '2025-04-26T03:52:04.254Z')
- * @param {string} format - Desired output format (e.g. 'DD MMM YYYY, hh:mm A')
- * @returns {string} - Formatted date string
+ * Format ISO date string
+ * @param {string} isoDate
+ * @param {string} [format='DD MMM YYYY']
+ * @returns {string}
  */
 export const formatDate = (isoDate, format = 'DD MMM YYYY') => {
   const date = moment(isoDate);
   return date.isValid() ? date.format(format) : '';
 };
 
+/**
+ * Format full partner address string
+ * @param {Object} d - Partner detail object
+ * @returns {string}
+ */
 export const getPartnerAddress = d =>
   [
-    // d?.shopNo && `Shop No: ${d.shopNo}`,
     d?.shopNo,
     d?.buildingName,
     d?.streetAddress,
@@ -347,55 +279,29 @@ export const getPartnerAddress = d =>
     .join(', ');
 
 /**
- * Helper to find uploaded document by type
- * @param {string} type
- * @param {Array} uploadedDocs
- * @returns {Object|undefined}
+ * Parse API error object into readable message
+ * @param {any} error
+ * @returns {string}
  */
-const findUploadedDoc = (type, uploadedDocs = []) =>
-  uploadedDocs.find(doc => doc.documentType === type);
-
-/**
- * Builds a full document list with uploaded and missing flags
- * @param {Object} partnerDetail
- * @param {Function} onPressHandler - function to call when document is clicked
- * @returns {Array}
- */
-export const buildDocumentsArray = (partnerDetail, onPressHandler) => {
-  const allDocTypes = Object.keys(partnerDocumentLabelMap);
-  const uploadedDocs = partnerDetail?.documents || [];
-  const missingDocs = partnerDetail?.missingDocuments || [];
-
-  return allDocTypes.map(type => {
-    const uploadedDoc = findUploadedDoc(type, uploadedDocs);
-
-    return {
-      label: partnerDocumentLabelMap[type],
-      documentType: type,
-      uploaded: !!uploadedDoc,
-      isMissing: missingDocs.includes(type),
-      ...uploadedDoc, // Spread all fields from uploaded doc if exists
-      onPress: () => onPressHandler(type, uploadedDoc?.documentUrl),
-    };
-  });
-};
-
 export const getErrorMessage = error => {
   try {
     if (error?.message === 'Network Error') {
       return 'Please check your internet connection.';
     }
     const message = error?.response?.data?.message;
-    if (message) {
-      return message;
-    } else {
-      return 'Something went wrong';
-    }
-  } catch (err) {
+    return message || 'Something went wrong';
+  } catch {
     return 'Something went wrong';
   }
 };
 
+/**
+ * Show toast message
+ * @param {'success'|'error'|'info'|'warning'} type
+ * @param {string} message
+ * @param {'top'|'bottom'} [position='bottom']
+ * @param {number} [visibilityTime=2000]
+ */
 export const showToast = (
   type = 'warning',
   message = '',
@@ -403,96 +309,61 @@ export const showToast = (
   visibilityTime = 2000,
 ) => {
   Toast.show({
-    type: type,
+    type,
     text1: message,
-    position: position,
+    position,
     bottomOffset: 100,
     topOffset: 100,
     visibilityTime,
   });
 };
 
+/**
+ * Show API error toast
+ * @param {any} error
+ */
 export const showApiErrorToast = error => {
   const message = getErrorMessage(error);
-  Toast.show({
-    type: 'error',
-    text1: message,
-    position: 'bottom',
-    bottomOffset: 100,
-    visibilityTime: 3000,
-  });
+  showToast('error', message, 'bottom', 3000);
 };
 
+/**
+ * Show API success toast
+ * @param {Object} response
+ */
 export const showApiSuccessToast = response => {
-  Toast.show({
-    type: 'success',
-    text1: response?.message,
-    position: 'bottom',
-    bottomOffset: 100,
-    visibilityTime: 3000,
-  });
+  showToast('success', response?.message, 'bottom', 3000);
 };
 
+/**
+ * Ensure mobile number has +91 prefix
+ * @param {string} num
+ * @returns {string}
+ */
 export const formatMobileNumber = num => {
   return num.startsWith('+91') ? num : `+91${num}`;
 };
 
+/**
+ * Remove country code from phone number
+ * @param {string} phoneNumber
+ * @param {string} [defaultCountryCode='91']
+ * @returns {string}
+ */
 export const removeCountryCode = (phoneNumber, defaultCountryCode = '91') => {
   if (!phoneNumber) {
     return '';
   }
 
-  // Remove any non-digit characters
   const digitsOnly = phoneNumber.replace(/\D/g, '');
 
-  // If it starts with the default country code, remove it
   if (digitsOnly.startsWith(defaultCountryCode)) {
     return digitsOnly.slice(defaultCountryCode.length);
   }
 
-  // If it starts with '0', assume it's already local
   if (digitsOnly.startsWith('0')) {
     return digitsOnly.slice(1);
   }
 
-  // Fallback: return last 10 digits (typical for mobile numbers)
   return digitsOnly.length > 10 ? digitsOnly.slice(-10) : digitsOnly;
-};
-
-export const viewDocumentHelper = async (uri, onImage, onError, onLoading) => {
-  if (!uri) {
-    return;
-  }
-
-  try {
-    const response = await fetch(uri, {method: 'HEAD'});
-    const contentType = response.headers.get('Content-Type') || '';
-    const isImage = contentType.startsWith('image/');
-
-    if (isImage) {
-      onImage(uri);
-    } else {
-      const extension = contentType.split('/')[1] || 'pdf';
-      const localFileName = `temp_file_${Date.now()}.${extension}`;
-      const localPath = `${RNFS.DocumentDirectoryPath}/${localFileName}`;
-
-      const downloadResult = await RNFS.downloadFile({
-        fromUrl: uri,
-        toFile: localPath,
-      }).promise;
-
-      if (downloadResult.statusCode === 200) {
-        await FileViewer.open(localPath, {
-          showOpenWithDialog: true,
-        });
-      } else {
-        throw new Error('Failed to download file');
-      }
-    }
-  } catch (error) {
-    console.warn('Error opening file:', error);
-    onError?.(error);
-  } finally {
-    onLoading?.();
-  }
 };

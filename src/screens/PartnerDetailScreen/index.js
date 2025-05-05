@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import {images} from '@caryaar/components';
 import {get} from 'lodash';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Loader} from '../../components';
-import {images} from '@caryaar/components';
 import {businessTypeValue, getLabelFromEnum} from '../../constants/enums';
 import ScreenNames from '../../constants/ScreenNames';
 import {
@@ -25,12 +25,13 @@ import {
 } from '../../redux/actions';
 import {
   buildDocumentsArray,
+  viewDocumentHelper,
+} from '../../utils/documentUtils';
+import {
   getLocationText,
   getPartnerAddress,
   showApiErrorToast,
-  viewDocumentHelper,
 } from '../../utils/helper';
-import {formatPartnerDetails} from '../../utils/partnerHelpers';
 import Partner_Detail_Component from './Partner_Detail_Component';
 
 class PartnerDetailScreen extends Component {

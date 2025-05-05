@@ -5,8 +5,9 @@ import {
   goBack,
   navigate,
 } from '../../navigation/NavigationUtils';
-import {formatIndianNumber, handleViewFilePreview} from '../../utils/helper';
+import {formatIndianNumber} from '../../utils/helper';
 import Application_Detail_Component from './Application_Detail_Component';
+import {handleViewFilePreview} from '../../utils/documentUtils';
 // import {handleViewImage} from './DocumentList';
 
 export default class ApplicationDetailScreen extends Component {
