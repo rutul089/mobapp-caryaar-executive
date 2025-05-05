@@ -1,14 +1,8 @@
 import moment from 'moment';
-import {Alert} from 'react-native';
-import FileViewer from 'react-native-file-viewer';
-import RNFS from 'react-native-fs';
+import Toast from 'react-native-toast-message';
+import {applicationStatus} from '../constants/enums';
 import theme from '../theme';
 import colors from '../theme/colors';
-import {
-  partnerDocumentLabelMap,
-  partnerOnboardingStatus,
-} from '../constants/enums';
-import Toast from 'react-native-toast-message';
 
 /**
  * Format a numeric value into Indian currency style (e.g., ₹12,34,567.89)
@@ -52,11 +46,11 @@ export const formatAmount = text =>
  */
 export const getGradientColors = status => {
   switch (status) {
-    case partnerOnboardingStatus.PENDING:
+    case applicationStatus.PENDING:
       return colors.appliedGradient;
-    case partnerOnboardingStatus.APPROVED:
+    case applicationStatus.APPROVED:
       return colors.lenderApprovedGradient;
-    case partnerOnboardingStatus.REJECTED:
+    case applicationStatus.REJECTED:
       return colors.onHoldGradient;
     default:
       return colors.appliedGradient;
@@ -370,3 +364,35 @@ export const removeCountryCode = (phoneNumber, defaultCountryCode = '91') => {
 
   return digitsOnly.length > 10 ? digitsOnly.slice(-10) : digitsOnly;
 };
+
+// utils/dateUtils.js
+
+export function getRelativeTime(dateString) {
+  const date = new Date(dateString);
+
+  if (isNaN(date.getTime())) {
+    return '';
+  }
+
+  const now = new Date();
+  const diffInSeconds = Math.floor((now - date) / 1000);
+
+  const units = [
+    {name: 'year', seconds: 31536000},
+    {name: 'month', seconds: 2592000},
+    {name: 'week', seconds: 604800},
+    {name: 'day', seconds: 86400},
+    {name: 'hour', seconds: 3600},
+    {name: 'minute', seconds: 60},
+    {name: 'second', seconds: 1},
+  ];
+
+  for (const unit of units) {
+    const interval = Math.floor(diffInSeconds / unit.seconds);
+    if (interval >= 1) {
+      return `${interval} ${unit.name}${interval > 1 ? 's' : ''} ago`;
+    }
+  }
+
+  return 'just now';
+}

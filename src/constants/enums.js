@@ -287,6 +287,45 @@ export const dealershipTypeLabels = {
   [dealershipTypeEnum.BROKER]: 'Broker',
 };
 
+// ===================== Application Status =====================
+
+/**
+ * Enum for Application Status values.
+ */
+export const applicationStatus = Object.freeze({
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  PENDING: 'PENDING',
+  QUERY: 'QUERY',
+  IN_REVIEW: 'IN_REVIEW',
+});
+
+/**
+ * Dropdown options for Application Status selection.
+ */
+export const applicationStatusOptions = [
+  {id: '1', label: 'Approved', value: applicationStatus.APPROVED},
+  {id: '2', label: 'Rejected', value: applicationStatus.REJECTED},
+  {id: '3', label: 'Pending', value: applicationStatus.PENDING},
+  {id: '4', label: 'Query', value: applicationStatus.QUERY},
+  {id: '5', label: 'In Review', value: applicationStatus.IN_REVIEW},
+];
+
+/**
+ * Mapping of Application Status value to its display label.
+ */
+export const applicationStatusValue = {
+  [applicationStatus.APPROVED]: 'Approved',
+  [applicationStatus.REJECTED]: 'Rejected',
+  [applicationStatus.PENDING]: 'Pending',
+  [applicationStatus.QUERY]: 'Query',
+  [applicationStatus.IN_REVIEW]: 'In Review',
+};
+
+export const getApplicationStatusLabel = status => {
+  return applicationStatusValue[status] || '';
+};
+
 // ===================== Other Static Constants =====================
 
 export const customerCategory = Object.freeze({

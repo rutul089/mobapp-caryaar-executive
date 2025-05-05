@@ -15,6 +15,7 @@ import React from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
 import {formatDate, getGradientColors} from '../../utils/helper';
 import {Loader, NoDataFound} from '../../components';
+import {getApplicationStatusLabel} from '../../constants/enums';
 
 const Applications_Component = ({
   onRightIconPress,
@@ -78,7 +79,7 @@ const Applications_Component = ({
               isLeftTextBold
               isStatusBold
               leftText={item?.loanApplicationId}
-              status={item.status?.toUpperCase()}
+              status={getApplicationStatusLabel(item.status)?.toUpperCase()}
               gradientColors={getGradientColors(item.status)}
               onPress={() => onItemPress && onItemPress(item)}>
               <PartnerCard

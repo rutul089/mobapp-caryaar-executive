@@ -15,6 +15,8 @@ import theme from '../../theme';
 
 import {getGradientColors} from '../../utils/helper';
 import DocumentList from './DocumentList';
+import {Loader} from '../../components';
+import {getApplicationStatusLabel} from '../../constants/enums';
 
 const Application_Detail_Component = ({
   onBackPress,
@@ -25,6 +27,13 @@ const Application_Detail_Component = ({
   onTackApplicationPress,
   viewPanCard,
   isLoading,
+  loading,
+  loanApplicationId,
+  loanStatus,
+  businessName,
+  submittedOn,
+  processingTime,
+  lastUpdatedOn,
 }) => {
   return (
     <SafeAreaWrapper backgroundColor={theme.colors.background}>
@@ -35,17 +44,17 @@ const Application_Detail_Component = ({
             showLeftText
             isLeftTextBold
             isStatusBold
-            leftText={'849363'}
-            status={applicationDetail.status?.toUpperCase()}
-            gradientColors={getGradientColors(applicationDetail.type)}>
+            leftText={loanApplicationId}
+            status={getApplicationStatusLabel(loanStatus)?.toUpperCase()}
+            gradientColors={getGradientColors(loanStatus)}>
             <PartnerCard
               noMargin
               showRightArrow={false}
-              name={applicationDetail.name}
-              subtitle={`Submitted on: ${applicationDetail.phone}`}
+              name={businessName}
+              subtitle={`Submitted on: ${submittedOn}`}
               buttonLabel="Track Application"
-              processingTime={1 + ' Days'}
-              textNote={'Last updated on 2 hours ago'}
+              processingTime={processingTime}
+              textNote={`Last updated on ${lastUpdatedOn}`}
               callToAction={onTackApplicationPress}
               wrapperColor={theme.colors.gray900}
               partnerColor={theme.colors.white}
@@ -87,6 +96,7 @@ const Application_Detail_Component = ({
           </View>
         </View>
       </ScrollView>
+      {loading && <Loader visible={loading} />}
     </SafeAreaWrapper>
   );
 };
