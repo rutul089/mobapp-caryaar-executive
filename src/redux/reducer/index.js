@@ -6,6 +6,7 @@ import userReducer from './userReducer';
 import partnersReducer from './partnersReducer';
 import salesExecutiveReducer from './salesExecutiveReducer';
 import bankReducer from './bankReducer';
+import loanApplicationReducer from './loanApplicationReducer';
 
 const rootReducer = combineReducers({
   appState: appStateReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   partners: partnersReducer,
   salesExecutives: salesExecutiveReducer,
   banks: bankReducer,
+  applications: loanApplicationReducer,
 });
 
 export default rootReducer;

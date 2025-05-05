@@ -4,7 +4,10 @@ import FileViewer from 'react-native-file-viewer';
 import RNFS from 'react-native-fs';
 import theme from '../theme';
 import colors from '../theme/colors';
-import {partnerDocumentLabelMap} from '../constants/enums';
+import {
+  partnerDocumentLabelMap,
+  partnerOnboardingStatus,
+} from '../constants/enums';
 import Toast from 'react-native-toast-message';
 
 /**
@@ -49,14 +52,14 @@ export const formatAmount = text =>
  */
 export const getGradientColors = status => {
   switch (status) {
-    case 1:
+    case partnerOnboardingStatus.PENDING:
       return colors.appliedGradient;
-    case 2:
+    case partnerOnboardingStatus.APPROVED:
       return colors.lenderApprovedGradient;
-    case 3:
+    case partnerOnboardingStatus.REJECTED:
       return colors.onHoldGradient;
     default:
-      return colors.defaultGradient;
+      return colors.appliedGradient;
   }
 };
 
