@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {userType, vehicleType} from '../../../constants/enums';
+import {userTypeEnum, vehicleTypeEnum} from '../../../constants/enums';
 import ScreenNames from '../../../constants/ScreenNames';
 import {goBack, navigate} from '../../../navigation/NavigationUtils';
 import {setSellerType, setUserType} from '../../../redux/actions';
@@ -10,8 +10,8 @@ class UserAndCarTypeSelection extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCarType: vehicleType.used,
-      selectedUserType: userType.multiUser,
+      selectedCarType: vehicleTypeEnum.USED,
+      selectedUserType: userTypeEnum.MULTI,
       isMultiUser: true,
     };
     this.onUserTypeSelect = this.onUserTypeSelect.bind(this);
@@ -23,7 +23,7 @@ class UserAndCarTypeSelection extends Component {
   onUserTypeSelect = value => {
     this.setState({
       selectedUserType: value,
-      isMultiUser: value === userType.multiUser,
+      isMultiUser: value === userTypeEnum.MULTI,
     });
   };
 
@@ -40,7 +40,7 @@ class UserAndCarTypeSelection extends Component {
     this.props.setUserType(this.state.isMultiUser);
 
     const nextScreen =
-      selectedUserType === userType.singleUser
+      selectedUserType === userTypeEnum.SINGLE
         ? ScreenNames.AddPartnerBasicDetail
         : ScreenNames.SelectPartnerRole;
 

@@ -40,8 +40,6 @@ export const salesExecutiveValue = {
   [salesExecutivePosition.MANAGER]: 'Manager',
 };
 
-// ======================================================================
-
 // ===================== Business Type Constants =====================
 
 /**
@@ -81,8 +79,6 @@ export const businessTypeValue = {
   [businessType.OTHER]: 'Other',
 };
 
-// ====================================================================
-
 // ===================== Partner Onboarding Status Constants =====================
 
 /**
@@ -111,8 +107,6 @@ export const partnerOnboardingStatusValue = {
   [partnerOnboardingStatus.REJECTED]: 'Rejected',
   [partnerOnboardingStatus.PENDING]: 'Pending',
 };
-
-// ====================================================================
 
 // ===================== Partner User Position Constants =====================
 
@@ -150,8 +144,6 @@ export const partnerUserPositionValue = {
   [partnerUserPosition.SENIOR_MANAGEMENT]: 'Senior Management',
   [partnerUserPosition.EMPLOYEE]: 'Employee',
 };
-
-// ======================================================================
 
 // ===================== Settlement Preference Constants =====================
 
@@ -237,12 +229,65 @@ export const partnerDocumentLabelMap = {
   [partnerDocumentType.CANCELLED_CHEQUE]: 'Cancelled Cheque',
 };
 
-// ===================== Other Static Constants =====================
+// ===================== Vehicle Types =====================
 
-export const vehicleType = Object.freeze({
-  used: 'USED_CAR',
-  new: 'NEW_CAR',
+/**
+ * Enum for Vehicle Types.
+ */
+export const vehicleTypeEnum = Object.freeze({
+  USED: 'USED_CAR',
+  NEW: 'NEW_CAR',
 });
+
+/**
+ * Mapping of Vehicle Type value to its display label.
+ */
+export const vehicleTypeLabels = {
+  [vehicleTypeEnum.USED]: 'Used Car',
+  [vehicleTypeEnum.NEW]: 'New Car',
+};
+
+// ===================== User Type Types =====================
+
+/**
+ * Enum for User Types.
+ */
+export const userTypeEnum = Object.freeze({
+  SINGLE: 'SINGLE_USER',
+  MULTI: 'MULTI_USER',
+});
+
+/**
+ * Mapping of User Type value to its display label.
+ */
+export const userTypeLabels = {
+  [userTypeEnum.SINGLE]: 'Single User',
+  [userTypeEnum.MULTI]: 'Multi User',
+};
+
+// ===================== Dealer Ship Types =====================
+
+/**
+ * Enum for Dealership Types.
+ */
+export const dealershipTypeEnum = Object.freeze({
+  OEM: 'OEM',
+  MULTI_BRAND: 'MULTI_BRAND',
+  DSA: 'DSA',
+  BROKER: 'BROKER',
+});
+
+/**
+ * Mapping of Dealership Type value to its display label.
+ */
+export const dealershipTypeLabels = {
+  [dealershipTypeEnum.OEM]: 'OEM Dealer',
+  [dealershipTypeEnum.MULTI_BRAND]: 'Multi-Brand Deaker',
+  [dealershipTypeEnum.DSA]: 'DSA',
+  [dealershipTypeEnum.BROKER]: 'Broker',
+};
+
+// ===================== Other Static Constants =====================
 
 export const customerCategory = Object.freeze({
   individual: 'Individual',
@@ -268,11 +313,6 @@ export const loanType = Object.freeze({
   loan: 6,
   lease: 7,
   subscribe: 8,
-});
-
-export const userType = Object.freeze({
-  singleUser: 'SINGLE_USER',
-  multiUser: 'MULTI_USER',
 });
 
 export const eVehicleStatus = Object.freeze({
@@ -301,15 +341,6 @@ export const userRole = Object.freeze({
   PARTNER: 'PARTNER',
   SALES_EXECUTIVE: 'SALES_EXECUTIVE',
 });
-
-export const dealershipType = Object.freeze({
-  OEM: 'OEM',
-  MULTI_BRAND: 'MULTI_BRAND',
-  DSA: 'DSA',
-  BROKER: 'BROKER',
-});
-
-// ======================================================================
 
 // ===================== Helper Functions ======================
 

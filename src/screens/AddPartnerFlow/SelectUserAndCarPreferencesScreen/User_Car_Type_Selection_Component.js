@@ -10,7 +10,12 @@ import {
 } from '@caryaar/components';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {userType, vehicleType} from '../../../constants/enums';
+import {
+  userTypeEnum,
+  userTypeLabels,
+  vehicleTypeEnum,
+  vehicleTypeLabels,
+} from '../../../constants/enums';
 
 const User_Car_Type_Selection_Component = ({
   onBackPress,
@@ -28,22 +33,22 @@ const User_Car_Type_Selection_Component = ({
         <Spacing size="smd" />
         <View style={styles.row}>
           <OptionCard
-            value={userType.singleUser}
-            label={'Single User'}
+            value={userTypeEnum.SINGLE}
+            label={userTypeLabels.SINGLE_USER}
             icon={images.userCircle}
             onSelect={onUserTypeSelect}
-            isSelected={selectedUserType === userType.singleUser}
+            isSelected={selectedUserType === userTypeEnum.SINGLE}
             textProps={{
               size: 'small',
               hankenGroteskMedium: true,
             }}
           />
           <OptionCard
-            value={userType.multiUser}
-            label={'Multi User'}
+            value={userTypeEnum.MULTI}
+            label={userTypeLabels.MULTI_USER}
             icon={images.userGroup}
             onSelect={onUserTypeSelect}
-            isSelected={selectedUserType === userType.multiUser}
+            isSelected={selectedUserType === userTypeEnum.MULTI}
             textProps={{
               size: 'small',
               hankenGroteskMedium: true,
@@ -55,11 +60,11 @@ const User_Car_Type_Selection_Component = ({
         <Spacing size="smd" />
         <View style={styles.row}>
           <OptionCard
-            value={vehicleType.new}
-            label={'New Car'}
+            value={vehicleTypeEnum.NEW}
+            label={vehicleTypeLabels.NEW_CAR}
             icon={images.newVehicle}
             onSelect={onCarTypeSelect}
-            isSelected={selectedCarType === vehicleType.new}
+            isSelected={selectedCarType === vehicleTypeEnum.NEW}
             isMedium
             textProps={{
               size: 'small',
@@ -67,11 +72,11 @@ const User_Car_Type_Selection_Component = ({
             }}
           />
           <OptionCard
-            value={vehicleType.used}
-            label={'Used Car'}
+            value={vehicleTypeEnum.USED}
+            label={vehicleTypeLabels.USED_CAR}
             icon={images.usedVehicle}
             onSelect={onCarTypeSelect}
-            isSelected={selectedCarType === vehicleType.used}
+            isSelected={selectedCarType === vehicleTypeEnum.USED}
             textProps={{
               size: 'small',
               hankenGroteskMedium: true,

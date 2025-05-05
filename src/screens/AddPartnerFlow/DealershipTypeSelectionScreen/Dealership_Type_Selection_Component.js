@@ -1,5 +1,3 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
 import {
   Button,
   Header,
@@ -10,7 +8,12 @@ import {
   Text,
   theme,
 } from '@caryaar/components';
-import {dealershipType} from '../../../constants/enums';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import {
+  dealershipTypeEnum,
+  dealershipTypeLabels,
+} from '../../../constants/enums';
 import {goBack} from '../../../navigation/NavigationUtils';
 
 const Dealership_Type_Selection_Component = ({
@@ -27,22 +30,24 @@ const Dealership_Type_Selection_Component = ({
         <Spacing size="smd" />
         <View style={styles.row}>
           <OptionCard
-            value={dealershipType.OEM}
-            label={'OEM Dealer'}
+            value={dealershipTypeEnum.OEM}
+            label={dealershipTypeLabels.OEM}
             icon={images.userCircle}
             onSelect={onDealerShipType}
-            isSelected={selectedDealershipType === dealershipType.OEM}
+            isSelected={selectedDealershipType === dealershipTypeEnum.OEM}
             textProps={{
               size: 'small',
               hankenGroteskMedium: true,
             }}
           />
           <OptionCard
-            value={dealershipType.MULTI_BRAND}
-            label={'Multi-Brand Dealer'}
+            value={dealershipTypeEnum.MULTI_BRAND}
+            label={dealershipTypeLabels.MULTI_BRAND}
             icon={images.userCircle}
             onSelect={onDealerShipType}
-            isSelected={selectedDealershipType === dealershipType.MULTI_BRAND}
+            isSelected={
+              selectedDealershipType === dealershipTypeEnum.MULTI_BRAND
+            }
             textProps={{
               size: 'small',
               hankenGroteskMedium: true,
@@ -52,11 +57,11 @@ const Dealership_Type_Selection_Component = ({
         <Spacing size="md" />
         <View style={styles.row}>
           <OptionCard
-            value={dealershipType.DSA}
-            label={'DSA'}
+            value={dealershipTypeEnum.DSA}
+            label={dealershipTypeLabels.DSA}
             icon={images.userCircle}
             onSelect={onDealerShipType}
-            isSelected={selectedDealershipType === dealershipType.DSA}
+            isSelected={selectedDealershipType === dealershipTypeEnum.DSA}
             isMedium
             textProps={{
               size: 'small',
@@ -64,11 +69,11 @@ const Dealership_Type_Selection_Component = ({
             }}
           />
           <OptionCard
-            value={dealershipType.BROKER}
-            label={'Broker'}
+            value={dealershipTypeEnum.BROKER}
+            label={dealershipTypeLabels.BROKER}
             icon={images.userCircle}
             onSelect={onDealerShipType}
-            isSelected={selectedDealershipType === dealershipType.BROKER}
+            isSelected={selectedDealershipType === dealershipTypeEnum.BROKER}
             textProps={{
               size: 'small',
               hankenGroteskMedium: true,
