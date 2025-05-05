@@ -1,4 +1,4 @@
-import axiosInstance from './axiosInstance';
+import axiosInstance from '../networking/axiosInstance';
 
 /**
  * Logs in a user based on type (e.g., admin, partner, customer).

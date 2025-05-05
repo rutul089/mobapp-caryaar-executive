@@ -44,7 +44,6 @@ const Manage_Members_Component = ({
   isLoading,
   restInputProps = {},
 }) => {
-  console.log('isLoading-<', isLoading);
   const [showDropdown, setShowDropdown] = React.useState(false);
 
   const renderItem = ({item, index}) => (

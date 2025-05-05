@@ -3,7 +3,7 @@ import {
   deleteSalesExecutiveById,
   fetchSalesExecutives,
   createSalesExecutive,
-} from '../../api/salesExecutiveService';
+} from '../../services';
 import {
   getErrorMessage,
   showApiErrorToast,

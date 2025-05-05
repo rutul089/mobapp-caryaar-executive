@@ -1,4 +1,4 @@
-import {searchBanks, verifyBankIFSC} from '../../api/bankServices';
+import {searchBanks, verifyBankIFSC} from '../../services';
 import {showApiErrorToast} from '../../utils/helper';
 import types from './types';
 

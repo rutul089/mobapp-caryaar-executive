@@ -6,7 +6,7 @@ import {
   fetchPartnersByStatus,
   searchPartnersByKeyword,
   updatePartnerById,
-} from '../../api/partnerServices';
+} from '../../services';
 import moment from 'moment';
 import {formatPartnerDetails} from '../../utils/partnerHelpers';
 import {

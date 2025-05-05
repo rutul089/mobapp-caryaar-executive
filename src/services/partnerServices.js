@@ -1,4 +1,4 @@
-import axiosInstance from '../api/axiosInstance';
+import axiosInstance from '../networking/axiosInstance';
 
 /**
  * Fetches partners filtered by onboarding status, with pagination.

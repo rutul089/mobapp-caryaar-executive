@@ -1,4 +1,4 @@
-import axiosInstance from '../api/axiosInstance';
+import axiosInstance from '../networking/axiosInstance';
 
 /**
  * Fetches the list of all banks from the backend API.

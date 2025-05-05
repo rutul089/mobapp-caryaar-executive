@@ -3,7 +3,7 @@ import {
   getUserProfile,
   loginWithType,
   updateUserProfile,
-} from '../../api/userApi';
+} from '../../services';
 import {showApiErrorToast, showApiSuccessToast} from '../../utils/helper';
 import types from './types';
 

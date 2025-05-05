@@ -1,4 +1,4 @@
-import axiosInstance from '../api/axiosInstance';
+import axiosInstance from '../networking/axiosInstance';
 
 /**
  * Fetches the list of all sales executives from the backend.

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {getCachedToken} from './tokenCache';
 import {logApiEvent} from './apiLogger';
+import {getCachedToken} from '../utils/storage';
 
 const axiosInstance = axios.create({
   baseURL: 'https://caryaar.onrender.com/api/v1',
