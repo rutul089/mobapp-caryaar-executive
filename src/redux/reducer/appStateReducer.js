@@ -24,7 +24,6 @@ const appStateReducer = (state = initialState, action) => {
     case types.SET_NOTIFICATION_COUNT:
       return {...state, notificationCount: action.payload};
 
-    case types.LOGOUT_USER:
     case types.RESET_APP_STATE:
       return {...initialState};
 

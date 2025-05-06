@@ -1,75 +1,74 @@
 import React, {Component} from 'react';
-import {View, Text, Alert} from 'react-native';
+import {Alert} from 'react-native';
+import {connect} from 'react-redux';
 import Notification_Component from './Notification_Component';
 import {goBack} from '../../navigation/NavigationUtils';
+import {
+  fetchNotificationsThunk,
+  markAllNotificationsReadThunk,
+} from '../../redux/actions';
 
 class NotificationView extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      notifications: [
-        {
-          status: 'success',
-          isLatest: true,
-          minutesAgo: '2 Mins ago',
-          description: 'Kotak bank has approved the loan request for #XBD123',
-        },
-        {
-          status: 'pending',
-          isLatest: false,
-          minutesAgo: '15 Mins ago',
-          description: 'Loan request #XYZ789 is under review by Axis bank',
-        },
-        {
-          status: 'rejected',
-          isLatest: false,
-          minutesAgo: '30 Mins ago',
-          description: 'ICICI bank has rejected the application #LMN456',
-        },
-        {
-          status: 'success',
-          isLatest: false,
-          minutesAgo: '5 Mins ago',
-          description: 'HDFC approved your credit increase request #HDFC001',
-        },
-        {
-          status: 'pending',
-          isLatest: true,
-          minutesAgo: '1 Mins ago',
-          description: 'Verification pending for request #VFY234 at SBI',
-        },
-        {
-          status: 'rejected',
-          isLatest: false,
-          minutesAgo: '50 Mins ago',
-          description: 'Loan request #TRF567 was declined by Yes Bank',
-        },
-      ],
-    };
-    this.onBackPress = this.onBackPress.bind(this);
-    this.onPressRightContent = this.onPressRightContent.bind(this);
+  state = {
+    refreshing: false,
+  };
+
+  componentDidMount() {
+    this.fetchNotification();
   }
+
+  fetchNotification = async () => {
+    try {
+      await this.props.fetchNotificationsThunk();
+    } catch (error) {
+      console.warn('Notification fetch error:', error);
+    } finally {
+      this.setState({refreshing: false});
+    }
+  };
+
+  handleRefresh = () => {
+    this.setState({refreshing: true}, this.fetchNotification);
+  };
 
   onBackPress = () => {
     goBack();
   };
 
+  // Method for mark all as read
   onPressRightContent = () => {
-    Alert.alert('Mark as Read Click');
+    const {notifications} = this.props;
+    if (!notifications.length > 0) {
+      return;
+    }
+    this.props.markAllNotificationsReadThunk();
   };
 
   render() {
-    const {notifications} = this.state;
+    const {notifications, loading} = this.props;
+    const {refreshing} = this.state;
+
     return (
-      <>
-        <Notification_Component
-          dataList={notifications}
-          onBackPress={this.onBackPress}
-          onPressRightContent={this.onPressRightContent}
-        />
-      </>
+      <Notification_Component
+        dataList={notifications}
+        onBackPress={this.onBackPress}
+        onPressRightContent={this.onPressRightContent}
+        loading={loading && !refreshing}
+        refreshing={refreshing}
+        onRefresh={this.handleRefresh}
+      />
     );
   }
 }
 
-export default NotificationView;
+const mapStateToProps = ({notifications}) => ({
+  notifications: notifications.notifications,
+  loading: notifications.loading,
+});
+
+const mapDispatchToProps = {
+  fetchNotificationsThunk,
+  markAllNotificationsReadThunk,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NotificationView);

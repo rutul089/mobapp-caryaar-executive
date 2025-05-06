@@ -75,7 +75,10 @@ class ApplicationDetailScreen extends Component {
             label: 'Registration',
             value: safeGet(usedVehicle, 'registerNumber'),
           },
-          {label: 'Price', value: formatIndianNumber(900000)},
+          {
+            label: 'Price',
+            value: safeGet(usedVehicle, 'salePrice'),
+          },
           {
             label: 'Loan Amount',
             value: formatIndianNumber(
@@ -89,10 +92,13 @@ class ApplicationDetailScreen extends Component {
             value: safeGet(customer?.customerDetails, 'applicantName'),
           },
           {label: 'Phone', value: safeGet(customer, 'mobileNumber')},
-          {label: 'Location', value: 'Mumbai'},
+          {
+            label: 'Location',
+            value: safeGet(customer?.customerDetails, 'address'),
+          },
           {
             label: 'Type',
-            value: safeGet(customer?.customerDetails, 'incomeSource'),
+            value: safeGet(customer?.customerDetails, 'occupation'),
           },
         ]}
         loanDetail={[
@@ -104,11 +110,11 @@ class ApplicationDetailScreen extends Component {
           },
           {
             label: 'Tenure',
-            value: `${safeGet(selectedLoanApplications, 'tenure')} Month`,
+            value: `${safeGet(selectedLoanApplications, 'tenure')} Months`,
           },
           {
             label: 'Interest Rate',
-            value: safeGet(selectedLoanApplications, 'interesetRate'),
+            value: `${safeGet(selectedLoanApplications, 'interesetRate')}%`,
           },
           {
             label: 'EMI',
@@ -125,6 +131,7 @@ class ApplicationDetailScreen extends Component {
         )}
         loanStatus={safeGet(selectedLoanApplications, 'status')}
         businessName={safeGet(partner, 'businessName')}
+        additionalNotes={usedVehicle?.additionalNotes}
         submittedOn={formatDate(safeGet(selectedLoanApplications, 'createdAt'))}
         processingTime={selectedLoanApplications?.processingTime}
         lastUpdatedOn={getRelativeTime(

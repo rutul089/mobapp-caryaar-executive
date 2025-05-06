@@ -11,7 +11,7 @@ const initialState = {
   sellerType: null,
 };
 
-export default function partnerFormReducer(state = initialState, action) {
+const partnerFormReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.SET_BASIC_DETAILS:
       return {...state, basicDetails: action.payload};
@@ -49,4 +49,6 @@ export default function partnerFormReducer(state = initialState, action) {
     default:
       return state;
   }
-}
+};
+
+export default partnerFormReducer;

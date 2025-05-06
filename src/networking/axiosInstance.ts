@@ -39,6 +39,8 @@ axiosInstance.interceptors.request.use(
     try {
       if (!config?.skipAuth) {
         const token = await getCachedToken();
+        // const token =
+        //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJiNmQ1YTY0LThhMjMtNDUxOC05Mzk1LTMwNDViZDhhZjg3NiIsInJvbGVJZCI6ImIxNGM3ZGVhLTVkZWYtNGViMi1iYjJiLTRlOWZiMjRhOTUzNCIsInJvbGUiOiJQQVJUTkVSIiwiaWF0IjoxNzQ2NDMyNTQ5LCJleHAiOjE3NDkwMjQ1NDl9.HTCEoru8EKd2RfzgwzeVuPq1F3mOd4N5mMJKmJNu0b8';
         if (token) {
           config.headers = {
             ...config.headers,

@@ -11,7 +11,7 @@ const initialState = {
   searchedLoanApplications: [],
 };
 
-const appStateReducer = (state = initialState, action) => {
+const loanApplicationReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.FETCH_LOAN_APPLICATIONS_REQUEST:
     case types.SEARCH_LOAN_APPLICATIONS_REQUEST:
@@ -69,7 +69,6 @@ const appStateReducer = (state = initialState, action) => {
         loading: false,
       };
 
-    case types.LOGOUT_USER:
     case types.RESET_APP_STATE:
       return {...initialState};
 
@@ -78,4 +77,4 @@ const appStateReducer = (state = initialState, action) => {
   }
 };
 
-export default appStateReducer;
+export default loanApplicationReducer;

@@ -7,3 +7,4 @@ export * from './salesExecutiveActions';
 export * from './bankActions';
 export * from './partnersAction';
 export * from './applicationsAction';
+export * from './notificationsAction';

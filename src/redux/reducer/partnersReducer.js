@@ -18,7 +18,7 @@ const initialState = {
   searchTotalPages: 1,
 };
 
-export default function partnerFormReducer(state = initialState, action) {
+const partnersReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.FETCH_PARTNERS_REQUEST:
     case types.CREATE_PARTNER_REQUEST:
@@ -143,4 +143,6 @@ export default function partnerFormReducer(state = initialState, action) {
     default:
       return state;
   }
-}
+};
+
+export default partnersReducer;

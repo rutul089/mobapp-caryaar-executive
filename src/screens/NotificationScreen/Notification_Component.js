@@ -6,18 +6,23 @@ import {
   images,
 } from '@caryaar/components';
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import {StyleSheet, FlatList} from 'react-native';
+import {Loader, NoDataFound} from '../../components';
+import {getRelativeTime} from '../../utils/helper';
 
 const Notification_Component = ({
   dataList,
   onBackPress,
   onPressRightContent,
+  loading,
+  onRefresh,
+  refreshing,
 }) => {
   const statusIcons = {
     success: images.icApproved,
     pending: images.icPending,
     rejected: images.icRejected,
+    undefined: images.icApproved,
   };
 
   return (
@@ -33,23 +38,25 @@ const Notification_Component = ({
       <FlatList
         data={dataList}
         keyExtractor={(_, index) => index.toString()}
-        bounces={false}
         renderItem={({item}) => (
           <NotificationCard
-            title={item?.description}
-            isLatest={item?.isLatest}
-            subTitle="All documents for AutoMax Motors have been verified successfully."
+            title={item?.title}
+            // showBadge={!item?.isRead}
+            subTitle={item?.body}
             imgSource={statusIcons[item.status]}
-            timeline={item?.minutesAgo}
+            timeline={getRelativeTime(item?.createdAt)}
           />
         )}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
-        initialNumToRender={5}
-        maxToRenderPerBatch={5}
-        removeClippedSubviews
-        windowSize={10}
+        // initialNumToRender={5}
+        // maxToRenderPerBatch={5}
+        // removeClippedSubviews
+        ListEmptyComponent={<NoDataFound />}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
       />
+      {loading && <Loader visible={loading} />}
     </SafeAreaWrapper>
   );
 };

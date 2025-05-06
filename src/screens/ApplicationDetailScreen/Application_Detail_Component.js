@@ -38,6 +38,7 @@ const Application_Detail_Component = ({
   kycDocuments,
   onDocumentPress,
   documentType,
+  additionalNotes,
 }) => {
   return (
     <SafeAreaWrapper backgroundColor={theme.colors.background}>
@@ -96,10 +97,9 @@ const Application_Detail_Component = ({
           <Spacing size="smd" />
           <TextAreaInput
             label=""
+            placeholder="No additional note"
             editable={false}
-            value={
-              'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
-            }
+            value={additionalNotes}
             textAreaStyle={{backgroundColor: 'white', marginTop: 0}}
           />
           <Spacing size="xl" />
