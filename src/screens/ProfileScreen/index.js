@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Loader} from '../../components';
-import {getLabelFromEnum, salesExecutiveValue} from '../../constants/enums';
+import {
+  getLabelFromEnum,
+  partnerUserPositionValue,
+  salesExecutiveValue,
+} from '../../constants/enums';
 import ScreenNames from '../../constants/ScreenNames';
 import {
   navigate,
@@ -83,6 +87,7 @@ class ProfileScreen extends Component {
   render() {
     const {showLogoutModal} = this.state;
     const {profileDetail} = this.props;
+    console.log('profileDetail', JSON.stringify(profileDetail));
 
     return (
       <>
@@ -98,11 +103,14 @@ class ProfileScreen extends Component {
           email={profileDetail?.email}
           phone={removeCountryCode(profileDetail?.mobileNumber)}
           designation={getLabelFromEnum(
-            salesExecutiveValue,
-            profileDetail?.role,
+            partnerUserPositionValue,
+            profileDetail?.partnerUser?.position,
           )}
           avatar={profileDetail?.profileImage}
-          userID={getLabelFromEnum(salesExecutiveValue, profileDetail?.role)}
+          userID={getLabelFromEnum(
+            partnerUserPositionValue,
+            profileDetail?.partnerUser?.position,
+          )}
         />
         {this.props.loading && <Loader visible={this.props.loading} />}
       </>

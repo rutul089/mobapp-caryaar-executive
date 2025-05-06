@@ -165,13 +165,13 @@ const Partner_Component = ({
           !loading && <NoDataFound text="No Partners found" />
         }
         ListFooterComponent={
-          !loading && currentPage >= totalPages && totalPages > 1 ? (
+          !loading && currentPage >= totalPages ? (
             <Text
               type={'helper-text'}
               style={{
                 alignSelf: 'center',
               }}>
-              You have reached the end. All partners are loaded.
+              All partners are loaded.
             </Text>
           ) : null
         }

@@ -41,8 +41,6 @@ class ManageMemberScreen extends Component {
     this.handleAddNewMemberPress = this.handleAddNewMemberPress.bind(this);
     this.onModalHide = this.onModalHide.bind(this);
     this.onPressPrimaryButton = this.onPressPrimaryButton.bind(this);
-    this.onChangeFullName = this.onChangeFullName.bind(this);
-    this.onChangeMobileNumber = this.onChangeMobileNumber.bind(this);
   }
 
   componentDidMount() {
@@ -121,18 +119,6 @@ class ManageMemberScreen extends Component {
         },
       );
     }
-  };
-
-  onChangeFullName = value => {
-    this.setState({
-      fullName: value,
-    });
-  };
-
-  onChangeMobileNumber = value => {
-    this.setState({
-      mobileNumber: value,
-    });
   };
 
   setSelectedSalesExec = item => {

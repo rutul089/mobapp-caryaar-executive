@@ -118,7 +118,7 @@ const Applications_Component = ({
                 style={{
                   alignSelf: 'center',
                 }}>
-                You have reached the end. All Applications are loaded.
+                All applications loaded.
               </Text>
             );
           }

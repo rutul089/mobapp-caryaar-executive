@@ -1,7 +1,7 @@
 import {DocumentRow, Spacing, Text, theme} from '@caryaar/components';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {DOCUMENT_LABELS, KYC_LABELS, KYS_LABELS} from '../../constants/enums';
+import {DOCUMENT_LABELS, KYC_LABELS} from '../../constants/enums';
 
 const DocumentList = ({
   isLoading,

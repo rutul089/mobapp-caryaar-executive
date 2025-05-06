@@ -75,7 +75,18 @@ export const fetchLoanApplicationFromIdThunk = (id, onSuccess, onFailure) => {
     }
   };
 };
-
+/**
+ * Thunk action to search for loan applications based on a keyword and optional status.
+ *
+ * @function searchLoanApplicationThunk
+ * @param {string} search - The search keyword.
+ * @param {number} [page=1] - The current page number for pagination.
+ * @param {number} [limit=10] - The number of items per page.
+ * @param {Function} [onSuccess] - Callback to invoke on successful API response.
+ * @param {Function} [onFailure] - Callback to invoke on failed API response.
+ * @param {string|null} [status=null] - Optional loan application status to filter results.
+ * @returns {Function} Thunk function that dispatches Redux actions.
+ */
 export const searchLoanApplicationThunk = (
   search,
   page = 1,
@@ -117,6 +128,12 @@ export const searchLoanApplicationThunk = (
   };
 };
 
+/**
+ * Clears the loan application search results from the Redux store.
+ *
+ * @function clearLoanSearch
+ * @returns {Object} Redux action to clear the search results.
+ */
 export const clearLoanSearch = () => ({
   type: types.CLEAR_LOAN_SEARCH,
 });

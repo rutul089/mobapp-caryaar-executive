@@ -3,7 +3,11 @@ import {connect} from 'react-redux';
 import {get} from 'lodash';
 
 import Edit_Profile_Component from './Edit_Profile_Component';
-import {getLabelFromEnum, salesExecutiveValue} from '../../../constants/enums';
+import {
+  getLabelFromEnum,
+  partnerUserPositionValue,
+  salesExecutiveValue,
+} from '../../../constants/enums';
 import {handleFileSelection} from '../../../utils/documentUtils';
 import {
   handleFieldChange,
@@ -37,7 +41,7 @@ class EditProfileScreen extends Component {
       fullName: get(profileDetail, 'name', ''),
       email: get(profileDetail, 'email', ''),
       mobileNumber: get(profileDetail, 'mobileNumber', ''),
-      salesExecutivePosition: get(profileDetail, 'role', ''),
+      salesExecutivePosition: get(profileDetail?.partnerUser, 'position', ''),
       profileImage: get(profileDetail, 'profileImage', ''),
     });
   }
@@ -164,7 +168,7 @@ class EditProfileScreen extends Component {
         onMobileChange={value => this.onChangeField('mobileNumber', value)}
         onSalesPositionSelection={this.onSalesPositionSelection}
         salesExecutivePosition={getLabelFromEnum(
-          salesExecutiveValue,
+          partnerUserPositionValue,
           salesExecutivePosition,
         )}
         profileImage={profileImage}

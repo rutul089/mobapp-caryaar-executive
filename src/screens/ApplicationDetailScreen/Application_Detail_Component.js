@@ -8,10 +8,10 @@ import {
   Spacing,
   Text,
   TextAreaInput,
+  theme,
 } from '@caryaar/components';
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import theme from '../../theme';
 
 import {Loader} from '../../components';
 import {getApplicationStatusLabel} from '../../constants/enums';
@@ -20,7 +20,6 @@ import DocumentList from './DocumentList';
 
 const Application_Detail_Component = ({
   onBackPress,
-  applicationDetail,
   vehicleDetail,
   customerDetail,
   loanDetail,

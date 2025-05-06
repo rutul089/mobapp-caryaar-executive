@@ -20,6 +20,7 @@ import {
   View,
 } from 'react-native';
 import {NoDataFound} from '../../../components';
+import {Dropdown} from '../../../components';
 import {getLabelFromEnum, salesExecutiveValue} from '../../../constants/enums';
 import {goBack} from '../../../navigation/NavigationUtils';
 import {formatMobileNumber} from '../../../utils/helper';
@@ -81,6 +82,12 @@ const Manage_Members_Component = ({
       <Spacing size="md" />
     </>
   );
+
+  const handleModalHide = () => {
+    setShowDropdown(false);
+    onModalHide?.();
+  };
+
   return (
     <SafeAreaWrapper>
       <Header
@@ -101,35 +108,19 @@ const Manage_Members_Component = ({
       />
       <CommonModal
         isVisible={isVisible}
-        onModalHide={onModalHide}
+        onModalHide={handleModalHide}
         primaryButtonLabel={'Send Invite'}
         isScrollableContent={true}
         isPrimaryButtonVisible={true}
         modalHeight={'75%'}
         onPressPrimaryButton={onPressPrimaryButton}
         title="Add New Member">
-        <View
-          enableOnAndroid={true}
-          extraScrollHeight={0}
-          extraHeight={0}
-          keyboardVerticalOffset={0}
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{paddingVertical: 15}}>
+        <View style={styles.modalContent}>
           {isLoading && (
-            <View
-              style={{
-                justifyContent: 'center',
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                pointerEvents: 'none',
-              }}>
+            <View style={styles.loaderOverlay}>
               <ActivityIndicator size={'large'} />
             </View>
           )}
-
           <Input
             label="Full Name"
             value={fullName}
@@ -171,43 +162,19 @@ const Manage_Members_Component = ({
             value={selectedSalesExec}
             {...(restInputProps.selectedSalesExec || {})}
           />
-          {salesExecOptions?.length > 0 && showDropdown && (
-            <View style={styles.dropdown}>
-              <FlatList
-                data={salesExecOptions}
-                keyExtractor={(item, index) => index}
-                renderItem={({item, index}) => (
-                  <Pressable
-                    style={[
-                      styles.item,
-                      {
-                        borderBottomWidth:
-                          index === salesExecOptions.length - 1 ? 0 : 1,
-                      },
-                    ]}
-                    onPress={() => {
-                      setShowDropdown(false);
-                      setSelectedSalesExec(item);
-                    }}>
-                    <Text
-                      hankenGroteskSemiBold={selectedSalesExec === item?.label}
-                      size="small"
-                      lineHeight="small">
-                      {item?.label}
-                    </Text>
-                  </Pressable>
-                )}
-              />
-            </View>
-          )}
-          <Spacing size="lg" />
+          <Dropdown
+            options={salesExecOptions}
+            selectedValue={selectedSalesExec}
+            onSelect={item => {
+              setShowDropdown(false);
+              setSelectedSalesExec(item);
+            }}
+            isVisible={showDropdown}
+            multiSelect={false}
+          />
         </View>
       </CommonModal>
-      <View
-        style={{
-          padding: theme.sizes.padding,
-          backgroundColor: theme.colors.background,
-        }}>
+      <View style={styles.buttonWrapper}>
         <Button label={'Add New Member'} onPress={handleAddNewMemberPress} />
       </View>
     </SafeAreaWrapper>
@@ -240,12 +207,30 @@ const styles = StyleSheet.create({
     maxHeight: 200,
     backgroundColor: '#fff',
   },
+  dropdownScroll: {
+    maxHeight: 200,
+  },
   item: {
     height: 45,
-    borderBottomWidth: 1,
     borderBottomColor: '#eee',
     justifyContent: 'center',
     paddingHorizontal: 10,
+  },
+  loaderOverlay: {
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    pointerEvents: 'none',
+  },
+  modalContent: {
+    paddingVertical: 15,
+  },
+  buttonWrapper: {
+    padding: theme.sizes.padding,
+    backgroundColor: theme.colors.background,
   },
 });
 

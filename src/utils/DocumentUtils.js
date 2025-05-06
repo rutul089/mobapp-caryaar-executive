@@ -110,27 +110,40 @@ export const buildDocumentsArray = (partnerDetail, onPressHandler) => {
 };
 
 /**
- * Attempts to preview a document from a remote URI. Downloads if necessary.
+ * Helper to view documents or images from URI.
  *
- * @param {string} uri - Remote file URL.
- * @param {(uri: string) => void} onImage - Image preview callback.
- * @param {(error: Error) => void} [onError] - Error callback.
- * @param {() => void} [onLoading] - Loading indicator callback.
+ * @param {string} uri - The URI to the document (can be HTTP, HTTPS, or local file path).
+ * @param {(uri: string) => void} [onImage] - Callback if the file is an image.
+ * @param {(error: Error) => void} [onError] - Callback if an error occurs.
+ * @param {() => void} [onLoading] - Callback when loading finishes.
  */
-
 export const viewDocumentHelper = async (uri, onImage, onError, onLoading) => {
   try {
-    if (!uri || typeof uri !== 'string' || !uri.startsWith('http')) {
-      throw new Error('Invalid document URL');
+    if (
+      !uri ||
+      typeof uri !== 'string' ||
+      !(
+        uri.startsWith('http://') ||
+        uri.startsWith('https://') ||
+        uri.startsWith('file://') ||
+        uri.startsWith(RNFS.DocumentDirectoryPath)
+      )
+    ) {
+      throw new Error('Invalid document URI. Must be HTTP(S) or a local file.');
     }
 
-    const response = await fetch(uri, {method: 'HEAD'});
-    const contentType = response.headers.get('Content-Type') || '';
-    const isImage = contentType.startsWith('image/');
+    // Check for image
+    if (uri.startsWith('http')) {
+      const response = await fetch(uri, {method: 'HEAD'});
+      const contentType = response.headers.get('Content-Type') || '';
+      const isImage = contentType.startsWith('image/');
 
-    if (isImage) {
-      onImage?.(uri);
-    } else {
+      if (isImage) {
+        onImage?.(uri);
+        return;
+      }
+
+      // Otherwise, download and open
       const extension = contentType.split('/')[1] || 'pdf';
       const localFileName = `temp_file_${Date.now()}.${extension}`;
       const localPath = `${RNFS.DocumentDirectoryPath}/${localFileName}`;
@@ -145,10 +158,12 @@ export const viewDocumentHelper = async (uri, onImage, onError, onLoading) => {
       } else {
         throw new Error('Failed to download the file.');
       }
+    } else {
+      // Assume it's a local file (already on device)
+      await FileViewer.open(uri, {showOpenWithDialog: true});
     }
   } catch (err) {
     console.warn('Error opening file:', err);
-
     onError?.(err);
   } finally {
     onLoading?.();
