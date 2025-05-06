@@ -90,7 +90,7 @@ class AddPartnerBasicDetail extends Component {
     const isFormValid = this.validateAllFields();
 
     if (!isFormValid) {
-      showToast('error', 'Required field cannot be empty.', 'bottom', 3000);
+      showToast('warning', 'Required field cannot be empty.', 'bottom', 3000);
       return;
     }
 

@@ -1,23 +1,21 @@
+import {get} from 'lodash';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {get} from 'lodash';
 
-import Edit_Profile_Component from './Edit_Profile_Component';
+import {getLabelFromEnum, salesExecutiveValue} from '../../../constants/enums';
+import ScreenNames from '../../../constants/ScreenNames';
+import {goBack, navigate} from '../../../navigation/NavigationUtils';
+import {updateProfileThunk} from '../../../redux/actions';
 import {
-  getLabelFromEnum,
-  partnerUserPositionValue,
-  salesExecutiveValue,
-} from '../../../constants/enums';
-import {handleFileSelection} from '../../../utils/documentUtils';
+  handleFileSelection,
+  viewDocumentHelper,
+} from '../../../utils/documentUtils';
 import {
   handleFieldChange,
   showToast,
   validateField,
 } from '../../../utils/helper';
-import {navigate} from '../../../navigation/NavigationUtils';
-import ScreenNames from '../../../constants/ScreenNames';
-import {updateProfileThunk} from '../../../redux/actions';
-import {viewDocumentHelper} from '../../../utils/documentUtils';
+import Edit_Profile_Component from './Edit_Profile_Component';
 
 class EditProfileScreen extends Component {
   state = {
@@ -41,7 +39,7 @@ class EditProfileScreen extends Component {
       fullName: get(profileDetail, 'name', ''),
       email: get(profileDetail, 'email', ''),
       mobileNumber: get(profileDetail, 'mobileNumber', ''),
-      salesExecutivePosition: get(profileDetail?.partnerUser, 'position', ''),
+      salesExecutivePosition: get(profileDetail, 'role', ''),
       profileImage: get(profileDetail, 'profileImage', ''),
     });
   }
@@ -49,7 +47,7 @@ class EditProfileScreen extends Component {
   handleSavePress = () => {
     let param = {
       name: this.state.fullName,
-      profileImage: 'https://randomuser.me/api/portraits/men/76.jpg',
+      profileImage: 'https://randomuser.me/api/portraits/men/77.jpg',
       email: this.state.email,
       mobileNumber: this.state.mobileNumber,
     };
@@ -60,10 +58,11 @@ class EditProfileScreen extends Component {
 
     this.props.updateProfileThunk(
       param,
-      success => {},
+      success => {
+        goBack();
+      },
       error => {},
     );
-    console.log({isFormValid});
   };
 
   onSalesPositionSelection = position => {
@@ -168,7 +167,7 @@ class EditProfileScreen extends Component {
         onMobileChange={value => this.onChangeField('mobileNumber', value)}
         onSalesPositionSelection={this.onSalesPositionSelection}
         salesExecutivePosition={getLabelFromEnum(
-          partnerUserPositionValue,
+          salesExecutiveValue,
           salesExecutivePosition,
         )}
         profileImage={profileImage}

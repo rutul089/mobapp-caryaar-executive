@@ -93,6 +93,12 @@ class ManageMemberScreen extends Component {
       selectedSalesExec: '',
       selectedSalesExecValue: '',
       email: '',
+      errors: {
+        fullName: '',
+        mobileNumber: '',
+        selectedSalesExecValue: '',
+        email: '',
+      },
     });
   };
 

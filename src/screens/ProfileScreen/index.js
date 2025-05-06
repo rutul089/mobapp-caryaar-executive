@@ -103,14 +103,11 @@ class ProfileScreen extends Component {
           email={profileDetail?.email}
           phone={removeCountryCode(profileDetail?.mobileNumber)}
           designation={getLabelFromEnum(
-            partnerUserPositionValue,
-            profileDetail?.partnerUser?.position,
+            salesExecutiveValue,
+            profileDetail?.role,
           )}
           avatar={profileDetail?.profileImage}
-          userID={getLabelFromEnum(
-            partnerUserPositionValue,
-            profileDetail?.partnerUser?.position,
-          )}
+          userID={getLabelFromEnum(salesExecutiveValue, profileDetail?.role)}
         />
         {this.props.loading && <Loader visible={this.props.loading} />}
       </>

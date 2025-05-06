@@ -10,6 +10,7 @@ import {
   Spacing,
   Text,
   theme,
+  Dropdown,
 } from '@caryaar/components';
 import React from 'react';
 import {
@@ -20,7 +21,6 @@ import {
   View,
 } from 'react-native';
 import {NoDataFound} from '../../../components';
-import {Dropdown} from '../../../components';
 import {getLabelFromEnum, salesExecutiveValue} from '../../../constants/enums';
 import {goBack} from '../../../navigation/NavigationUtils';
 import {formatMobileNumber} from '../../../utils/helper';
