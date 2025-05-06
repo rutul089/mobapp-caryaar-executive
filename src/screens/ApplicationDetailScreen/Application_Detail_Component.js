@@ -1,22 +1,22 @@
-import React from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
 import {
-  Header,
-  SafeAreaWrapper,
-  CardWrapper,
-  PartnerCard,
   Button,
+  CardWrapper,
   DetailInfoCard,
+  Header,
+  PartnerCard,
+  SafeAreaWrapper,
   Spacing,
   Text,
   TextAreaInput,
 } from '@caryaar/components';
+import React from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import theme from '../../theme';
 
-import {getGradientColors} from '../../utils/helper';
-import DocumentList from './DocumentList';
 import {Loader} from '../../components';
 import {getApplicationStatusLabel} from '../../constants/enums';
+import {getGradientColors} from '../../utils/helper';
+import DocumentList from './DocumentList';
 
 const Application_Detail_Component = ({
   onBackPress,
@@ -34,6 +34,10 @@ const Application_Detail_Component = ({
   submittedOn,
   processingTime,
   lastUpdatedOn,
+  loanDocuments,
+  kycDocuments,
+  onDocumentPress,
+  documentType,
 }) => {
   return (
     <SafeAreaWrapper backgroundColor={theme.colors.background}>
@@ -70,7 +74,20 @@ const Application_Detail_Component = ({
           <DetailInfoCard label="Customer Details" data={customerDetail} />
           <Spacing size="lg" />
           <DetailInfoCard label={'Documents'} isSemiBold={false}>
-            <DocumentList viewPanCard={viewPanCard} isLoading={isLoading} />
+            <DocumentList
+              viewPanCard={viewPanCard}
+              isLoading={isLoading}
+              documentType={documentType}
+              // kycDocuments={kycDocuments} // TODO remove this comment and delete kycDocuments object
+              kycDocuments={{
+                aadharFrontPhoto:
+                  'https://www.aeee.in/wp-content/uploads/2020/08/Sample-pdf.pdf',
+                aadharBackphoto: 'https://picsum.photos/200/300',
+                pancardPhoto: '',
+              }}
+              loanDocuments={loanDocuments}
+              onDocumentPress={onDocumentPress}
+            />
           </DetailInfoCard>
           <Spacing size="lg" />
           <DetailInfoCard label="Loan Details" data={loanDetail} />

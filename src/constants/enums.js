@@ -418,3 +418,22 @@ export const generateOptionsAndValueMap = enumObject => {
 export const PARTNER_TAB_OPTIONS = ['active', 'pending'];
 
 // const { options: salesExecOptions, valueMap: salesExecutiveValue } = generateOptionsAndValueMap(SalesExecutivePosition);
+
+export const DOCUMENT_LABELS = {
+  // idProofImage: 'ID Proof',
+  addressProofImage: 'Address Proof',
+  // permanentAddressImage: 'Permanent Address',
+  incomeProofImage: 'Income Proof',
+  bankingProofImage: 'Bank Statement',
+  businessProofImage: 'Business Proof',
+  // insuranceImage: 'Insurance Document',
+  // applicationFormImage: 'Application Form',
+  // coapplicantImage: 'Co-applicant Document',
+  // passportImage: 'Passport',
+};
+
+export const KYC_LABELS = {
+  pancardPhoto: 'PAN Card',
+  aadharFrontPhoto: 'Aadhar Card Front',
+  aadharBackphoto: 'Aadhar Card Back',
+};

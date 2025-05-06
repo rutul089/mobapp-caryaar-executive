@@ -1,8 +1,15 @@
 import {DocumentRow, Spacing, Text, theme} from '@caryaar/components';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {DOCUMENT_LABELS, KYC_LABELS, KYS_LABELS} from '../../constants/enums';
 
-const DocumentList = ({viewPanCard, isLoading}) => {
+const DocumentList = ({
+  isLoading,
+  loanDocuments = {},
+  kycDocuments = {},
+  onDocumentPress,
+  documentType,
+}) => {
   return (
     <>
       {/* KYC Documents */}
@@ -10,37 +17,51 @@ const DocumentList = ({viewPanCard, isLoading}) => {
         KYC Documents
       </Text>
       <Spacing size="sm" />
-      <DocumentRow
-        label="PAN Card"
-        actionLabel="View"
-        onPress={viewPanCard}
-        isLoading={isLoading}
-      />
-      <Spacing size="smd" />
+      {Object.entries(KYC_LABELS).map(([key, label]) => {
+        const hasDocument = kycDocuments[key];
 
-      <DocumentRow label="Aadhar Card Front" actionLabel="View" />
-      <Spacing size="smd" />
-
-      <DocumentRow label="Aadhar Card Back" actionLabel="View" />
-      <Spacing size="smd" />
-
-      <DocumentRow label="Address Proof" actionLabel="View" />
+        return (
+          <React.Fragment key={key}>
+            <DocumentRow
+              label={label}
+              actionLabel={hasDocument ? 'View' : 'Request'}
+              isLoading={isLoading && documentType === key}
+              onPress={() => {
+                onDocumentPress?.(key, kycDocuments[key], hasDocument);
+              }}
+              showError={!hasDocument}
+            />
+            <Spacing size="smd" />
+          </React.Fragment>
+        );
+      })}
 
       <View style={styles.divider} />
 
       {/* Income Documents */}
       <Text type={'helper-text'} hankenGroteskMedium={true}>
-        Income Documents
+        Loan Documents
       </Text>
       <Spacing size="sm" />
 
-      <DocumentRow label="Salary Slips" actionLabel="View" />
-      <Spacing size="smd" />
-      <DocumentRow
-        label="Bank Statements"
-        actionLabel="Request Documents"
-        showError
-      />
+      {Object.entries(DOCUMENT_LABELS).map(([key, label]) => {
+        const hasDocument = loanDocuments[key];
+
+        return (
+          <React.Fragment key={key}>
+            <DocumentRow
+              label={label}
+              actionLabel={hasDocument ? 'View' : 'Request'}
+              isLoading={isLoading && documentType === key}
+              onPress={() => {
+                onDocumentPress?.(key, loanDocuments[key], hasDocument);
+              }}
+              showError={!hasDocument}
+            />
+            <Spacing size="smd" />
+          </React.Fragment>
+        );
+      })}
     </>
   );
 };

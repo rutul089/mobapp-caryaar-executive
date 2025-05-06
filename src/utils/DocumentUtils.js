@@ -75,50 +75,6 @@ export const getFileType = fileUri => {
 };
 
 /**
- * Opens a file (image/pdf/doc) for preview.
- *
- * @param {string} fileUri - File URI.
- * @param {(imageUri: string) => void} onImagePreview - Callback for image previews.
- * @param {string} [label='file'] - Label to use for file name.
- * @param {(isProcessing: boolean) => void} [onProgressChange] - Optional loading callback.
- */
-export const handleViewFilePreview = (
-  fileUri,
-  onImagePreview,
-  label = 'file',
-  onProgressChange,
-) => {
-  if (!fileUri) {
-    Alert.alert('No file to preview');
-    return;
-  }
-
-  const extension = fileUri.split('.').pop().toLowerCase();
-
-  if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) {
-    onImagePreview(fileUri);
-    return;
-  }
-
-  const localPath = `${RNFS.DocumentDirectoryPath}/${label}.${extension}`;
-  onProgressChange?.(true);
-
-  RNFS.downloadFile({fromUrl: fileUri, toFile: localPath})
-    .promise.then(() =>
-      FileViewer.open(localPath)
-        .then(() => onProgressChange?.(false))
-        .catch(err => {
-          onProgressChange?.(false);
-          Alert.alert('Error opening file', err.message);
-        }),
-    )
-    .catch(err => {
-      onProgressChange?.(false);
-      Alert.alert('Download failed', err.message);
-    });
-};
-
-/**
  * Finds an uploaded document from a list by type.
  *
  * @param {string} type - Document type.
@@ -161,18 +117,19 @@ export const buildDocumentsArray = (partnerDetail, onPressHandler) => {
  * @param {(error: Error) => void} [onError] - Error callback.
  * @param {() => void} [onLoading] - Loading indicator callback.
  */
-export const viewDocumentHelper = async (uri, onImage, onError, onLoading) => {
-  if (!uri) {
-    return;
-  }
 
+export const viewDocumentHelper = async (uri, onImage, onError, onLoading) => {
   try {
+    if (!uri || typeof uri !== 'string' || !uri.startsWith('http')) {
+      throw new Error('Invalid document URL');
+    }
+
     const response = await fetch(uri, {method: 'HEAD'});
     const contentType = response.headers.get('Content-Type') || '';
     const isImage = contentType.startsWith('image/');
 
     if (isImage) {
-      onImage(uri);
+      onImage?.(uri);
     } else {
       const extension = contentType.split('/')[1] || 'pdf';
       const localFileName = `temp_file_${Date.now()}.${extension}`;
@@ -186,11 +143,12 @@ export const viewDocumentHelper = async (uri, onImage, onError, onLoading) => {
       if (result.statusCode === 200) {
         await FileViewer.open(localPath, {showOpenWithDialog: true});
       } else {
-        throw new Error('Failed to download file');
+        throw new Error('Failed to download the file.');
       }
     }
   } catch (err) {
     console.warn('Error opening file:', err);
+
     onError?.(err);
   } finally {
     onLoading?.();

@@ -7,63 +7,49 @@ import {
   navigate,
 } from '../../navigation/NavigationUtils';
 import {fetchLoanApplicationFromIdThunk} from '../../redux/actions';
-import {handleViewFilePreview} from '../../utils/documentUtils';
+import {viewDocumentHelper} from '../../utils/documentUtils';
 import {
   formatDate,
   formatIndianNumber,
   getRelativeTime,
+  showToast,
 } from '../../utils/helper';
 import Application_Detail_Component from './Application_Detail_Component';
-// import {handleViewImage} from './DocumentList';
 import {get} from 'lodash';
 
 class ApplicationDetailScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      applicationDetail: {},
-      applicationID: '',
-      isLoading: false,
-      panCardLink:
-        'https://file-examples.com/storage/fe0d4ef3b467fe96a99bd97/2017/10/file-example_PDF_1MB.pdf',
-    };
-    this.onBackPress = this.onBackPress.bind(this);
-  }
+  state = {
+    applicationDetail: {},
+    applicationID: '',
+    isLoading: false,
+    documentType: '',
+  };
 
   componentDidMount() {
-    let route = this.props.route;
-    const applicationID = getScreenParam(route, 'params')?.id;
-
+    const applicationID = getScreenParam(this.props.route, 'params')?.id;
     this.setState({applicationID}, () => {
-      this.fetchApplicationDetailById(applicationID);
+      this.props.fetchLoanApplicationFromIdThunk(applicationID);
     });
   }
 
-  fetchApplicationDetailById = id => {
-    this.props.fetchLoanApplicationFromIdThunk(id);
-  };
+  onBackPress = () => goBack();
 
-  onBackPress = () => {
-    goBack();
-  };
+  onTackApplicationPress = () => navigate(ScreenNames.TrackApplication);
 
-  onTackApplicationPress = () => {
-    navigate(ScreenNames.TrackApplication);
-  };
+  requestDocument = key => showToast('warning', `Request ${key}`);
 
-  viewPanCard = () => {
-    handleViewFilePreview(
-      this.state.panCardLink,
-      imageUri => {
-        console.log({imageUri});
-        // Callback when image preview is available
-        this.setState({previewImage: imageUri});
-      },
-      'Pancard',
-      isProcessing => {
-        // Callback for loading state
-        this.setState({isLoading: isProcessing});
-      },
+  onDocumentPress = async (type, link, hasDocument) => {
+    if (!hasDocument) {
+      return this.requestDocument(type);
+    }
+
+    this.setState({isLoading: true, documentType: type});
+
+    await viewDocumentHelper(
+      link,
+      uri => navigate(ScreenNames.ImagePreviewScreen, {uri}),
+      () => showToast('error', 'Could not open the document.'),
+      () => this.setState({isLoading: false, documentType: ''}),
     );
   };
 
@@ -77,93 +63,89 @@ class ApplicationDetailScreen extends Component {
     } = selectedLoanApplications || {};
 
     const safeGet = (obj, path) => (loading ? '-' : get(obj, path, '-'));
+
     return (
-      <>
-        <Application_Detail_Component
-          onBackPress={this.onBackPress}
-          applicationDetail={this.state.applicationDetail}
-          vehicleDetail={[
-            {label: 'Make', value: safeGet(vehicle, 'make')},
-            {label: 'Model', value: safeGet(vehicle, 'model')},
-            {
-              label: 'Registration',
-              value: safeGet(usedVehicle, 'registerNumber'),
-            },
-            {label: 'Price', value: formatIndianNumber(900000)},
-            {
-              label: 'Loan Amount',
-              value: formatIndianNumber(
-                safeGet(selectedLoanApplications, 'loanAmount'),
-              ),
-            },
-          ]}
-          customerDetail={[
-            {
-              label: 'Name',
-              value: safeGet(customer?.customerDetails, 'applicantName'),
-            },
-            {
-              label: 'Phone',
-              value: safeGet(customer, 'mobileNumber'),
-            },
-            {label: 'Location', value: 'Mumbai'},
-            {
-              label: 'Type',
-              value: safeGet(customer?.customerDetails, 'incomeSource'),
-            },
-          ]}
-          loanDetail={[
-            {
-              label: 'Amount',
-              value: formatIndianNumber(
-                safeGet(selectedLoanApplications, 'loanAmount'),
-              ),
-            },
-            {
-              label: 'Tenure',
-              value: ` ${safeGet(selectedLoanApplications, 'tenure')} Month`,
-            },
-            {
-              label: 'Interest Rate',
-              value: safeGet(selectedLoanApplications, 'interesetRate'),
-            },
-            {
-              label: 'EMI',
-              value: formatIndianNumber(
-                safeGet(selectedLoanApplications, 'emi'),
-              ),
-            },
-          ]}
-          onTackApplicationPress={this.onTackApplicationPress}
-          viewPanCard={this.viewPanCard}
-          isLoading={this.state.isLoading}
-          loading={loading}
-          loanApplicationId={safeGet(
-            selectedLoanApplications,
-            'loanApplicationId',
-          )}
-          loanStatus={safeGet(selectedLoanApplications, 'status')}
-          businessName={safeGet(partner, 'businessName')}
-          submittedOn={formatDate(
-            safeGet(selectedLoanApplications, 'createdAt'),
-          )}
-          processingTime={selectedLoanApplications?.processingTime}
-          lastUpdatedOn={getRelativeTime(
-            safeGet(selectedLoanApplications, 'updatedAt'),
-          )}
-        />
-      </>
+      <Application_Detail_Component
+        onBackPress={this.onBackPress}
+        applicationDetail={this.state.applicationDetail}
+        vehicleDetail={[
+          {label: 'Make', value: safeGet(vehicle, 'make')},
+          {label: 'Model', value: safeGet(vehicle, 'model')},
+          {
+            label: 'Registration',
+            value: safeGet(usedVehicle, 'registerNumber'),
+          },
+          {label: 'Price', value: formatIndianNumber(900000)},
+          {
+            label: 'Loan Amount',
+            value: formatIndianNumber(
+              safeGet(selectedLoanApplications, 'loanAmount'),
+            ),
+          },
+        ]}
+        customerDetail={[
+          {
+            label: 'Name',
+            value: safeGet(customer?.customerDetails, 'applicantName'),
+          },
+          {label: 'Phone', value: safeGet(customer, 'mobileNumber')},
+          {label: 'Location', value: 'Mumbai'},
+          {
+            label: 'Type',
+            value: safeGet(customer?.customerDetails, 'incomeSource'),
+          },
+        ]}
+        loanDetail={[
+          {
+            label: 'Amount',
+            value: formatIndianNumber(
+              safeGet(selectedLoanApplications, 'loanAmount'),
+            ),
+          },
+          {
+            label: 'Tenure',
+            value: `${safeGet(selectedLoanApplications, 'tenure')} Month`,
+          },
+          {
+            label: 'Interest Rate',
+            value: safeGet(selectedLoanApplications, 'interesetRate'),
+          },
+          {
+            label: 'EMI',
+            value: formatIndianNumber(safeGet(selectedLoanApplications, 'emi')),
+          },
+        ]}
+        onTackApplicationPress={this.onTackApplicationPress}
+        viewPanCard={this.viewPanCard}
+        isLoading={this.state.isLoading}
+        loading={loading}
+        loanApplicationId={safeGet(
+          selectedLoanApplications,
+          'loanApplicationId',
+        )}
+        loanStatus={safeGet(selectedLoanApplications, 'status')}
+        businessName={safeGet(partner, 'businessName')}
+        submittedOn={formatDate(safeGet(selectedLoanApplications, 'createdAt'))}
+        processingTime={selectedLoanApplications?.processingTime}
+        lastUpdatedOn={getRelativeTime(
+          safeGet(selectedLoanApplications, 'updatedAt'),
+        )}
+        loanDocuments={customer?.loanDocuments}
+        kycDocuments={customer?.customerDetails}
+        onDocumentPress={this.onDocumentPress}
+        documentType={this.state.documentType}
+      />
     );
   }
 }
 
+const mapStateToProps = ({applications}) => ({
+  selectedLoanApplications: applications.selectedLoanApplications,
+  loading: applications.loading,
+});
+
 const mapDispatchToProps = {fetchLoanApplicationFromIdThunk};
-const mapStateToProps = ({applications}) => {
-  return {
-    selectedLoanApplications: applications.selectedLoanApplications,
-    loading: applications.loading,
-  };
-};
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
