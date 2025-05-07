@@ -17,6 +17,7 @@ import {Loader} from '../../components';
 import {getApplicationStatusLabel} from '../../constants/enums';
 import {getGradientColors} from '../../utils/helper';
 import DocumentList from './DocumentList';
+import {goBack} from '../../navigation/NavigationUtils';
 
 const Application_Detail_Component = ({
   onBackPress,
@@ -38,10 +39,12 @@ const Application_Detail_Component = ({
   onDocumentPress,
   documentType,
   additionalNotes,
+  contactCustomer,
+  contactPartner,
 }) => {
   return (
     <SafeAreaWrapper backgroundColor={theme.colors.background}>
-      <Header title="Application Details" onBackPress={onBackPress} />
+      <Header title="Application Details" onBackPress={() => goBack()} />
       <ScrollView bounces={false} contentContainerStyle={{flexGrow: 1}}>
         <View style={styles.wrapper}>
           <CardWrapper
@@ -78,13 +81,13 @@ const Application_Detail_Component = ({
               viewPanCard={viewPanCard}
               isLoading={isLoading}
               documentType={documentType}
-              // kycDocuments={kycDocuments} // TODO remove this comment and delete kycDocuments object
-              kycDocuments={{
-                aadharFrontPhoto:
-                  'https://www.aeee.in/wp-content/uploads/2020/08/Sample-pdf.pdf',
-                aadharBackphoto: 'https://picsum.photos/200/300',
-                pancardPhoto: '',
-              }}
+              kycDocuments={kycDocuments} // TODO remove this comment and delete kycDocuments object
+              // kycDocuments={{
+              //   aadharFrontPhoto:
+              //     'https://www.aeee.in/wp-content/uploads/2020/08/Sample-pdf.pdf',
+              //   aadharBackphoto: 'https://picsum.photos/200/300',
+              //   pancardPhoto: '',
+              // }}
               loanDocuments={loanDocuments}
               onDocumentPress={onDocumentPress}
             />
@@ -104,10 +107,18 @@ const Application_Detail_Component = ({
           <Spacing size="xl" />
           <View style={styles.buttonWrapper}>
             <View style={styles.halfFlex}>
-              <Button label={'Contact Partner'} variant="link" />
+              <Button
+                label={'Contact Partner'}
+                variant="link"
+                onPress={contactPartner}
+              />
             </View>
             <View style={styles.halfFlex}>
-              <Button label={'Contact Customer'} variant="link" />
+              <Button
+                label={'Contact Customer'}
+                variant="link"
+                onPress={contactCustomer}
+              />
             </View>
           </View>
         </View>

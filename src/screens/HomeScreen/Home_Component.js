@@ -12,10 +12,10 @@ import {
 } from '@caryaar/components';
 import React from 'react';
 import {FlatList, Image, View} from 'react-native';
-import {styles} from '../../styles/Home.style';
-import {navigateToTab} from '../../navigation/NavigationUtils';
+import {InitialsAvatar, Loader, NoDataFound} from '../../components';
 import ScreenNames from '../../constants/ScreenNames';
-import {Loader, NoDataFound, InitialsAvatar} from '../../components';
+import {navigateToTab} from '../../navigation/NavigationUtils';
+import {styles} from '../../styles/Home.style';
 
 const Home_Component = ({
   onRightIconPress,

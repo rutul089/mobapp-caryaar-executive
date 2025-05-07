@@ -45,7 +45,7 @@ const TabNavigator = ({avatar}) => {
         headerShown: false,
         tabBarShowLabel: true,
         tabBarStyle: {
-          paddingTop: 0,
+          paddingTop: 8,
           paddingBottom: 0,
           borderTopWidth: 2,
           borderTopColor: 'rgba(0, 0, 0, 0.08)',

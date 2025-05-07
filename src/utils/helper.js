@@ -17,7 +17,7 @@ export const formatIndianNumber = (value, showSign = true) => {
   let cleaned = intPart.replace(/[^0-9]/g, '');
 
   if (!cleaned) {
-    return '';
+    return '-';
   }
 
   let lastThree = cleaned.slice(-3);
@@ -49,10 +49,12 @@ export const formatAmount = text =>
 export const getGradientColors = status => {
   switch (status) {
     case applicationStatus.PENDING:
+    case applicationStatus.IN_REVIEW:
       return colors.appliedGradient;
     case applicationStatus.APPROVED:
       return colors.lenderApprovedGradient;
     case applicationStatus.REJECTED:
+    case applicationStatus.QUERY:
       return colors.onHoldGradient;
     default:
       return colors.appliedGradient;
@@ -317,13 +319,43 @@ export const showToast = (
   });
 };
 
+// export const showToast = (
+//   type = 'warning',
+//   message = '',
+//   positionOrTime = 'bottom',
+//   visibilityTime = 2000,
+// ) => {
+//   let position = 'bottom';
+//   let time = visibilityTime;
+
+//   if (!isNaN(positionOrTime)) {
+//     time = Number(positionOrTime);
+//   } else {
+//     position = positionOrTime;
+//   }
+
+//   Toast.show({
+//     type,
+//     text1: message,
+//     position,
+//     bottomOffset: 100,
+//     topOffset: 100,
+//     visibilityTime: time,
+//   });
+// };
+
 /**
  * Show API error toast
  * @param {any} error
  */
 export const showApiErrorToast = error => {
-  const message = getErrorMessage(error);
-  showToast('error', message, 'bottom', 3000);
+  let type = 'warning';
+  let message = getErrorMessage(error);
+  if (error?.status === 503) {
+    type = 'warning';
+    message = 'Service is temporarily unavailable. Please try again later.';
+  }
+  showToast(type, message, 'bottom', 3000);
 };
 
 /**
@@ -420,4 +452,50 @@ export const handleStepNavigation = (stepId, screenParams = {}) => {
   } else {
     console.warn(`No screen defined for stepId: ${stepId}`);
   }
+};
+
+/**
+ * Returns a human-readable time difference between two dates
+ * (e.g., "2 months", "1 year", "5 seconds").
+ *
+ * @param {string | Date} from - The starting date.
+ * @param {string | Date} [to=new Date()] - The ending date (defaults to now).
+ * @returns {string} - Formatted time difference.
+ */
+export const getTimeDifference = (from, to = new Date()) => {
+  const fromMoment = moment(from);
+  const toMoment = moment(to);
+
+  // Validate both dates
+  if (!fromMoment.isValid() || !toMoment.isValid()) {
+    return '-';
+  }
+
+  const duration = moment.duration(toMoment.diff(fromMoment));
+
+  const format = (value, unit) => `${value} ${unit}${value > 1 ? 's' : ''}`;
+
+  if (duration.asYears() >= 1) {
+    const years = Math.floor(duration.asYears());
+    return format(years, 'year');
+  }
+  if (duration.asMonths() >= 1) {
+    const months = Math.floor(duration.asMonths());
+    return format(months, 'month');
+  }
+  if (duration.asDays() >= 1) {
+    const days = Math.floor(duration.asDays());
+    return format(days, 'day');
+  }
+  if (duration.asHours() >= 1) {
+    const hours = Math.floor(duration.asHours());
+    return format(hours, 'hour');
+  }
+  if (duration.asMinutes() >= 1) {
+    const minutes = Math.floor(duration.asMinutes());
+    return format(minutes, 'minute');
+  }
+
+  const seconds = Math.floor(duration.asSeconds());
+  return format(seconds, 'second');
 };

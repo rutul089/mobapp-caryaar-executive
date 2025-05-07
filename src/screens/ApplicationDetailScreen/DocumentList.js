@@ -5,11 +5,16 @@ import {DOCUMENT_LABELS, KYC_LABELS} from '../../constants/enums';
 
 const DocumentList = ({
   isLoading,
-  loanDocuments = {},
-  kycDocuments = {},
+  loanDocuments,
+  kycDocuments,
   onDocumentPress,
   documentType,
 }) => {
+  const safeKycDocs =
+    kycDocuments && typeof kycDocuments === 'object' ? kycDocuments : {};
+  const safeLoanDocs =
+    loanDocuments && typeof loanDocuments === 'object' ? loanDocuments : {};
+
   return (
     <>
       {/* KYC Documents */}
@@ -18,7 +23,7 @@ const DocumentList = ({
       </Text>
       <Spacing size="sm" />
       {Object.entries(KYC_LABELS).map(([key, label]) => {
-        const hasDocument = kycDocuments[key];
+        const hasDocument = safeKycDocs?.[key];
 
         return (
           <React.Fragment key={key}>
@@ -27,7 +32,7 @@ const DocumentList = ({
               actionLabel={hasDocument ? 'View' : 'Request'}
               isLoading={isLoading && documentType === key}
               onPress={() => {
-                onDocumentPress?.(key, kycDocuments[key], hasDocument);
+                onDocumentPress?.(key, safeKycDocs[key], hasDocument);
               }}
               showError={!hasDocument}
             />
@@ -38,14 +43,13 @@ const DocumentList = ({
 
       <View style={styles.divider} />
 
-      {/* Income Documents */}
+      {/* Loan Documents */}
       <Text type={'helper-text'} hankenGroteskMedium={true}>
         Loan Documents
       </Text>
       <Spacing size="sm" />
-
       {Object.entries(DOCUMENT_LABELS).map(([key, label]) => {
-        const hasDocument = loanDocuments[key];
+        const hasDocument = safeLoanDocs[key];
 
         return (
           <React.Fragment key={key}>
@@ -54,7 +58,7 @@ const DocumentList = ({
               actionLabel={hasDocument ? 'View' : 'Request'}
               isLoading={isLoading && documentType === key}
               onPress={() => {
-                onDocumentPress?.(key, loanDocuments[key], hasDocument);
+                onDocumentPress?.(key, safeLoanDocs?.[key], hasDocument);
               }}
               showError={!hasDocument}
             />
