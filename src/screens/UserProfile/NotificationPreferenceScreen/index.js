@@ -23,7 +23,6 @@ export default class NotificationPreferenceScreen extends Component {
     this.setState({
       valueLoanStatusUpdate: value,
     });
-    console.log({value});
   };
 
   onPartnerOnboardingStatusChange = value => {

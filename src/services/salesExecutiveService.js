@@ -7,12 +7,10 @@ import axiosInstance from '../networking/axiosInstance';
  * @throws Will throw an error if the API call fails.
  */
 export const fetchSalesExecutives = async query => {
-  console.log('query', query);
   try {
     const response = await axiosInstance.get(`/sales-executives/?${query}`);
     return response.data;
   } catch (error) {
-    console.log({error});
     throw error;
   }
 };

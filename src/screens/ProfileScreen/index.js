@@ -87,7 +87,6 @@ class ProfileScreen extends Component {
   render() {
     const {showLogoutModal} = this.state;
     const {profileDetail} = this.props;
-    console.log('profileDetail', JSON.stringify(profileDetail));
 
     return (
       <>

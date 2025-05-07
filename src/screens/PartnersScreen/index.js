@@ -222,8 +222,6 @@ class PartnersScreen extends Component {
     //   partnerRole,
     // } = formatPartnerDetails(selectedPartner);
 
-    // console.log('bankingDetails=====>', bankingDetails);
-
     // this.props.setUserType(isMultiUser);
     // this.props.setPartnerRole(partnerRole);
     // this.props.setDealershipType(partnerType);
@@ -295,6 +293,7 @@ class PartnersScreen extends Component {
           searchText={searchText}
           clearSearch={this.clearSearch}
           setSearch={this.searchFromAPI}
+          apiTrigger={this.state.apiTrigger}
         />
         {/* Show loader only for the initial/default fetch */}
         {loading && apiTrigger === 'default' && <Loader visible />}

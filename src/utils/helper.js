@@ -3,6 +3,8 @@ import Toast from 'react-native-toast-message';
 import {applicationStatus} from '../constants/enums';
 import theme from '../theme';
 import colors from '../theme/colors';
+import {navigate} from '../navigation/NavigationUtils';
+import ScreenNames from '../constants/ScreenNames';
 
 /**
  * Format a numeric value into Indian currency style (e.g., ₹12,34,567.89)
@@ -396,3 +398,26 @@ export function getRelativeTime(dateString) {
 
   return 'just now';
 }
+
+/**
+ * Navigates to the correct screen based on stepId.
+ *
+ * @param {number} stepId - The step identifier (1–4).
+ * @param {object} screenParams - The shared params to pass during navigation.
+ */
+export const handleStepNavigation = (stepId, screenParams = {}) => {
+  const stepRoutes = {
+    1: ScreenNames.AddPartnerBasicDetail,
+    2: ScreenNames.AddPartnerBusinessLocation,
+    3: ScreenNames.AddPartnerRequiredDocument,
+    4: ScreenNames.AddPartnersBankDetail,
+  };
+
+  const route = stepRoutes[stepId];
+
+  if (route) {
+    navigate(route, {params: screenParams});
+  } else {
+    console.warn(`No screen defined for stepId: ${stepId}`);
+  }
+};

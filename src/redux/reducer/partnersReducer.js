@@ -7,15 +7,15 @@ const initialState = {
   selectedPartner: {},
   searchPartners: [],
   currentPage: 1,
-  totalPages: 1,
+  totalPages: 0, //1
   activePartners: [],
   pendingPartners: [],
   activePage: 1,
-  activeTotalPages: 1,
-  pendingPage: 1,
-  pendingTotalPages: 1,
-  searchPage: 1,
-  searchTotalPages: 1,
+  activeTotalPages: 0, // 1
+  pendingPage: 0, // 1
+  pendingTotalPages: 0, // 1
+  searchPage: 0, // 1
+  searchTotalPages: 0, // 1
 };
 
 const partnersReducer = (state = initialState, action) => {

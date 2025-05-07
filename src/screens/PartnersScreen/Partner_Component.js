@@ -1,6 +1,13 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
-import {FlatList, Pressable, StyleSheet, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {
   Card,
   ImageHeader,
@@ -42,6 +49,7 @@ const Partner_Component = ({
   loading,
   TAB_OPTIONS,
   totalPages,
+  apiTrigger,
 }) => {
   const [activeTab, setActiveTab] = useState('active');
   const [filteredPartners, setFilteredPartners] = useState([]);
@@ -164,17 +172,25 @@ const Partner_Component = ({
         ListEmptyComponent={
           !loading && <NoDataFound text="No Partners found" />
         }
-        ListFooterComponent={
-          !loading && currentPage >= totalPages && totalPages >= 1 ? (
-            <Text
-              type={'helper-text'}
-              style={{
-                alignSelf: 'center',
-              }}>
-              All partners are loaded.
-            </Text>
-          ) : null
-        }
+        ListFooterComponent={() => {
+          if (apiTrigger === 'loadMore') {
+            return <ActivityIndicator style={{marginVertical: 16}} />;
+          }
+
+          if (!loading && currentPage >= totalPages && totalPages >= 1) {
+            return (
+              <Text
+                type={'helper-text'}
+                style={{
+                  alignSelf: 'center',
+                }}>
+                All partners are loaded.
+              </Text>
+            );
+          }
+
+          return null;
+        }}
       />
     </SafeAreaWrapper>
   );

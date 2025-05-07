@@ -16,7 +16,6 @@ export const fetchNotificationsThunk = (onSuccess, onFailure) => {
 
     try {
       const response = await fetchNotifications();
-      console.log('fetchNotifications', JSON.stringify(response));
       dispatch({
         type: types.NOTIFICATIONS_SUCCESS,
         payload: response,

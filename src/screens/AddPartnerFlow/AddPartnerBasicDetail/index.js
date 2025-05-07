@@ -11,6 +11,7 @@ import {getScreenParam, navigate} from '../../../navigation/NavigationUtils';
 import {setBasicDetails} from '../../../redux/actions';
 import {
   handleFieldChange,
+  handleStepNavigation,
   showToast,
   validateField,
 } from '../../../utils/helper';
@@ -144,6 +145,11 @@ class AddPartnerBasicDetail extends Component {
     handleFieldChange(this, key, value);
   };
 
+  onStepPress = stepId => {
+    const {fromScreen, showImages, errorSteps} = this.state;
+    handleStepNavigation(stepId, {fromScreen, showImages, errorSteps});
+  };
+
   render() {
     const {
       businessName,
@@ -225,6 +231,7 @@ class AddPartnerBasicDetail extends Component {
           isNewPartner={
             !selectedPartner || Object.keys(selectedPartner).length === 0
           }
+          onStepPress={this.onStepPress}
         />
       </>
     );

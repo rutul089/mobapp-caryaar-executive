@@ -146,7 +146,6 @@ export const updateProfileThunk = (param, onSuccess, onFailure) => {
     dispatch({type: types.USER_LOADING});
     try {
       const response = await updateUserProfile(param);
-      console.log('123123213123123123', JSON.stringify(response?.data));
       dispatch({
         type: types.UPDATE_USER_SUCCESS,
         payload: {

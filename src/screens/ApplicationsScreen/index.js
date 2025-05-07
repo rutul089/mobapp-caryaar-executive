@@ -89,8 +89,8 @@ class ApplicationsScreen extends Component {
   };
 
   onPressPrimaryButton = filters => {
+    // TODO Handle filter logic here if needed
     console.log({filters});
-    // Handle filter logic here if needed
   };
 
   onSearchText = text => {

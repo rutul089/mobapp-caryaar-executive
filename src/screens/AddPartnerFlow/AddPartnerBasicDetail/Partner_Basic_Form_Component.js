@@ -26,6 +26,7 @@ const Partner_Basic_Form_Component = ({
   showImages = [],
   errorSteps = [],
   isNewPartner,
+  onStepPress,
 }) => {
   return (
     <SafeAreaWrapper>
@@ -37,7 +38,7 @@ const Partner_Basic_Form_Component = ({
         selectedId={1}
         showImages={showImages}
         errorSteps={errorSteps}
-        onStepPress={stepId => console.log({stepId})}
+        onStepPress={onStepPress}
       />
       <BasicDetailsForm
         onSelectBusinessType={onSelectBusinessType}
