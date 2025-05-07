@@ -109,3 +109,39 @@ export const updatePartnerById = async (partnerData, partnerId) => {
     throw error;
   }
 };
+
+/**
+ * Fetches performance data for partners from the backend.
+ *
+ * @async
+ * @function fetchPartnerPerformances
+ * @returns {Promise<Object>} Resolves with partner performance data if successful.
+ * @throws {Error} Throws error if the API request fails.
+ */
+export const fetchPartnerPerformances = async () => {
+  try {
+    const response = await axiosInstance.get(
+      '/partners/get-partner-performances',
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * Fetches performance stats for partners from the backend.
+ *
+ * @async
+ * @function fetchPartnerStat
+ * @returns {Promise<Object>} Resolves with partner stats data if successful.
+ * @throws {Error} Throws error if the API request fails.
+ */
+export const fetchPartnerStats = async () => {
+  try {
+    const response = await axiosInstance.get('/partners/stats');
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

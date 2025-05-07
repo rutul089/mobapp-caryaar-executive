@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import theme from '../theme';
+import {theme} from '@caryaar/components';
 
 export const styles = StyleSheet.create({
   wrapper: {
@@ -30,6 +30,14 @@ export const styles = StyleSheet.create({
   flatListStyle: {
     flexGrow: 1,
     padding: theme.sizes.padding,
+    paddingTop: theme.sizes.spacing.smd,
+    backgroundColor: theme.colors.background,
+  },
+  headerWrapper1: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: theme.sizes.padding,
+    paddingBottom: theme.sizes.spacing.smd,
     backgroundColor: theme.colors.background,
   },
 });

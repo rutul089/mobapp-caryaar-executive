@@ -15,13 +15,23 @@ import {FlatList, Image, View} from 'react-native';
 import {styles} from '../../styles/Home.style';
 import {navigateToTab} from '../../navigation/NavigationUtils';
 import ScreenNames from '../../constants/ScreenNames';
+import {Loader, NoDataFound} from '../../components';
 
-const data = Array.from({length: 12}, (_, index) => ({
-  id: index + 1,
-  label: `Item ${index + 1}`,
-}));
+const Home_Component = ({
+  onRightIconPress,
+  onAddPartner,
+  partnerPerformances,
+  loading,
+  onRefresh,
+  refreshing,
+  partnerStats,
+}) => {
+  const getTrendIcon = value =>
+    value > 0 ? images.up_trend : value < 0 ? images.down_trend : null;
 
-const Home_Component = ({onRightIconPress, onAddPartner}) => {
+  const getTrendColor = value =>
+    value > 0 ? '#5FC52E' : value < 0 ? '#B60003' : theme.colors.textLabel;
+
   const renderBox = (count, countColor, label, onPress) => {
     return (
       <Pressable style={styles.statBox} onPress={onPress}>
@@ -65,18 +75,23 @@ const Home_Component = ({onRightIconPress, onAddPartner}) => {
           style={{height: 42, width: 42, borderRadius: 20}}
         />
         <View style={{flex: 1}}>
-          <Text hankenGroteskMedium={true}>Super Cars + {item.label} </Text>
+          <Text hankenGroteskMedium={true}>{item?.companyName}</Text>
           <Spacing size={3} />
-          <Text type={'helper-text'}>12 application this month</Text>
+          <Text type={'helper-text'}>
+            {`${item.this_month_count}`} application this month
+          </Text>
         </View>
         <View style={{flexDirection: 'row', gap: 8, alignItems: 'center'}}>
-          <Image source={images.down_trend} style={{height: 20, width: 20}} />
+          <Image
+            source={getTrendIcon(item.percentage_growth)}
+            style={{height: 20, width: 20}}
+          />
           <Text
             lineHeight={'small'}
             size={'small'}
             hankenGroteskMedium={true}
-            color={'#B60003'}>
-            85%
+            color={getTrendColor(item.percentage_growth)}>
+            {Math.abs(item.percentage_growth)}%
           </Text>
         </View>
       </Card>
@@ -110,7 +125,25 @@ const Home_Component = ({onRightIconPress, onAddPartner}) => {
             </Text>
           </View>
           <View style={styles.statsContainer}>
-            {renderBox(1211, '#696EFF', 'Active Partners', () =>
+            {renderBox(
+              partnerStats?.activePartners || '-',
+              '#696EFF',
+              'Active\nPartners',
+              () => navigateToTab(ScreenNames.Partners),
+            )}
+            {renderBox(
+              partnerStats?.pendingPartners || '-',
+              '#F8A902',
+              'Pending\nPartners',
+              () => navigateToTab(ScreenNames.Partners),
+            )}
+            {renderBox(
+              partnerStats?.totalPartners || '-',
+              '#6EEE87',
+              'Total\nPartners',
+              () => navigateToTab(ScreenNames.Partners),
+            )}
+            {/* {renderBox(1211, '#696EFF', 'Active Partners', () =>
               navigateToTab(ScreenNames.Partners),
             )}
             {renderBox(3, '#F8A902', 'Pending Approvals', () =>
@@ -118,39 +151,35 @@ const Home_Component = ({onRightIconPress, onAddPartner}) => {
             )}
             {renderBox(2, '#6EEE87', 'Loan Approved', () =>
               navigateToTab(ScreenNames.Applications),
-            )}
+            )} */}
           </View>
         </View>
+        <View style={styles.headerWrapper1}>
+          <Text type={'h4'} hankenGroteskBold={true} lineHeight={24}>
+            Partner Performance
+          </Text>
+          <Pressable onPress={onAddPartner}>
+            <InfoRow
+              iconSource={images.plus_icon}
+              text="ADD NEW"
+              textColor={theme.colors.primary}
+              textStyle={{
+                ...theme.typography.fontStyles.hankenGroteskBold,
+              }}
+            />
+          </Pressable>
+        </View>
         <FlatList
-          bounces={false}
           contentContainerStyle={styles.flatListStyle}
-          ListHeaderComponent={
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingBottom: 16,
-              }}>
-              <Text type={'h4'} hankenGroteskBold={true} lineHeight={24}>
-                Partner Performance
-              </Text>
-              <Pressable onPress={onAddPartner}>
-                <InfoRow
-                  iconSource={images.plus_icon}
-                  text="ADD NEW"
-                  textColor={theme.colors.primary}
-                  textStyle={{
-                    ...theme.typography.fontStyles.hankenGroteskBold,
-                  }}
-                />
-              </Pressable>
-            </View>
-          }
-          keyExtractor={item => item.id.toString()}
-          data={data}
+          keyExtractor={(_, index) => index.toString()}
+          data={partnerPerformances}
           renderItem={renderItem}
+          ListEmptyComponent={<NoDataFound />}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
         />
       </View>
+      {loading && <Loader visible={loading} />}
     </SafeAreaWrapper>
   );
 };

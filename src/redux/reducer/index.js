@@ -8,6 +8,7 @@ import salesExecutiveReducer from './salesExecutiveReducer';
 import bankReducer from './bankReducer';
 import loanApplicationReducer from './loanApplicationReducer';
 import notificationReducer from './notificationReducer';
+import performanceReducer from './performanceReducer';
 
 const rootReducer = combineReducers({
   appState: appStateReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   banks: bankReducer,
   applications: loanApplicationReducer,
   notifications: notificationReducer,
+  partnerPerformance: performanceReducer,
 });
 
 export default rootReducer;
