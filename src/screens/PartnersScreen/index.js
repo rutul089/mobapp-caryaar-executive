@@ -1,32 +1,31 @@
 import React, {Component} from 'react';
-import ScreenNames from '../../constants/ScreenNames';
-import {navigate} from '../../navigation/NavigationUtils';
-import Partner_Component from './Partner_Component';
 import {connect} from 'react-redux';
-import {
-  fetchActivePartners,
-  fetchPendingPartners,
-  resetPartnerDetail,
-  resetRegistration,
-  clearSearchResults,
-  searchPartnersThunk,
-  setSelectedPartner,
-  setUserType,
-  setPartnerRole,
-  setBankingDetails,
-  setBasicDetails,
-  setDealershipType,
-  setDocumentDetails,
-  setLocationDetails,
-  setSellerType,
-  fetchPartnerFromId,
-} from '../../redux/actions';
 import {Loader} from '../../components';
 import {
   PARTNER_TAB_OPTIONS,
   partnerOnboardingStatus,
 } from '../../constants/enums';
-import {formatPartnerDetails} from '../../utils/partnerHelpers';
+import ScreenNames from '../../constants/ScreenNames';
+import {navigate} from '../../navigation/NavigationUtils';
+import {
+  clearSearchResults,
+  fetchActivePartners,
+  fetchPartnerFromId,
+  fetchPendingPartners,
+  resetPartnerDetail,
+  resetRegistration,
+  searchPartnersThunk,
+  setBankingDetails,
+  setBasicDetails,
+  setDealershipType,
+  setDocumentDetails,
+  setLocationDetails,
+  setPartnerRole,
+  setSelectedPartner,
+  setSellerType,
+  setUserType,
+} from '../../redux/actions';
+import Partner_Component from './Partner_Component';
 
 class PartnersScreen extends Component {
   constructor(props) {

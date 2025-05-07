@@ -19,6 +19,11 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
+    let {partnerPerformances} = this.props;
+    if (Array.isArray(partnerPerformances) && partnerPerformances?.length > 0) {
+      // Not making api call when partnerPerformances data is there
+      return;
+    }
     this.fetchPartnerPerformances(false);
   }
 

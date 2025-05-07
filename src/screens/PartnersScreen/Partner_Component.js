@@ -22,6 +22,7 @@ import {NoDataFound} from '../../components';
 import {partnerDocumentLabelMap} from '../../constants/enums';
 import {
   formatDate,
+  formatMobileNumber,
   getLocationText,
   removeCountryCode,
 } from '../../utils/helper';
@@ -98,7 +99,7 @@ const Partner_Component = ({
           }
           phone={
             !isPendingTab
-              ? removeCountryCode(item.owner?.mobileNumber) ?? '-'
+              ? removeCountryCode(item.owner?.mobileNumber) || '-'
               : undefined
           }
           showPersonalInfo={!isPendingTab ? undefined : false}
