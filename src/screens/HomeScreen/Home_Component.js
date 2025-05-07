@@ -15,7 +15,7 @@ import {FlatList, Image, View} from 'react-native';
 import {styles} from '../../styles/Home.style';
 import {navigateToTab} from '../../navigation/NavigationUtils';
 import ScreenNames from '../../constants/ScreenNames';
-import {Loader, NoDataFound} from '../../components';
+import {Loader, NoDataFound, InitialsAvatar} from '../../components';
 
 const Home_Component = ({
   onRightIconPress,
@@ -70,10 +70,11 @@ const Home_Component = ({
           marginBottom: 12,
           gap: 13,
         }}>
-        <Image
+        <InitialsAvatar name={item.companyName} fontSize="body" />
+        {/* <Image
           source={images.placeholder_image}
           style={{height: 42, width: 42, borderRadius: 20}}
-        />
+        /> */}
         <View style={{flex: 1}}>
           <Text hankenGroteskMedium={true}>{item?.companyName}</Text>
           <Spacing size={3} />
@@ -177,6 +178,7 @@ const Home_Component = ({
           ListEmptyComponent={<NoDataFound />}
           refreshing={refreshing}
           onRefresh={onRefresh}
+          showsVerticalScrollIndicator={false}
         />
       </View>
       {loading && <Loader visible={loading} />}
