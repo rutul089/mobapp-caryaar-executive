@@ -77,7 +77,7 @@ class ApplicationDetailScreen extends Component {
           },
           {
             label: 'Price',
-            value: safeGet(usedVehicle, 'salePrice'),
+            value: formatIndianNumber(safeGet(usedVehicle, 'salePrice')),
           },
           {
             label: 'Loan Amount',

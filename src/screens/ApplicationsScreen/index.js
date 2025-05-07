@@ -17,7 +17,7 @@ class ApplicationsScreen extends Component {
     isSearch: false,
   };
 
-  limit = 5;
+  limit = 10;
 
   componentDidMount() {
     this.fetchLoanApplications();
