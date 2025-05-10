@@ -251,14 +251,41 @@ export const getLocationText = (city, state) => {
 };
 
 /**
- * Format ISO date string
- * @param {string} isoDate
- * @param {string} [format='DD MMM YYYY']
- * @returns {string}
+ * Attempts to parse and format a date string safely using known formats.
+ * Prevents Moment fallback warnings by strictly validating known formats only.
+ *
+ * @param {string} inputDate - The input date string.
+ * @param {string} outputFormat - The desired output format (default: 'DD MMM YYYY').
+ * @returns {string} Formatted date or empty string if invalid.
  */
-export const formatDate = (isoDate, format = 'DD MMM YYYY') => {
-  const date = moment(isoDate);
-  return date.isValid() ? date.format(format) : '';
+export const formatDate = (inputDate, outputFormat = 'DD MMM YYYY') => {
+  if (!inputDate || typeof inputDate !== 'string') {
+    return '-';
+  }
+
+  // List of known safe formats (add more if needed)
+  const knownFormats = [
+    moment.ISO_8601,
+    'YYYY-MM-DD',
+    'YYYY/MM/DD',
+    'MM-DD-YYYY',
+    'DD-MM-YYYY',
+    'MM/DD/YYYY',
+    'DD/MM/YYYY',
+    'YYYY-MM-DDTHH:mm:ssZ',
+    'YYYY-MM-DD HH:mm:ss',
+  ];
+
+  let parsedDate;
+
+  for (const format of knownFormats) {
+    parsedDate = moment(inputDate, format, true); // strict parsing
+    if (parsedDate.isValid()) {
+      break;
+    }
+  }
+
+  return parsedDate?.isValid() ? parsedDate.format(outputFormat) : '-';
 };
 
 /**
@@ -401,35 +428,55 @@ export const removeCountryCode = (phoneNumber, defaultCountryCode = '91') => {
 
 // utils/dateUtils.js
 
+/**
+ * Returns a relative time string (e.g., "5 minutes ago") from a date string.
+ * Uses Moment.js with strict ISO 8601 parsing to avoid deprecation warnings.
+ *
+ * @param {string} dateString - The date string in ISO 8601 format.
+ * @returns {string} Relative time or empty string if invalid.
+ */
 export function getRelativeTime(dateString) {
-  const date = new Date(dateString);
+  // Strictly parse date using ISO 8601 format
+  const date = moment(dateString, moment.ISO_8601, true);
 
-  if (isNaN(date.getTime())) {
+  // Validate parsed date
+  if (!date.isValid()) {
     return '';
   }
 
-  const now = new Date();
-  const diffInSeconds = Math.floor((now - date) / 1000);
-
-  const units = [
-    {name: 'year', seconds: 31536000},
-    {name: 'month', seconds: 2592000},
-    {name: 'week', seconds: 604800},
-    {name: 'day', seconds: 86400},
-    {name: 'hour', seconds: 3600},
-    {name: 'minute', seconds: 60},
-    {name: 'second', seconds: 1},
-  ];
-
-  for (const unit of units) {
-    const interval = Math.floor(diffInSeconds / unit.seconds);
-    if (interval >= 1) {
-      return `${interval} ${unit.name}${interval > 1 ? 's' : ''} ago`;
-    }
-  }
-
-  return 'just now';
+  // Return relative time (e.g., "3 days ago", "just now")
+  return date.fromNow();
 }
+
+// export function getRelativeTime(dateString) {
+//   const date = new Date(dateString);
+
+//   if (isNaN(date.getTime())) {
+//     return '';
+//   }
+
+//   const now = new Date();
+//   const diffInSeconds = Math.floor((now - date) / 1000);
+
+//   const units = [
+//     {name: 'year', seconds: 31536000},
+//     {name: 'month', seconds: 2592000},
+//     {name: 'week', seconds: 604800},
+//     {name: 'day', seconds: 86400},
+//     {name: 'hour', seconds: 3600},
+//     {name: 'minute', seconds: 60},
+//     {name: 'second', seconds: 1},
+//   ];
+
+//   for (const unit of units) {
+//     const interval = Math.floor(diffInSeconds / unit.seconds);
+//     if (interval >= 1) {
+//       return `${interval} ${unit.name}${interval > 1 ? 's' : ''} ago`;
+//     }
+//   }
+
+//   return 'just now';
+// }
 
 /**
  * Navigates to the correct screen based on stepId.

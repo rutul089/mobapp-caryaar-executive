@@ -20,7 +20,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {NoDataFound} from '../../../components';
+import {InitialsAvatar, NoDataFound} from '../../../components';
 import {getLabelFromEnum, salesExecutiveValue} from '../../../constants/enums';
 import {goBack} from '../../../navigation/NavigationUtils';
 import {formatMobileNumber} from '../../../utils/helper';
@@ -50,11 +50,19 @@ const Manage_Members_Component = ({
   const renderItem = ({item, index}) => (
     <>
       <Card cardContainerStyle={styles.cardWrapper} padding={12}>
-        <Image
-          source={item.avatar ? {uri: item.avatar} : images.placeholder_image}
-          style={styles.avatar}
-          defaultSource={images.placeholder_image}
-        />
+        {item.avatar ? (
+          <Image
+            source={item.avatar ? {uri: item.avatar} : images.placeholder_image}
+            style={styles.avatar}
+            defaultSource={images.placeholder_image}
+          />
+        ) : (
+          <InitialsAvatar
+            name={item?.user?.name || 'Car Yaar'}
+            fontSize="body"
+            size={48}
+          />
+        )}
         <View style={styles.textWrapper}>
           <Text
             lineHeight={'caption'}

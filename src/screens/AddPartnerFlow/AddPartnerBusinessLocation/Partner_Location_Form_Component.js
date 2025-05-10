@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: theme.colors.background,
     padding: theme.sizes.padding,
+    paddingBottom: theme.sizes.padding,
   },
 });
 export default Partner_Location_Form_Component;

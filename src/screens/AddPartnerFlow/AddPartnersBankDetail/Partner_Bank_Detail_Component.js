@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     padding: theme.sizes.padding,
     backgroundColor: theme.colors.background,
     flexGrow: 1,
+    paddingBottom: theme.sizes.padding,
   },
 });
 

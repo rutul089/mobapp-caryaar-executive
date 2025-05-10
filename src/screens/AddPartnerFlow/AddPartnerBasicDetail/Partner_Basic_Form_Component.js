@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     flexGrow: 1,
     padding: theme.sizes.padding,
+    paddingBottom: theme.sizes.padding,
   },
 });
 

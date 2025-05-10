@@ -50,7 +50,7 @@ const TabNavigator = ({avatar}) => {
           borderTopWidth: 2,
           borderTopColor: 'rgba(0, 0, 0, 0.08)',
           backgroundColor: 'white',
-          height: 80,
+          height: 75,
           maxHeight: 90,
         },
         tabBarItemStyle: {},
