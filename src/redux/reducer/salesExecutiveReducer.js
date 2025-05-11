@@ -14,11 +14,13 @@ const initialState = {
 const salesExecutiveReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.FETCH_SALES_EXECUTIVE_REQUEST:
+    case types.REMOVE_SALES_EXECUTIVE_REQUEST:
       return {
         ...state,
         loading: true,
       };
     case types.FETCH_SALES_EXECUTIVE_FAILURE:
+    case types.REMOVE_SALES_EXECUTIVE_FAILURE:
       return {
         ...state,
         loading: false,
@@ -28,7 +30,10 @@ const salesExecutiveReducer = (state = initialState, action) => {
     case types.FETCH_SALES_EXECUTIVE_SUCCESS:
       return {
         ...state,
-        salesExecutives: [...state.salesExecutives, ...action.payload.data], // <-- notice spread
+        salesExecutives:
+          action.payload.page === 1
+            ? action.payload.data
+            : [...state.salesExecutives, ...action.payload.data],
         loading: false,
         page: action.payload.page,
         limit: action.payload.limit,
@@ -49,7 +54,7 @@ const salesExecutiveReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         salesExecutives: state.salesExecutives.filter(
-          executive => executive.id !== action.payload,
+          executive => executive.userId !== action.payload,
         ),
       };
     case types.RESET_APP_STATE:

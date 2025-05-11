@@ -390,7 +390,9 @@ export const showApiErrorToast = error => {
  * @param {Object} response
  */
 export const showApiSuccessToast = response => {
-  showToast('success', response?.message, 'bottom', 3000);
+  if (response?.success && response?.message) {
+    showToast('success', response.message, 'bottom', 3000);
+  }
 };
 
 /**

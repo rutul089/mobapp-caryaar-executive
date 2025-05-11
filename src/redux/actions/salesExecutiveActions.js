@@ -7,6 +7,7 @@ import {
 import {
   getErrorMessage,
   showApiErrorToast,
+  showApiSuccessToast,
   showToast,
 } from '../../utils/helper';
 
@@ -108,8 +109,8 @@ export const deleteSalesExecutiveByIdThunk = (
         payload: partnerId,
       });
       removeSalesExecutive(partnerId);
-
       onSuccess?.(response);
+      showApiSuccessToast(response);
     } catch (error) {
       showApiErrorToast(error);
       dispatch({

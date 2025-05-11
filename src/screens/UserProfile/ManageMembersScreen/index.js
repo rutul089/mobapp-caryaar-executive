@@ -28,7 +28,6 @@ class ManageMemberScreen extends Component {
       selectedSalesExec: '',
       selectedSalesExecValue: '',
       email: '',
-      isLoading: true,
       errors: {
         fullName: '',
         mobileNumber: '',
@@ -36,6 +35,8 @@ class ManageMemberScreen extends Component {
         email: '',
       },
       isFormValid: false,
+      refreshing: false,
+      loadingMore: false,
     };
     this.handleDeleteMemberPress = this.handleDeleteMemberPress.bind(this);
     this.handleAddNewMemberPress = this.handleAddNewMemberPress.bind(this);
@@ -48,12 +49,9 @@ class ManageMemberScreen extends Component {
   }
 
   fetchSalesExecutives = (page = this.props.page, limit = this.props.limit) => {
-    this.props.fetchSalesExecutivesThunk(
-      page,
-      limit,
-      () => {},
-      () => {},
-    );
+    this.props
+      .fetchSalesExecutivesThunk(page, limit)
+      .finally(() => this.setState({refreshing: false, loadingMore: false}));
   };
 
   handleDeleteMemberPress = (item, index) => {
@@ -76,7 +74,7 @@ class ManageMemberScreen extends Component {
   };
 
   deleteMember = (item, index) => {
-    this.props.deleteSalesExecutiveByIdThunk(item?.id);
+    this.props.deleteSalesExecutiveByIdThunk(item?.userId);
   };
 
   handleAddNewMemberPress = () => {
@@ -143,7 +141,7 @@ class ManageMemberScreen extends Component {
     setTimeout(() => {
       if (!loading && page < totalPages) {
         this.setState({
-          isLoading: false,
+          loadingMore: true,
         });
         this.fetchSalesExecutives(page + 1, limit);
       }
@@ -178,14 +176,22 @@ class ManageMemberScreen extends Component {
     return isFormValid;
   };
 
+  handleRefresh = async () => {
+    this.setState({
+      refreshing: true,
+    });
+    await this.fetchSalesExecutives(1); // fetch first page of normal applications
+  };
+
   render() {
     const {
       mobileNumber,
       fullName,
       selectedSalesExec,
-      isLoading,
+      loadingMore,
       errors,
       email,
+      refreshing,
     } = this.state;
     const {salesExecutives, loading} = this.props;
     return (
@@ -209,7 +215,7 @@ class ManageMemberScreen extends Component {
           salesExecOptions={salesExecOptions}
           salesExecutives={salesExecutives}
           handleLoadMore={this.handleLoadMore}
-          isLoading={isLoading && loading}
+          isLoading={loading && !refreshing && !loadingMore}
           restInputProps={{
             fullName: {
               value: fullName,
@@ -232,8 +238,12 @@ class ManageMemberScreen extends Component {
               statusMsg: errors.email,
             },
           }}
+          refreshing={refreshing}
+          onRefresh={this.handleRefresh}
+          currentPage={this.props.page}
+          totalPages={this.props.totalPages}
+          loadingMore={this.state.loadingMore}
         />
-        {isLoading && loading && <Loader visible={isLoading && loading} />}
       </>
     );
   }
@@ -248,7 +258,6 @@ const mapDispatchToProps = {
 const mapStateToProps = ({appState, salesExecutives}) => {
   return {
     isInternetConnected: appState.isInternetConnected,
-    isLoading: appState.loading,
     salesExecutives: salesExecutives.salesExecutives,
     page: salesExecutives.page,
     limit: salesExecutives.limit,

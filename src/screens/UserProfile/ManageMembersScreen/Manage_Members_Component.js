@@ -20,7 +20,12 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {InitialsAvatar, NoDataFound} from '../../../components';
+import {
+  InitialsAvatar,
+  Loader,
+  NoDataFound,
+  PaginationFooter,
+} from '../../../components';
 import {getLabelFromEnum, salesExecutiveValue} from '../../../constants/enums';
 import {goBack} from '../../../navigation/NavigationUtils';
 import {formatMobileNumber} from '../../../utils/helper';
@@ -44,6 +49,11 @@ const Manage_Members_Component = ({
   handleLoadMore,
   isLoading,
   restInputProps = {},
+  onRefresh,
+  refreshing,
+  currentPage,
+  totalPages,
+  loadingMore,
 }) => {
   const [showDropdown, setShowDropdown] = React.useState(false);
 
@@ -80,10 +90,7 @@ const Manage_Members_Component = ({
             {formatMobileNumber(item?.user?.mobileNumber)}
           </Text>
         </View>
-        <Pressable
-          onPress={() =>
-            handleDeleteMemberPress && handleDeleteMemberPress(item, index)
-          }>
+        <Pressable onPress={() => handleDeleteMemberPress?.(item, index)}>
           <Image source={images.icon_delete} style={styles.deleteIcon} />
         </Pressable>
       </Card>
@@ -98,12 +105,8 @@ const Manage_Members_Component = ({
 
   return (
     <SafeAreaWrapper>
-      <Header
-        title={'Manage Members' + isLoading + ' '}
-        onBackPress={() => goBack()}
-      />
+      <Header title={'Manage Members'} onBackPress={() => goBack()} />
       <FlatList
-        bounces={false}
         data={salesExecutives}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
@@ -113,6 +116,17 @@ const Manage_Members_Component = ({
         }
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        ListFooterComponent={
+          <PaginationFooter
+            loadingMore={loadingMore}
+            loading={isLoading}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            footerMessage={'All applications loaded.'}
+          />
+        }
       />
       <CommonModal
         isVisible={isVisible}
@@ -175,7 +189,7 @@ const Manage_Members_Component = ({
             selectedValue={selectedSalesExec}
             onSelect={item => {
               setShowDropdown(false);
-              setSelectedSalesExec(item);
+              setSelectedSalesExec?.(item);
             }}
             isVisible={showDropdown}
             multiSelect={false}
@@ -185,6 +199,7 @@ const Manage_Members_Component = ({
       <View style={styles.buttonWrapper}>
         <Button label={'Add New Member'} onPress={handleAddNewMemberPress} />
       </View>
+      {isLoading && <Loader visible={isLoading} />}
     </SafeAreaWrapper>
   );
 };
@@ -194,7 +209,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: theme.colors.background,
     padding: theme.sizes.padding,
-    paddingBottom: 0,
+    paddingBottom: 10,
   },
   cardWrapper: {flexDirection: 'row', alignItems: 'center'},
   avatar: {
@@ -237,7 +252,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   buttonWrapper: {
-    padding: theme.sizes.padding,
+    paddingHorizontal: theme.sizes.padding,
+    paddingVertical: theme.sizes.padding - 10,
     backgroundColor: theme.colors.background,
   },
 });
