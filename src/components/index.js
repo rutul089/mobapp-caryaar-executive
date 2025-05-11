@@ -5,3 +5,4 @@ export {default as ImageComponent} from './ImageComponent';
 export {default as NoDataFound} from './NoDataFound';
 export {default as Dropdown} from './Dropdown';
 export {default as InitialsAvatar} from './InitialsAvatar';
+export {default as PaginationFooter} from './PaginationFooter';

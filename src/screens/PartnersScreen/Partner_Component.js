@@ -1,13 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
-/* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
 import {
   Card,
   ImageHeader,
@@ -18,11 +8,12 @@ import {
   images,
   theme,
 } from '@caryaar/components';
-import {NoDataFound} from '../../components';
+import React, {useEffect, useState} from 'react';
+import {FlatList, Pressable, StyleSheet, View} from 'react-native';
+import {NoDataFound, PaginationFooter} from '../../components';
 import {partnerDocumentLabelMap} from '../../constants/enums';
 import {
   formatDate,
-  formatMobileNumber,
   getLocationText,
   removeCountryCode,
 } from '../../utils/helper';
@@ -173,25 +164,16 @@ const Partner_Component = ({
         ListEmptyComponent={
           !loading && <NoDataFound text="No Partners found" />
         }
-        ListFooterComponent={() => {
-          if (apiTrigger === 'loadMore') {
-            return <ActivityIndicator style={{marginVertical: 16}} />;
-          }
-
-          if (!loading && currentPage >= totalPages && totalPages >= 1) {
-            return (
-              <Text
-                type={'helper-text'}
-                style={{
-                  alignSelf: 'center',
-                }}>
-                All partners are loaded.
-              </Text>
-            );
-          }
-
-          return null;
-        }}
+        ListFooterComponent={
+          <PaginationFooter
+            loadingMore={apiTrigger === 'loadMore'}
+            loading={loading}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            footerMessage={'All Partners are loaded.'}
+            minTotalPagesToShowMessage={0}
+          />
+        }
       />
     </SafeAreaWrapper>
   );

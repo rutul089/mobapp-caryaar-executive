@@ -1,5 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
-/* eslint-disable react-native/no-inline-styles */
 import {
   CardWrapper,
   CommonModal,
@@ -9,13 +7,12 @@ import {
   SafeAreaWrapper,
   Spacing,
   theme,
-  Text,
 } from '@caryaar/components';
 import React from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
-import {formatDate, getGradientColors} from '../../utils/helper';
-import {Loader, NoDataFound} from '../../components';
+import {FlatList, StyleSheet, View} from 'react-native';
+import {Loader, NoDataFound, PaginationFooter} from '../../components';
 import {getApplicationStatusLabel} from '../../constants/enums';
+import {formatDate, getGradientColors} from '../../utils/helper';
 
 const Applications_Component = ({
   onRightIconPress,
@@ -39,7 +36,7 @@ const Applications_Component = ({
   const [activeFilterOption, setActiveFilterOption] = React.useState('');
 
   const handleApplyFilter = () => {
-    onPressPrimaryButton && onPressPrimaryButton(activeFilterOption);
+    onPressPrimaryButton?.(activeFilterOption);
     setActiveFilterOption('');
     setIsFilterModalVisible(false);
   };
@@ -73,29 +70,25 @@ const Applications_Component = ({
         keyExtractor={(_, index) => index.toString()}
         data={applications}
         renderItem={({item}) => (
-          <>
-            <CardWrapper
-              showLeftText
-              isLeftTextBold
-              isStatusBold
-              leftText={item?.loanApplicationId}
-              status={getApplicationStatusLabel(item.status)?.toUpperCase()}
-              gradientColors={getGradientColors(item.status)}
-              onPress={() => onItemPress && onItemPress(item)}>
-              <PartnerCard
-                name={item?.partner?.businessName}
-                subtitle={`Submitted on: ${formatDate(item.createdAt)}`}
-                showPersonalInfo={false}
-                isCTAShow
-                callToAction={() =>
-                  onTrackApplicationPress && onTrackApplicationPress(item)
-                }
-                buttonLabel="Track Application"
-                processingTime={item?.ProcessingTime}
-              />
-            </CardWrapper>
-            <Spacing size="md" />
-          </>
+          <CardWrapper
+            showLeftText
+            isLeftTextBold
+            isStatusBold
+            leftText={item?.loanApplicationId}
+            status={getApplicationStatusLabel(item.status)?.toUpperCase()}
+            gradientColors={getGradientColors(item.status)}
+            onPress={() => onItemPress?.(item)}
+            disableMargin={false}>
+            <PartnerCard
+              name={item?.partner?.businessName}
+              subtitle={`Submitted on: ${formatDate(item.createdAt)}`}
+              showPersonalInfo={false}
+              isCTAShow
+              callToAction={() => onTrackApplicationPress?.(item)}
+              buttonLabel="Track Application"
+              processingTime={item?.ProcessingTime}
+            />
+          </CardWrapper>
         )}
         showsVerticalScrollIndicator={false}
         windowSize={10}
@@ -106,26 +99,15 @@ const Applications_Component = ({
         refreshing={refreshing}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={() => {
-          if (loadingMore) {
-            return <ActivityIndicator style={{marginVertical: 16}} />;
-          }
-
-          if (!loading && currentPage >= totalPages && totalPages > 1) {
-            return (
-              <Text
-                type={'helper-text'}
-                style={{
-                  alignSelf: 'center',
-                }}>
-                All applications loaded.
-              </Text>
-            );
-          }
-
-          return null;
-        }}
-        // ListFooterComponent={loadingMore ? <ActivityIndicator /> : null}
+        ListFooterComponent={
+          <PaginationFooter
+            loadingMore={loadingMore}
+            loading={loading}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            footerMessage={'All applications loaded.'}
+          />
+        }
       />
 
       <CommonModal
