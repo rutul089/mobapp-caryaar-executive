@@ -16,6 +16,7 @@ import {
   resetAppState,
   resetSalesExecutive,
   setLoginStatus,
+  setLogoutUser,
 } from '../../redux/actions';
 import {removeCountryCode} from '../../utils/helper';
 import {clearLoginStatus} from '../../utils/storage';
@@ -74,10 +75,11 @@ class ProfileScreen extends Component {
 
   onPressPrimaryButton = async () => {
     this.toggleLogoutModal(false);
-    await clearLoginStatus();
-    this.props.resetAppState();
-    this.props.setLoginStatus(false);
-    navigateAndSimpleReset(ScreenNames.Login);
+    this.props.setLogoutUser();
+    // await clearLoginStatus();
+    // this.props.resetAppState();
+    // this.props.setLoginStatus(false);
+    // navigateAndSimpleReset(ScreenNames.Login);
   };
 
   onModalHide = () => {
@@ -119,6 +121,7 @@ const mapDispatchToProps = {
   resetAppState,
   fetchUser,
   resetSalesExecutive,
+  setLogoutUser,
 };
 const mapStateToProps = ({user}) => {
   return {

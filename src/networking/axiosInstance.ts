@@ -1,9 +1,12 @@
 import axios from 'axios';
 import {logApiEvent} from './apiLogger';
 import {getCachedToken} from '../utils/storage';
+import {store} from '../redux';
+import {logoutUser, setLogoutUser} from '../redux/actions';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://caryaar.onrender.com/api/v1',
+  // baseURL: 'https://caryaar.onrender.com/api/v1',
+  baseURL: 'https://caryaar-dev-api.pedalsupclients.xyz/api/v1',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -89,6 +92,13 @@ axiosInstance.interceptors.response.use(
       error,
       duration,
     });
+
+    const status = error?.response?.status;
+    const isTokenExpired = status === 401 || status === 402;
+    if (isTokenExpired) {
+      // Option 1: If using Redux
+      store.dispatch(setLogoutUser());
+    }
 
     return Promise.reject(error);
   },

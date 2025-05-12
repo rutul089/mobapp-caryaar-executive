@@ -124,7 +124,7 @@ const Manage_Members_Component = ({
             loading={isLoading}
             currentPage={currentPage}
             totalPages={totalPages}
-            footerMessage={'All applications loaded.'}
+            footerMessage={'All members loaded.'}
           />
         }
       />

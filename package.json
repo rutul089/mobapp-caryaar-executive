@@ -7,7 +7,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
-    "start": "npx react-native start --client-logs",
+    "start": "npx react-native start --client-logs --reset-cache",
     "test": "jest"
   },
   "dependencies": {
@@ -24,6 +24,7 @@
     "prop-types": "^15.8.1",
     "react": "19.0.0",
     "react-native": "0.78.2",
+    "react-native-device-info": "^14.0.4",
     "react-native-fast-image": "^8.6.3",
     "react-native-file-viewer": "^2.1.5",
     "react-native-fs": "^2.20.0",

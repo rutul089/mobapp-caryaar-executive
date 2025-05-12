@@ -10,7 +10,7 @@ import {
 } from '@caryaar/components';
 import React, {useEffect, useState} from 'react';
 import {FlatList, Pressable, StyleSheet, View} from 'react-native';
-import {NoDataFound, PaginationFooter} from '../../components';
+import {Loader, NoDataFound, PaginationFooter} from '../../components';
 import {partnerDocumentLabelMap} from '../../constants/enums';
 import {
   formatDate,
@@ -84,19 +84,19 @@ const Partner_Component = ({
     return (
       <>
         <PartnerCard
-          name={item.companyName}
+          name={item?.companyName}
           location={
-            !isPendingTab ? getLocationText(item.city, item.state) : undefined
+            !isPendingTab ? getLocationText(item?.city, item?.state) : undefined
           }
           phone={
             !isPendingTab
-              ? removeCountryCode(item.owner?.mobileNumber) || '-'
+              ? removeCountryCode(item?.owner?.mobileNumber) || '-'
               : undefined
           }
           showPersonalInfo={!isPendingTab ? undefined : false}
           subtitle={
             isPendingTab
-              ? `Submitted on: ${formatDate(item.createdAt)}`
+              ? `Submitted on: ${formatDate(item?.createdAt)}`
               : undefined
           }
           statusObject={isPendingTab ? statusObject : undefined}
@@ -171,10 +171,11 @@ const Partner_Component = ({
             currentPage={currentPage}
             totalPages={totalPages}
             footerMessage={'All Partners are loaded.'}
-            minTotalPagesToShowMessage={0}
+            minTotalPagesToShowMessage={1}
           />
         }
       />
+      {loading && apiTrigger === 'default' && <Loader visible />}
     </SafeAreaWrapper>
   );
 };

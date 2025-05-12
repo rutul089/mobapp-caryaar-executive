@@ -273,30 +273,26 @@ class PartnersScreen extends Component {
     const [currentPage, totalPages] = this.getPageInfo();
 
     return (
-      <>
-        <Partner_Component
-          onTabPress={this.onTabPress}
-          TAB_OPTIONS={PARTNER_TAB_OPTIONS}
-          onRightIconPress={this.onRightIconPress}
-          partnersData={Array.isArray(displayList) ? displayList : []}
-          onItemPress={this.onItemPress}
-          callToAction={this.callToAction}
-          onAddButtonPress={this.onAddButtonPress}
-          onRefresh={this.pullToRefresh}
-          refreshing={refreshing}
-          onLoadMore={this.loadMorePartners}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          loading={loading}
-          onSearchText={this.onSearchText}
-          searchText={searchText}
-          clearSearch={this.clearSearch}
-          setSearch={this.searchFromAPI}
-          apiTrigger={this.state.apiTrigger}
-        />
-        {/* Show loader only for the initial/default fetch */}
-        {loading && apiTrigger === 'default' && <Loader visible />}
-      </>
+      <Partner_Component
+        onTabPress={this.onTabPress}
+        TAB_OPTIONS={PARTNER_TAB_OPTIONS}
+        onRightIconPress={this.onRightIconPress}
+        partnersData={Array.isArray(displayList) ? displayList : []}
+        onItemPress={this.onItemPress}
+        callToAction={this.callToAction}
+        onAddButtonPress={this.onAddButtonPress}
+        onRefresh={this.pullToRefresh}
+        refreshing={refreshing}
+        onLoadMore={this.loadMorePartners}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        loading={loading}
+        onSearchText={this.onSearchText}
+        searchText={searchText}
+        clearSearch={this.clearSearch}
+        setSearch={this.searchFromAPI}
+        apiTrigger={this.state.apiTrigger}
+      />
     );
   }
 }

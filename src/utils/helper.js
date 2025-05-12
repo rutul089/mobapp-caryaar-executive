@@ -313,9 +313,9 @@ export const getPartnerAddress = d =>
  */
 export const getErrorMessage = error => {
   try {
-    if (error?.message === 'Network Error') {
-      return 'Please check your internet connection.';
-    }
+    // if (error?.message === 'Network Error') {
+    //   return 'Please check your internet connection.';
+    // }
     const message = error?.response?.data?.message;
     return message || 'Something went wrong';
   } catch {
