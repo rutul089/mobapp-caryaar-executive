@@ -12,7 +12,7 @@ import {
 } from '@caryaar/components';
 import React from 'react';
 import {Image, ScrollView, StyleSheet, View} from 'react-native';
-
+import DeviceInfo from 'react-native-device-info';
 import {ImageComponent} from '../../components';
 import ScreenNames from '../../constants/ScreenNames';
 
@@ -32,6 +32,9 @@ const Profile_Component = ({
   avatar,
   designation,
 }) => {
+  const version = DeviceInfo.getVersion();
+  const build = DeviceInfo.getBuildNumber();
+
   const profileCard = () => {
     return (
       <View style={styles.profileCard}>
@@ -179,8 +182,13 @@ const Profile_Component = ({
               </React.Fragment>
             ))}
           </View>
+          <Spacing size="md_lg" />
+          <Text textAlign="center" type="helper-text">
+            App Version: {version}.{build}
+          </Text>
         </View>
       </ScrollView>
+
       <CommonModal
         isVisible={showLogoutModal}
         onModalHide={onModalHide}

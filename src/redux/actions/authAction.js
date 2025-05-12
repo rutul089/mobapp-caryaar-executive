@@ -9,7 +9,7 @@ export const setLoginStatus = isLoggedIn => ({
   payload: isLoggedIn,
 });
 
-export const setLogoutUser = () => {
+export const logoutUser = () => {
   return async dispatch => {
     try {
       await clearLoginStatus();

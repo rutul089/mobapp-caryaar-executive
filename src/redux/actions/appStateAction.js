@@ -18,10 +18,6 @@ export const setNotificationCount = count => ({
   payload: count,
 });
 
-export const logoutUser = () => ({
-  type: types.RESET_APP_STATE,
-});
-
 export const resetAppState = () => ({
   type: types.RESET_APP_STATE,
 });
