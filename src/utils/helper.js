@@ -378,7 +378,7 @@ export const showToast = (
 export const showApiErrorToast = error => {
   let type = 'warning';
   let message = getErrorMessage(error);
-  if (error?.status === 503) {
+  if (error?.status === 503 || error?.status === 400) {
     type = 'warning';
     message = 'Service is temporarily unavailable. Please try again later.';
   }

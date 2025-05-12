@@ -29,8 +29,9 @@ const DocumentList = ({
           <React.Fragment key={key}>
             <DocumentRow
               label={label}
-              actionLabel={hasDocument ? 'View' : 'Request'}
+              actionLabel={hasDocument ? 'View' : 'Request Documents'}
               isLoading={isLoading && documentType === key}
+              disabled={isLoading}
               onPress={() => {
                 onDocumentPress?.(key, safeKycDocs[key], hasDocument);
               }}
@@ -55,8 +56,9 @@ const DocumentList = ({
           <React.Fragment key={key}>
             <DocumentRow
               label={label}
-              actionLabel={hasDocument ? 'View' : 'Request'}
+              actionLabel={hasDocument ? 'View' : 'Request Documents'}
               isLoading={isLoading && documentType === key}
+              disabled={isLoading}
               onPress={() => {
                 onDocumentPress?.(key, safeLoanDocs?.[key], hasDocument);
               }}
